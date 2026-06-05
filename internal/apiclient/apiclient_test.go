@@ -44,3 +44,67 @@ func TestGetJSONNon2xx(t *testing.T) {
 		t.Fatal("expected error on 500, got nil")
 	}
 }
+
+func TestGetArticleNotFound(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+	}))
+	defer srv.Close()
+
+	c := New(srv.URL)
+	_, err := c.GetArticle(context.Background(), 42)
+	if err != ErrNotFound {
+		t.Fatalf("expected ErrNotFound, got %v", err)
+	}
+}
+
+func TestGetArticleOK(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.RequestURI() != "/articles/get?id=42" {
+			t.Errorf("unexpected path: %s", r.URL.RequestURI())
+		}
+		w.Write([]byte(`{"id":42,"title":"Deep Dive","content":"full body","feed_url":"f"}`))
+	}))
+	defer srv.Close()
+
+	c := New(srv.URL)
+	a, err := c.GetArticle(context.Background(), 42)
+	if err != nil {
+		t.Fatalf("GetArticle error: %v", err)
+	}
+	if a.ID != 42 || a.Content != "full body" {
+		t.Fatalf("unexpected article: %+v", a)
+	}
+}
+
+func TestListFeeds(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(`{"feeds":[{"feed_url":"https://a/rss","article_count":5}],"count":1}`))
+	}))
+	defer srv.Close()
+
+	c := New(srv.URL)
+	feeds, err := c.ListFeeds(context.Background())
+	if err != nil {
+		t.Fatalf("ListFeeds error: %v", err)
+	}
+	if len(feeds) != 1 || feeds[0].FeedURL != "https://a/rss" || feeds[0].ArticleCount != 5 {
+		t.Fatalf("unexpected feeds: %+v", feeds)
+	}
+}
+
+func TestGetStats(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(`{"total_articles":100,"total_feeds":12,"last_fetch":null}`))
+	}))
+	defer srv.Close()
+
+	c := New(srv.URL)
+	s, err := c.GetStats(context.Background())
+	if err != nil {
+		t.Fatalf("GetStats error: %v", err)
+	}
+	if s.TotalArticles != 100 || s.TotalFeeds != 12 {
+		t.Fatalf("unexpected stats: %+v", s)
+	}
+}

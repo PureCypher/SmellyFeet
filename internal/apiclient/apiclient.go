@@ -113,3 +113,26 @@ func (c *Client) ListArticles(ctx context.Context, p ListParams) (ListResult, er
 	err := c.getJSON(ctx, "/articles?"+v.Encode(), &res)
 	return res, err
 }
+
+// GetArticle fetches a single article by id. Returns ErrNotFound on 404.
+func (c *Client) GetArticle(ctx context.Context, id int64) (Article, error) {
+	var a Article
+	err := c.getJSON(ctx, "/articles/get?id="+strconv.FormatInt(id, 10), &a)
+	return a, err
+}
+
+// ListFeeds returns the known feeds and their article counts.
+func (c *Client) ListFeeds(ctx context.Context) ([]Feed, error) {
+	var res struct {
+		Feeds []Feed `json:"feeds"`
+	}
+	err := c.getJSON(ctx, "/feeds", &res)
+	return res.Feeds, err
+}
+
+// GetStats returns overall system statistics.
+func (c *Client) GetStats(ctx context.Context) (Stats, error) {
+	var s Stats
+	err := c.getJSON(ctx, "/stats", &s)
+	return s, err
+}
