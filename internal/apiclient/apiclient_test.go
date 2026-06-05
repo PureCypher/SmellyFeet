@@ -2,6 +2,7 @@ package apiclient
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -53,7 +54,7 @@ func TestGetArticleNotFound(t *testing.T) {
 
 	c := New(srv.URL)
 	_, err := c.GetArticle(context.Background(), 42)
-	if err != ErrNotFound {
+	if !errors.Is(err, ErrNotFound) {
 		t.Fatalf("expected ErrNotFound, got %v", err)
 	}
 }
@@ -79,6 +80,9 @@ func TestGetArticleOK(t *testing.T) {
 
 func TestListFeeds(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/feeds" {
+			t.Errorf("unexpected path: %s", r.URL.Path)
+		}
 		w.Write([]byte(`{"feeds":[{"feed_url":"https://a/rss","article_count":5}],"count":1}`))
 	}))
 	defer srv.Close()
@@ -95,6 +99,9 @@ func TestListFeeds(t *testing.T) {
 
 func TestGetStats(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/stats" {
+			t.Errorf("unexpected path: %s", r.URL.Path)
+		}
 		w.Write([]byte(`{"total_articles":100,"total_feeds":12,"last_fetch":null}`))
 	}))
 	defer srv.Close()
