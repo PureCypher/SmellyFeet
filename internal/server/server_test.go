@@ -151,3 +151,31 @@ func TestStatsPage(t *testing.T) {
 		t.Fatalf("stats body missing numbers: %s", body)
 	}
 }
+
+func TestArticlePageUpstreamErrorRendersErrorPage(t *testing.T) {
+	svc := stubService{getErr: context.DeadlineExceeded}
+	h := newTestServer(t, svc)
+	req := httptest.NewRequest(http.MethodGet, "/article/7", nil)
+	rec := httptest.NewRecorder()
+	h.ServeHTTP(rec, req)
+	if rec.Code != http.StatusBadGateway {
+		t.Fatalf("status = %d, want 502", rec.Code)
+	}
+	if !strings.Contains(rec.Body.String(), "Something went wrong") {
+		t.Fatalf("expected error page, got: %s", rec.Body.String())
+	}
+}
+
+func TestStatsPageUpstreamErrorRendersErrorPage(t *testing.T) {
+	svc := stubService{statsErr: context.DeadlineExceeded}
+	h := newTestServer(t, svc)
+	req := httptest.NewRequest(http.MethodGet, "/stats", nil)
+	rec := httptest.NewRecorder()
+	h.ServeHTTP(rec, req)
+	if rec.Code != http.StatusBadGateway {
+		t.Fatalf("status = %d, want 502", rec.Code)
+	}
+	if !strings.Contains(rec.Body.String(), "Something went wrong") {
+		t.Fatalf("expected error page, got: %s", rec.Body.String())
+	}
+}
