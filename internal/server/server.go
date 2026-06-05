@@ -31,19 +31,21 @@ type Server struct {
 }
 
 var funcMap = template.FuncMap{
-	"formatDate": func(t any) string {
-		switch v := t.(type) {
-		case nil:
-			return "—"
-		default:
-			if tt, ok := asTime(v); ok {
-				return tt.Format("2006-01-02 15:04")
-			}
-			return ""
-		}
-	},
-	"inc": func(n int) int { return n + 1 },
-	"dec": func(n int) int { return n - 1 },
+	"formatDate": formatDate,
+	"inc":        func(n int) int { return n + 1 },
+	"dec":        func(n int) int { return n - 1 },
+}
+
+// formatDate renders a time value for display, returning "—" for a nil or zero time.
+func formatDate(t any) string {
+	if t == nil {
+		return "—"
+	}
+	tt, ok := asTime(t)
+	if !ok || tt.IsZero() {
+		return "—"
+	}
+	return tt.Format("2006-01-02 15:04")
 }
 
 // New constructs a Server with parsed templates.

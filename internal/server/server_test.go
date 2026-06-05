@@ -6,6 +6,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 
 	"smellyfeet/internal/apiclient"
 )
@@ -177,5 +178,25 @@ func TestStatsPageUpstreamErrorRendersErrorPage(t *testing.T) {
 	}
 	if !strings.Contains(rec.Body.String(), "Something went wrong") {
 		t.Fatalf("expected error page, got: %s", rec.Body.String())
+	}
+}
+
+func TestFormatDate(t *testing.T) {
+	if got := formatDate(nil); got != "—" {
+		t.Errorf("nil -> %q, want —", got)
+	}
+	if got := formatDate(time.Time{}); got != "—" {
+		t.Errorf("zero time -> %q, want —", got)
+	}
+	var np *time.Time
+	if got := formatDate(np); got != "—" {
+		t.Errorf("nil *time.Time -> %q, want —", got)
+	}
+	ts := time.Date(2026, 6, 5, 23, 25, 0, 0, time.UTC)
+	if got := formatDate(ts); got != "2026-06-05 23:25" {
+		t.Errorf("value -> %q", got)
+	}
+	if got := formatDate(&ts); got != "2026-06-05 23:25" {
+		t.Errorf("ptr -> %q", got)
 	}
 }
