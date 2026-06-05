@@ -1,0 +1,86 @@
+// Package server renders the Information-Broker frontend.
+package server
+
+import (
+	"bytes"
+	"context"
+	"embed"
+	"html/template"
+	"log"
+	"net/http"
+
+	"smellyfeet/internal/apiclient"
+)
+
+//go:embed templates/*.html
+var templatesFS embed.FS
+
+// ArticleService is the subset of the API the handlers need.
+type ArticleService interface {
+	ListArticles(ctx context.Context, p apiclient.ListParams) (apiclient.ListResult, error)
+	GetArticle(ctx context.Context, id int64) (apiclient.Article, error)
+	ListFeeds(ctx context.Context) ([]apiclient.Feed, error)
+	GetStats(ctx context.Context) (apiclient.Stats, error)
+}
+
+// Server holds dependencies for the HTTP handlers.
+type Server struct {
+	svc      ArticleService
+	tmpl     *template.Template
+	pageSize int
+}
+
+var funcMap = template.FuncMap{
+	"formatDate": func(t any) string {
+		switch v := t.(type) {
+		case nil:
+			return "—"
+		default:
+			if tt, ok := asTime(v); ok {
+				return tt.Format("2006-01-02 15:04")
+			}
+			return ""
+		}
+	},
+	"inc": func(n int) int { return n + 1 },
+	"dec": func(n int) int { return n - 1 },
+}
+
+// New constructs a Server with parsed templates.
+func New(svc ArticleService) (*Server, error) {
+	tmpl, err := template.New("").Funcs(funcMap).ParseFS(templatesFS, "templates/*.html")
+	if err != nil {
+		return nil, err
+	}
+	return &Server{svc: svc, tmpl: tmpl, pageSize: 20}, nil
+}
+
+// Routes returns the configured HTTP handler.
+func (s *Server) Routes() http.Handler {
+	mux := http.NewServeMux()
+	mux.HandleFunc("GET /healthz", s.handleHealthz)
+	mux.HandleFunc("GET /{$}", s.handleList)
+	mux.HandleFunc("GET /article/{id}", s.handleArticle)
+	mux.HandleFunc("GET /stats", s.handleStats)
+	return mux
+}
+
+func (s *Server) render(w http.ResponseWriter, status int, name string, data any) {
+	var buf bytes.Buffer
+	if err := s.tmpl.ExecuteTemplate(&buf, name, data); err != nil {
+		log.Printf("template error (%s): %v", name, err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(status)
+	_, _ = buf.WriteTo(w)
+}
+
+func (s *Server) renderError(w http.ResponseWriter, err error) {
+	log.Printf("handler error: %v", err)
+	s.render(w, http.StatusBadGateway, "error", map[string]any{
+		"Title":   "Error",
+		"Message": "The article service is currently unavailable. Please try again later.",
+	})
+}
