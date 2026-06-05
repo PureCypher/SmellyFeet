@@ -1,0 +1,7 @@
+{{ define "notfound" }}{{ template "header" . }}
+<div class="bg-white rounded-lg border border-slate-200 p-8 text-center">
+  <h1 class="text-xl font-bold text-slate-900">Article not found</h1>
+  <p class="mt-2 text-slate-600">We couldn't find that article.</p>
+  <a href="/" class="inline-block mt-4 text-indigo-600 hover:underline">← Back to articles</a>
+</div>
+{{ template "footer" . }}{{ end }}

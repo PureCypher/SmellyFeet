@@ -1,0 +1,19 @@
+{{ define "stats" }}{{ template "header" . }}
+<h1 class="text-2xl font-bold text-slate-900 mb-6">System statistics</h1>
+{{ with .Stats }}
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+  <div class="bg-white rounded-lg border border-slate-200 p-5">
+    <div class="text-xs uppercase tracking-wide text-slate-400">Total articles</div>
+    <div class="text-3xl font-bold text-slate-900 mt-1">{{ .TotalArticles }}</div>
+  </div>
+  <div class="bg-white rounded-lg border border-slate-200 p-5">
+    <div class="text-xs uppercase tracking-wide text-slate-400">Feeds</div>
+    <div class="text-3xl font-bold text-slate-900 mt-1">{{ .TotalFeeds }}</div>
+  </div>
+  <div class="bg-white rounded-lg border border-slate-200 p-5">
+    <div class="text-xs uppercase tracking-wide text-slate-400">Last fetch</div>
+    <div class="text-lg font-semibold text-slate-900 mt-2">{{ if .LastFetch }}{{ .LastFetch | formatDate }}{{ else }}—{{ end }}</div>
+  </div>
+</div>
+{{ end }}
+{{ template "footer" . }}{{ end }}

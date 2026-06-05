@@ -1,0 +1,29 @@
+{{ define "header" }}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ .Title }} · Information Broker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+  <header class="bg-slate-900 text-white">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/" class="text-lg font-semibold tracking-tight">🛰️ Information Broker</a>
+      <nav class="space-x-4 text-sm">
+        <a href="/" class="hover:underline">Articles</a>
+        <a href="/stats" class="hover:underline">Stats</a>
+      </nav>
+    </div>
+  </header>
+  <main class="max-w-5xl mx-auto px-4 py-8">
+{{ end }}
+
+{{ define "footer" }}
+  </main>
+  <footer class="max-w-5xl mx-auto px-4 py-8 text-xs text-slate-400">
+    Information Broker frontend
+  </footer>
+</body>
+</html>
+{{ end }}

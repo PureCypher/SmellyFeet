@@ -1,0 +1,45 @@
+{{ define "list" }}{{ template "header" . }}
+<form method="get" action="/" class="mb-6 flex flex-wrap gap-3 items-end">
+  <div class="flex-1 min-w-[12rem]">
+    <label class="block text-xs font-medium text-slate-500 mb-1">Search</label>
+    <input type="text" name="q" value="{{ .Q }}" placeholder="keyword in title or summary"
+      class="w-full rounded border border-slate-300 px-3 py-2 text-sm">
+  </div>
+  <div>
+    <label class="block text-xs font-medium text-slate-500 mb-1">Feed</label>
+    <select name="feed" class="rounded border border-slate-300 px-3 py-2 text-sm max-w-[16rem]">
+      <option value="">All feeds</option>
+      {{ range .Feeds }}
+      <option value="{{ .FeedURL }}" {{ if eq .FeedURL $.Feed }}selected{{ end }}>{{ .FeedURL }} ({{ .ArticleCount }})</option>
+      {{ end }}
+    </select>
+  </div>
+  <button type="submit" class="rounded bg-slate-900 text-white px-4 py-2 text-sm">Apply</button>
+</form>
+
+{{ if not .Articles }}
+  <p class="text-slate-500">No articles found.</p>
+{{ end }}
+
+<ul class="space-y-4">
+  {{ range .Articles }}
+  <li class="bg-white rounded-lg shadow-sm border border-slate-200 p-5">
+    <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+      <span>{{ .FeedURL }}</span>
+      <span>{{ .PublishedAt | formatDate }}</span>
+    </div>
+    <a href="/article/{{ .ID }}" class="text-lg font-semibold text-slate-900 hover:text-indigo-600">{{ .Title }}</a>
+    <p class="mt-2 text-sm text-slate-600 leading-relaxed">
+      {{ if .Summary }}{{ .Summary }}{{ else }}No summary available.{{ end }}
+    </p>
+    <a href="/article/{{ .ID }}" class="inline-block mt-3 text-sm text-indigo-600 hover:underline">Read full article →</a>
+  </li>
+  {{ end }}
+</ul>
+
+<div class="mt-8 flex justify-between text-sm">
+  {{ if .HasPrev }}<a href="?page={{ dec .Page }}&q={{ .Q }}&feed={{ .Feed }}" class="text-indigo-600 hover:underline">← Previous</a>{{ else }}<span></span>{{ end }}
+  <span class="text-slate-400">Page {{ .Page }}</span>
+  {{ if .HasNext }}<a href="?page={{ inc .Page }}&q={{ .Q }}&feed={{ .Feed }}" class="text-indigo-600 hover:underline">Next →</a>{{ else }}<span></span>{{ end }}
+</div>
+{{ template "footer" . }}{{ end }}
