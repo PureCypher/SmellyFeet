@@ -1,6 +1,7 @@
 package server
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 	"time"
@@ -84,9 +85,37 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleArticle(w http.ResponseWriter, r *http.Request) {
-	http.Error(w, "not implemented", http.StatusNotImplemented)
+	idStr := r.PathValue("id")
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil || id <= 0 {
+		s.render(w, http.StatusNotFound, "notfound", map[string]any{"Title": "Not Found"})
+		return
+	}
+
+	a, err := s.svc.GetArticle(r.Context(), id)
+	if errors.Is(err, apiclient.ErrNotFound) {
+		s.render(w, http.StatusNotFound, "notfound", map[string]any{"Title": "Not Found"})
+		return
+	}
+	if err != nil {
+		s.renderError(w, err)
+		return
+	}
+
+	s.render(w, http.StatusOK, "article", map[string]any{
+		"Title":   a.Title,
+		"Article": a,
+	})
 }
 
 func (s *Server) handleStats(w http.ResponseWriter, r *http.Request) {
-	http.Error(w, "not implemented", http.StatusNotImplemented)
+	st, err := s.svc.GetStats(r.Context())
+	if err != nil {
+		s.renderError(w, err)
+		return
+	}
+	s.render(w, http.StatusOK, "stats", map[string]any{
+		"Title": "Statistics",
+		"Stats": st,
+	})
 }
