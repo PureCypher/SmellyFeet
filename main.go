@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"smellyfeet/internal/apiclient"
 	"smellyfeet/internal/config"
@@ -20,7 +21,16 @@ func main() {
 
 	addr := ":" + cfg.Port
 	log.Printf("frontend listening on %s (API: %s)", addr, cfg.APIBaseURL)
-	if err := http.ListenAndServe(addr, srv.Routes()); err != nil {
+
+	httpServer := &http.Server{
+		Addr:              addr,
+		Handler:           srv.Routes(),
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       60 * time.Second,
+	}
+	if err := httpServer.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}
 }
