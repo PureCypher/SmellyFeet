@@ -1,13 +1,10 @@
 package config
 
-import (
-	"os"
-	"testing"
-)
+import "testing"
 
 func TestLoadDefaults(t *testing.T) {
-	os.Unsetenv("API_BASE_URL")
-	os.Unsetenv("PORT")
+	t.Setenv("API_BASE_URL", "")
+	t.Setenv("PORT", "")
 	c := Load()
 	if c.APIBaseURL != "http://localhost:8080" {
 		t.Errorf("APIBaseURL default = %q", c.APIBaseURL)
