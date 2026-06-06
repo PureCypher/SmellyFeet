@@ -1,7 +1,8 @@
 {{ define "error" }}{{ template "header" . }}
-<div class="bg-white rounded-lg border border-red-200 p-8 text-center">
-  <h1 class="text-xl font-bold text-red-700">Something went wrong</h1>
-  <p class="mt-2 text-slate-600">{{ .Message }}</p>
-  <a href="/" class="inline-block mt-4 text-indigo-600 hover:underline">← Back to articles</a>
+<div class="text-center py-20 border border-red-500/25 bg-red-500/[0.05] rounded-2xl">
+  <p class="font-mono text-[11px] uppercase tracking-[0.25em] text-red-400/80 mb-2">// error</p>
+  <h1 class="text-xl font-semibold text-red-300">Something went wrong</h1>
+  <p class="mt-2 text-fog text-sm">{{ .Message }}</p>
+  <a href="/" class="inline-block mt-6 font-mono text-xs uppercase tracking-widest text-accent hover:text-accent-bright transition-colors">← Back to feed</a>
 </div>
 {{ template "footer" . }}{{ end }}

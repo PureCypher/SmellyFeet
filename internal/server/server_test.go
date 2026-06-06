@@ -200,3 +200,17 @@ func TestFormatDate(t *testing.T) {
 		t.Errorf("ptr -> %q", got)
 	}
 }
+
+func TestCleanContent(t *testing.T) {
+	in := "Hello   world\n   \n\n        \n  foo\t bar  \n\nbaz\n"
+	want := "Hello world\nfoo bar\nbaz"
+	if got := cleanContent(in); got != want {
+		t.Fatalf("cleanContent = %q, want %q", got, want)
+	}
+	if got := cleanContent("\n\n   \n\t\n"); got != "" {
+		t.Fatalf("all-whitespace should be empty, got %q", got)
+	}
+	if got := cleanContent("single line"); got != "single line" {
+		t.Fatalf("single line changed: %q", got)
+	}
+}

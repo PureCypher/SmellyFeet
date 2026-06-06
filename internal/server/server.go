@@ -8,6 +8,8 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"regexp"
+	"strings"
 
 	"smellyfeet/internal/apiclient"
 )
@@ -31,9 +33,11 @@ type Server struct {
 }
 
 var funcMap = template.FuncMap{
-	"formatDate": formatDate,
-	"inc":        func(n int) int { return n + 1 },
-	"dec":        func(n int) int { return n - 1 },
+	"formatDate":   formatDate,
+	"cleanContent": cleanContent,
+	"inc":          func(n int) int { return n + 1 },
+	"dec":          func(n int) int { return n - 1 },
+	"mul":          func(a, b int) int { return a * b },
 }
 
 // formatDate renders a time value for display, returning "—" for a nil or zero time.
@@ -46,6 +50,25 @@ func formatDate(t any) string {
 		return "—"
 	}
 	return tt.Format("2006-01-02 15:04")
+}
+
+var innerWhitespace = regexp.MustCompile(`[ \t\x{00a0}]+`)
+
+// cleanContent normalizes scraped full-text for display. HTML-stripped article
+// bodies keep the original page's whitespace skeleton (long runs of blank lines
+// and indentation), which renders as huge empty gaps. This trims each line,
+// collapses internal runs of spaces/tabs, and drops blank lines so the text
+// reads compactly. The result is rendered with CSS white-space: pre-line.
+func cleanContent(s string) string {
+	lines := strings.Split(s, "\n")
+	out := make([]string, 0, len(lines))
+	for _, ln := range lines {
+		ln = strings.TrimSpace(innerWhitespace.ReplaceAllString(ln, " "))
+		if ln != "" {
+			out = append(out, ln)
+		}
+	}
+	return strings.Join(out, "\n")
 }
 
 // New constructs a Server with parsed templates.

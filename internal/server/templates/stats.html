@@ -1,18 +1,21 @@
 {{ define "stats" }}{{ template "header" . }}
-<h1 class="text-2xl font-bold text-slate-900 mb-6">System statistics</h1>
+<div class="mb-7">
+  <p class="font-mono text-[11px] uppercase tracking-[0.25em] text-accent/80 mb-1.5">// system</p>
+  <h1 class="text-2xl font-semibold text-zinc-100 tracking-tight">Statistics</h1>
+</div>
 {{ with .Stats }}
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-  <div class="bg-white rounded-lg border border-slate-200 p-5">
-    <div class="text-xs uppercase tracking-wide text-slate-400">Total articles</div>
-    <div class="text-3xl font-bold text-slate-900 mt-1">{{ .TotalArticles }}</div>
+  <div class="bg-ink-900 border border-line rounded-xl p-6 hover:border-accent/40 transition-colors">
+    <div class="font-mono text-[10px] uppercase tracking-widest text-fog">Total articles</div>
+    <div class="font-mono text-4xl font-semibold text-accent mt-2 tabular-nums">{{ .TotalArticles }}</div>
   </div>
-  <div class="bg-white rounded-lg border border-slate-200 p-5">
-    <div class="text-xs uppercase tracking-wide text-slate-400">Feeds</div>
-    <div class="text-3xl font-bold text-slate-900 mt-1">{{ .TotalFeeds }}</div>
+  <div class="bg-ink-900 border border-line rounded-xl p-6 hover:border-accent/40 transition-colors">
+    <div class="font-mono text-[10px] uppercase tracking-widest text-fog">Sources</div>
+    <div class="font-mono text-4xl font-semibold text-zinc-100 mt-2 tabular-nums">{{ .TotalFeeds }}</div>
   </div>
-  <div class="bg-white rounded-lg border border-slate-200 p-5">
-    <div class="text-xs uppercase tracking-wide text-slate-400">Last fetch</div>
-    <div class="text-lg font-semibold text-slate-900 mt-2">{{ if .LastFetch }}{{ .LastFetch | formatDate }}{{ else }}—{{ end }}</div>
+  <div class="bg-ink-900 border border-line rounded-xl p-6 hover:border-accent/40 transition-colors">
+    <div class="font-mono text-[10px] uppercase tracking-widest text-fog">Last fetch</div>
+    <div class="font-mono text-lg font-medium text-zinc-100 mt-3">{{ if .LastFetch }}{{ .LastFetch | formatDate }}{{ else }}—{{ end }}</div>
   </div>
 </div>
 {{ end }}
