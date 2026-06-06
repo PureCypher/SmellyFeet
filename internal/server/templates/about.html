@@ -1,0 +1,62 @@
+{{ define "about" }}{{ template "header" . }}
+<div class="mb-8">
+  <p class="font-mono text-[11px] uppercase tracking-[0.25em] text-accent/80 mb-1.5">// about</p>
+  <h1 class="text-3xl font-bold text-zinc-50 tracking-tight">SmellyFeet</h1>
+  <p class="mt-1.5 font-mono text-xs text-fog">the reading room for Information Broker</p>
+</div>
+
+<div class="space-y-4 text-[15px] leading-relaxed text-zinc-300 max-w-2xl">
+  <p>SmellyFeet is the front end for <span class="text-accent">Information Broker</span> — a continuously-running intelligence pipeline that scrapes cybersecurity RSS sources, summarizes every article with a local LLM, and stores them for fast browsing.</p>
+  <p>This app turns that firehose into something you can actually read: a clean stream of AI-written summaries, a full-text view for each article with a link straight back to the original source, plus keyword search, per-source filtering, and live system statistics.</p>
+</div>
+
+<section class="mt-10">
+  <h2 class="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-fog mb-4 flex items-center gap-2"><span class="h-px w-6 bg-line"></span>How it works</h2>
+  <div class="flex flex-wrap items-center gap-2 font-mono text-xs">
+    <span class="px-3 py-2 rounded-lg bg-ink-900 border border-line text-zinc-300">RSS sources</span>
+    <span class="text-accent" aria-hidden="true">→</span>
+    <span class="px-3 py-2 rounded-lg bg-ink-900 border border-line text-zinc-300">LLM summarize</span>
+    <span class="text-accent" aria-hidden="true">→</span>
+    <span class="px-3 py-2 rounded-lg bg-ink-900 border border-line text-zinc-300">PostgreSQL</span>
+    <span class="text-accent" aria-hidden="true">→</span>
+    <span class="px-3 py-2 rounded-lg bg-ink-900 border border-line text-zinc-300">Broker API</span>
+    <span class="text-accent" aria-hidden="true">→</span>
+    <span class="px-3 py-2 rounded-lg border border-accent/50 bg-accent/[0.08] text-accent font-semibold">SmellyFeet</span>
+  </div>
+</section>
+
+<section class="mt-10">
+  <h2 class="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-fog mb-4 flex items-center gap-2"><span class="h-px w-6 bg-line"></span>What you can do</h2>
+  <div class="grid gap-3 sm:grid-cols-2">
+    <div class="rounded-xl bg-ink-900 border border-line p-4">
+      <h3 class="text-sm font-semibold text-zinc-100">Browse summaries</h3>
+      <p class="mt-1 text-sm text-zinc-400 leading-relaxed">Scan the latest intelligence as concise, AI-written summaries.</p>
+    </div>
+    <div class="rounded-xl bg-ink-900 border border-line p-4">
+      <h3 class="text-sm font-semibold text-zinc-100">Read the full story</h3>
+      <p class="mt-1 text-sm text-zinc-400 leading-relaxed">Open any article for the full stored text and a link to the original source.</p>
+    </div>
+    <div class="rounded-xl bg-ink-900 border border-line p-4">
+      <h3 class="text-sm font-semibold text-zinc-100">Search &amp; filter</h3>
+      <p class="mt-1 text-sm text-zinc-400 leading-relaxed">Find articles by keyword or narrow the feed to a single source.</p>
+    </div>
+    <div class="rounded-xl bg-ink-900 border border-line p-4">
+      <h3 class="text-sm font-semibold text-zinc-100">Watch the system</h3>
+      <p class="mt-1 text-sm text-zinc-400 leading-relaxed">Live stats: total articles indexed, active sources, and last fetch time.</p>
+    </div>
+  </div>
+</section>
+
+<section class="mt-10">
+  <h2 class="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-fog mb-4 flex items-center gap-2"><span class="h-px w-6 bg-line"></span>Under the hood</h2>
+  <ul class="font-mono text-xs text-fog space-y-2">
+    <li><span class="text-accent">›</span> Server-rendered Go (<span class="text-zinc-300">html/template</span>), styled with Tailwind</li>
+    <li><span class="text-accent">›</span> No database of its own — talks only to the Information Broker HTTP API</li>
+    <li><span class="text-accent">›</span> Containerized; deploys and restarts independently of the scraper</li>
+  </ul>
+</section>
+
+<div class="mt-10 pt-5 border-t border-line">
+  <a href="/" class="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-accent hover:text-accent-bright transition-colors">← Back to feed</a>
+</div>
+{{ template "footer" . }}{{ end }}

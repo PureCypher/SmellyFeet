@@ -119,3 +119,7 @@ func (s *Server) handleStats(w http.ResponseWriter, r *http.Request) {
 		"Stats": st,
 	})
 }
+
+func (s *Server) handleAbout(w http.ResponseWriter, r *http.Request) {
+	s.render(w, http.StatusOK, "about", map[string]any{"Title": "About"})
+}

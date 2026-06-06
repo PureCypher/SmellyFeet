@@ -87,6 +87,7 @@ func (s *Server) Routes() http.Handler {
 	mux.HandleFunc("GET /{$}", s.handleList)
 	mux.HandleFunc("GET /article/{id}", s.handleArticle)
 	mux.HandleFunc("GET /stats", s.handleStats)
+	mux.HandleFunc("GET /about", s.handleAbout)
 	return mux
 }
 

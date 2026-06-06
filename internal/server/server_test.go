@@ -214,3 +214,19 @@ func TestCleanContent(t *testing.T) {
 		t.Fatalf("single line changed: %q", got)
 	}
 }
+
+func TestAboutPage(t *testing.T) {
+	h := newTestServer(t, stubService{})
+	req := httptest.NewRequest(http.MethodGet, "/about", nil)
+	rec := httptest.NewRecorder()
+	h.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, want 200", rec.Code)
+	}
+	body := rec.Body.String()
+	for _, want := range []string{"SmellyFeet", "Information Broker", "How it works"} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("about page missing %q", want)
+		}
+	}
+}
