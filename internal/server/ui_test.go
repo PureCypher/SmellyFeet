@@ -24,8 +24,8 @@ func TestListCardShowsPillBadgeAndRelTime(t *testing.T) {
 	body := getPath(t, newTestServer(t, svc), "/").Body.String()
 
 	for _, want := range []string{
-		">brighttalk.com</span>",
-		`title="https://www.brighttalk.com/channel/7451/feed/rss"`,
+		">brighttalk.com</a>",
+		`title="Filter by brighttalk.com"`,
 		">CVE-2026-14615</span>",
 		"2h ago",
 		"brighttalk.com (12)",
@@ -49,7 +49,7 @@ func TestArticlePageSingleURLAndPill(t *testing.T) {
 	if n := strings.Count(body, "https://example.com/original-report"); n != 1 {
 		t.Errorf("original URL appears %d times, want exactly 1 (href only)", n)
 	}
-	if !strings.Contains(body, ">feeds.feedburner.com</span>") {
+	if !strings.Contains(body, ">feeds.feedburner.com</a>") {
 		t.Error("article page missing source pill")
 	}
 }
