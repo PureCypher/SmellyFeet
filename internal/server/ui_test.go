@@ -1,12 +1,15 @@
 package server
 
 import (
+	"errors"
 	"strings"
 	"testing"
 	"time"
 
 	"smellyfeet/internal/apiclient"
 )
+
+var errBoom = errors.New("boom")
 
 func TestListCardShowsPillBadgeAndRelTime(t *testing.T) {
 	sum := "A keycloak bypass."
@@ -48,5 +51,32 @@ func TestArticlePageSingleURLAndPill(t *testing.T) {
 	}
 	if !strings.Contains(body, ">feeds.feedburner.com</span>") {
 		t.Error("article page missing source pill")
+	}
+}
+
+func TestStatsShowsTopSources(t *testing.T) {
+	svc := stubService{feeds: []apiclient.Feed{
+		{FeedURL: "https://small.example.com/rss", ArticleCount: 10},
+		{FeedURL: "https://big.example.com/rss", ArticleCount: 200},
+	}}
+	body := getPath(t, newTestServer(t, svc), "/stats").Body.String()
+	if !strings.Contains(body, "top sources") {
+		t.Fatal("stats missing top-sources section")
+	}
+	if !strings.Contains(body, "bar-100") {
+		t.Error("largest source should render bar-100")
+	}
+	i := strings.Index(body, "big.example.com")
+	j := strings.Index(body, "small.example.com")
+	if i == -1 || j == -1 || i > j {
+		t.Errorf("sources not sorted descending (big at %d, small at %d)", i, j)
+	}
+}
+
+func TestStatsOmitsSourcesOnFeedError(t *testing.T) {
+	svc := stubService{feedsErr: errBoom}
+	body := getPath(t, newTestServer(t, svc), "/stats").Body.String()
+	if strings.Contains(body, "top sources") {
+		t.Error("top-sources section should be omitted when ListFeeds fails")
 	}
 }

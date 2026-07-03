@@ -2,7 +2,9 @@ package server
 
 import (
 	"errors"
+	"math"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -53,6 +55,37 @@ type listView struct {
 	Page      int
 	HasPrev   bool
 	HasNext   bool
+}
+
+// sourceBar is one row of the stats top-sources chart. Bar is a quantized
+// width step (5..100 in steps of 5) rendered as a static bar-N CSS class,
+// because CSP style-src 'self' forbids inline style widths.
+type sourceBar struct {
+	Name  string
+	Count int
+	Bar   int
+}
+
+const topSourcesMax = 15
+
+func topSources(feeds []apiclient.Feed) []sourceBar {
+	sort.Slice(feeds, func(i, j int) bool { return feeds[i].ArticleCount > feeds[j].ArticleCount })
+	if len(feeds) > topSourcesMax {
+		feeds = feeds[:topSourcesMax]
+	}
+	if len(feeds) == 0 || feeds[0].ArticleCount == 0 {
+		return nil
+	}
+	max := float64(feeds[0].ArticleCount)
+	out := make([]sourceBar, 0, len(feeds))
+	for _, f := range feeds {
+		bar := int(math.Round(float64(f.ArticleCount)/max*20)) * 5
+		if bar < 5 {
+			bar = 5
+		}
+		out = append(out, sourceBar{Name: sourceName(f.FeedURL), Count: f.ArticleCount, Bar: bar})
+	}
+	return out
 }
 
 // trimDesc collapses whitespace and truncates to n runes for meta descriptions.
@@ -145,11 +178,16 @@ func (s *Server) handleStats(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	setCache(w, cacheStats)
+	var sources []sourceBar
+	if feeds, err := s.svc.ListFeeds(r.Context()); err == nil {
+		sources = topSources(feeds)
+	} // non-fatal: section simply omitted
 
+	setCache(w, cacheStats)
 	s.render(w, http.StatusOK, "stats", map[string]any{
-		"Title": "Statistics",
-		"Stats": st,
+		"Title":   "Statistics",
+		"Stats":   st,
+		"Sources": sources,
 	})
 }
 

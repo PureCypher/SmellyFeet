@@ -15,8 +15,22 @@
   </div>
   <div class="bg-ink-900 border border-line rounded-xl p-6 hover:border-accent/40 transition-colors">
     <div class="font-mono text-[10px] uppercase tracking-widest text-fog">Last fetch</div>
-    <div class="font-mono text-lg font-medium text-zinc-100 mt-3">{{ if .LastFetch }}{{ .LastFetch | formatDate }}{{ else }}—{{ end }}</div>
+    <div class="font-mono text-lg font-medium text-zinc-100 mt-3" title="{{ .LastFetch | formatDate }}">{{ if .LastFetch }}{{ .LastFetch | relTime }}{{ else }}—{{ end }}</div>
   </div>
 </div>
+{{ end }}
+{{ if .Sources }}
+<section class="mt-10">
+  <p class="font-mono text-[11px] uppercase tracking-[0.25em] text-accent/80 mb-4">// top sources</p>
+  <ul class="space-y-2">
+    {{ range .Sources }}
+    <li class="flex items-center gap-3 font-mono text-xs">
+      <span class="w-40 md:w-56 truncate text-zinc-300">{{ .Name }}</span>
+      <span class="flex-1 h-2 rounded bg-ink-800 overflow-hidden"><span class="block h-full rounded bg-accent/70 bar-{{ .Bar }}"></span></span>
+      <span class="w-14 text-right text-fog">{{ .Count }}</span>
+    </li>
+    {{ end }}
+  </ul>
+</section>
 {{ end }}
 {{ template "footer" . }}{{ end }}
