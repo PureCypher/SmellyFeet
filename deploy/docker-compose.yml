@@ -13,6 +13,8 @@ services:
   cloudflared:
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
-    command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN}   # read by cloudflared; kept out of argv so it never shows in ps
+    command: tunnel --no-autoupdate run
     depends_on:
       - smellyfeet
