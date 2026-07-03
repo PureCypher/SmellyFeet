@@ -93,7 +93,8 @@ New `deploy/` directory:
     `tunnel run --token ${TUNNEL_TOKEN}`; shares the compose network and proxies the
     public hostname to `http://smellyfeet:3000`. No router port forwarding; the origin
     is unreachable from the internet except through Cloudflare.
-- `.env.example` gains `TUNNEL_TOKEN=`.
+- `deploy/.env.example` with `TUNNEL_TOKEN=` and `API_BASE_URL=` (compose reads `.env`
+  from its project directory; the root `.env.example` stays app-only).
 - `deploy/README.md`: dashboard steps (Zero Trust → Networks → Tunnels → create
   "smellyfeet" tunnel → copy token → public hostname `smellyfeet.<domain>` →
   `http://smellyfeet:3000`), the HTML cache rule, and the on-host commands
