@@ -4,64 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ .Title }} · Information Broker</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = { theme: { extend: {
-      colors: {
-        ink:  { 950:'#0a0a0c', 900:'#0f0f13', 850:'#15151b', 800:'#1c1c24', 700:'#26262f' },
-        line: '#26262f',
-        fog:  '#8b8b97',
-        accent: { DEFAULT:'#f5b13d', bright:'#ffc964', dim:'#c08a33' },
-      },
-      fontFamily: {
-        sans: ['"IBM Plex Sans"','ui-sans-serif','system-ui','sans-serif'],
-        mono: ['"IBM Plex Mono"','ui-monospace','SFMono-Regular','monospace'],
-      },
-    } } }
-  </script>
-  <style>
-    html { color-scheme: dark; }
-    body {
-      background-color: #0a0a0c;
-      background-image:
-        radial-gradient(1100px 520px at 50% -8%, rgba(245,177,61,0.08), transparent 62%),
-        linear-gradient(180deg, #0c0c10 0%, #0a0a0c 55%);
-      background-attachment: fixed;
-    }
-    body::before {
-      content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
-      background-size: 46px 46px;
-      -webkit-mask-image: radial-gradient(circle at 50% 0%, #000 0%, transparent 78%);
-              mask-image: radial-gradient(circle at 50% 0%, #000 0%, transparent 78%);
-    }
-    header, main, footer { position: relative; z-index: 1; }
-    ::selection { background: rgba(245,177,61,0.32); color: #fff; }
-    ::-webkit-scrollbar { width: 11px; height: 11px; }
-    ::-webkit-scrollbar-track { background: #0a0a0c; }
-    ::-webkit-scrollbar-thumb { background: #2a2a33; border-radius: 8px; border: 2px solid #0a0a0c; }
-    ::-webkit-scrollbar-thumb:hover { background: #3a3a46; }
-
-    /* Full-text typography (replaces the unavailable Tailwind prose plugin) */
-    .article-body {
-      white-space: pre-line;
-      font-size: 0.94rem;
-      line-height: 1.85;
-      color: #c4c7d0;
-      max-width: 72ch;
-      word-break: break-word;
-    }
-    .article-body a { color: #f5b13d; text-decoration: underline; text-underline-offset: 2px; }
-
-    @keyframes riseIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-    .reveal { opacity: 0; animation: riseIn .5s cubic-bezier(.21,.7,.2,1) forwards; }
-    @media (prefers-reduced-motion: reduce) { .reveal { animation: none; opacity: 1; } }
-  </style>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="stylesheet" href="/static/app.css?v={{ assetHash }}">
 </head>
 <body class="text-zinc-200 font-sans min-h-screen antialiased">
   <header class="sticky top-0 z-20 border-b border-line/70 bg-ink-950/80 backdrop-blur supports-[backdrop-filter]:bg-ink-950/55">

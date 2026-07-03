@@ -4,7 +4,9 @@ package server
 import (
 	"bytes"
 	"context"
+	"crypto/sha256"
 	"embed"
+	"encoding/hex"
 	"html/template"
 	"log"
 	"net/http"
@@ -16,6 +18,20 @@ import (
 
 //go:embed templates/*.html
 var templatesFS embed.FS
+
+//go:embed static
+var staticFS embed.FS
+
+// assetHash is a short content hash of app.css, used to bust Cloudflare's
+// immutable /static/ cache when the stylesheet changes.
+var assetHash = func() string {
+	b, err := staticFS.ReadFile("static/app.css")
+	if err != nil {
+		return "dev"
+	}
+	sum := sha256.Sum256(b)
+	return hex.EncodeToString(sum[:4])
+}()
 
 // ArticleService is the subset of the API the handlers need.
 type ArticleService interface {
@@ -37,7 +53,7 @@ var funcMap = template.FuncMap{
 	"cleanContent": cleanContent,
 	"inc":          func(n int) int { return n + 1 },
 	"dec":          func(n int) int { return n - 1 },
-	"mul":          func(a, b int) int { return a * b },
+	"assetHash":    func() string { return assetHash },
 }
 
 // formatDate renders a time value for display, returning "—" for a nil or zero time.
@@ -88,6 +104,16 @@ func (s *Server) Routes() http.Handler {
 	mux.HandleFunc("GET /article/{id}", s.handleArticle)
 	mux.HandleFunc("GET /stats", s.handleStats)
 	mux.HandleFunc("GET /about", s.handleAbout)
+
+	staticSrv := http.FileServerFS(staticFS)
+	mux.Handle("GET /static/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasSuffix(r.URL.Path, "/") { // no directory listings
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+		staticSrv.ServeHTTP(w, r)
+	}))
 	return mux
 }
 

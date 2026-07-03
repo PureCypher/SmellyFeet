@@ -29,8 +29,8 @@
 {{ end }}
 
 <ul class="space-y-3">
-  {{ range $i, $a := .Articles }}
-  <li class="reveal" style="animation-delay:{{ mul $i 35 }}ms">
+  {{ range $a := .Articles }}
+  <li class="reveal">
     <a href="/article/{{ $a.ID }}" class="block group relative overflow-hidden bg-ink-900 border border-line rounded-xl p-5 hover:border-accent/50 hover:bg-ink-850 transition-colors">
       <span class="absolute left-0 top-0 h-full w-[2px] bg-accent origin-top scale-y-0 group-hover:scale-y-100 transition-transform duration-300"></span>
       <div class="flex items-center justify-between font-mono text-[11px] mb-2 gap-3">
