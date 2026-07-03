@@ -120,6 +120,7 @@ func (s *Server) Routes() http.Handler {
 	mux.HandleFunc("GET /article/{id}", s.handleArticle)
 	mux.HandleFunc("GET /stats", s.handleStats)
 	mux.HandleFunc("GET /about", s.handleAbout)
+	mux.HandleFunc("GET /feed.xml", s.handleFeed)
 	mux.HandleFunc("GET /robots.txt", func(w http.ResponseWriter, r *http.Request) {
 		setCache(w, cacheAbout)
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
