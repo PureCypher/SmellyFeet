@@ -35,6 +35,7 @@ func parsePage(s string) int {
 }
 
 func (s *Server) handleHealthz(w http.ResponseWriter, r *http.Request) {
+	setCache(w, cacheNone)
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte("ok"))
 }
@@ -67,6 +68,8 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	setCache(w, cacheList)
+
 	feeds, err := s.svc.ListFeeds(ctx)
 	if err != nil {
 		feeds = nil // non-fatal: filter dropdown simply shows "All feeds"
@@ -88,12 +91,14 @@ func (s *Server) handleArticle(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil || id <= 0 {
+		setCache(w, cacheNone)
 		s.render(w, http.StatusNotFound, "notfound", map[string]any{"Title": "Not Found"})
 		return
 	}
 
 	a, err := s.svc.GetArticle(r.Context(), id)
 	if errors.Is(err, apiclient.ErrNotFound) {
+		setCache(w, cacheNone)
 		s.render(w, http.StatusNotFound, "notfound", map[string]any{"Title": "Not Found"})
 		return
 	}
@@ -101,6 +106,8 @@ func (s *Server) handleArticle(w http.ResponseWriter, r *http.Request) {
 		s.renderError(w, err)
 		return
 	}
+
+	setCache(w, cacheArticle)
 
 	s.render(w, http.StatusOK, "article", map[string]any{
 		"Title":   a.Title,
@@ -114,6 +121,9 @@ func (s *Server) handleStats(w http.ResponseWriter, r *http.Request) {
 		s.renderError(w, err)
 		return
 	}
+
+	setCache(w, cacheStats)
+
 	s.render(w, http.StatusOK, "stats", map[string]any{
 		"Title": "Statistics",
 		"Stats": st,
@@ -121,5 +131,6 @@ func (s *Server) handleStats(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleAbout(w http.ResponseWriter, r *http.Request) {
+	setCache(w, cacheAbout)
 	s.render(w, http.StatusOK, "about", map[string]any{"Title": "About"})
 }

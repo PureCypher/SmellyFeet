@@ -33,6 +33,20 @@ var assetHash = func() string {
 	return hex.EncodeToString(sum[:4])
 }()
 
+// Cache-Control values; Cloudflare's edge honors s-maxage once the HTML
+// cache rule from deploy/README.md is enabled.
+const (
+	cacheList    = "public, max-age=60, s-maxage=120, stale-while-revalidate=300"
+	cacheArticle = "public, max-age=300, s-maxage=3600"
+	cacheStats   = "public, max-age=30, s-maxage=60"
+	cacheAbout   = "public, max-age=3600, s-maxage=86400"
+	cacheFeed    = "public, max-age=300, s-maxage=300"
+	cacheStatic  = "public, max-age=31536000, immutable"
+	cacheNone    = "no-store"
+)
+
+func setCache(w http.ResponseWriter, v string) { w.Header().Set("Cache-Control", v) }
+
 // ArticleService is the subset of the API the handlers need.
 type ArticleService interface {
 	ListArticles(ctx context.Context, p apiclient.ListParams) (apiclient.ListResult, error)
@@ -111,7 +125,7 @@ func (s *Server) Routes() http.Handler {
 			http.NotFound(w, r)
 			return
 		}
-		w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+		setCache(w, cacheStatic)
 		staticSrv.ServeHTTP(w, r)
 	}))
 	return withRequestLog(withSecurityHeaders(mux))
@@ -130,6 +144,7 @@ func (s *Server) render(w http.ResponseWriter, status int, name string, data any
 }
 
 func (s *Server) renderError(w http.ResponseWriter, err error) {
+	setCache(w, cacheNone)
 	log.Printf("handler error: %v", err)
 	s.render(w, http.StatusBadGateway, "error", map[string]any{
 		"Title":   "Error",
