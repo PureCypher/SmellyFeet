@@ -31,12 +31,24 @@ go run .
 
 Then open http://localhost:3000.
 
+Styling is a pre-built, committed CSS file. If you change templates or the theme,
+regenerate it with `./scripts/build-css.sh` (downloads the Tailwind standalone CLI
+on first run).
+
 ## Configuration
 
 | Variable       | Default                  | Description                          |
 |----------------|--------------------------|--------------------------------------|
 | `API_BASE_URL` | `http://localhost:8080`  | Base URL of the Information-Broker API |
 | `PORT`         | `3000`                   | Port the frontend listens on         |
+
+## Public deployment
+
+The site is designed to be exposed through a Cloudflare Tunnel — see
+[deploy/README.md](deploy/README.md). The app sends per-route `Cache-Control`
+headers (articles cache at the edge for an hour), strict security headers, and
+serves everything — CSS, fonts, favicon — from the binary with zero JavaScript
+and zero third-party requests. An Atom feed is available at `/feed.xml`.
 
 ## Architecture
 
