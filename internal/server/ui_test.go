@@ -31,7 +31,7 @@ func TestListCardShowsPillBadgeAndRelTime(t *testing.T) {
 			t.Errorf("list page missing %q", want)
 		}
 	}
-	if strings.Contains(body, "READ FULL ARTICLE") {
+	if strings.Contains(body, "Read full article") {
 		t.Error("redundant card CTA still present")
 	}
 }
