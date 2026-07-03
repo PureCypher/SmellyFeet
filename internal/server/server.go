@@ -114,7 +114,7 @@ func (s *Server) Routes() http.Handler {
 		w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
 		staticSrv.ServeHTTP(w, r)
 	}))
-	return mux
+	return withRequestLog(withSecurityHeaders(mux))
 }
 
 func (s *Server) render(w http.ResponseWriter, status int, name string, data any) {
