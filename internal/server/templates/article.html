@@ -2,10 +2,9 @@
 <a href="/" class="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-fog hover:text-accent transition-colors mb-6">← Back to feed</a>
 {{ with .Article }}
 <article class="bg-ink-900 border border-line rounded-2xl p-7 md:p-9">
-  <div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] text-fog mb-4">
-    <span class="text-accent-dim break-all">{{ .FeedURL }}</span>
-    <span class="text-zinc-700">•</span>
-    <span>{{ .PublishedAt | formatDate }}</span>
+  <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-[11px] text-fog mb-4">
+    <span class="rounded border border-line bg-ink-950 px-2 py-0.5 text-accent-dim" title="{{ .FeedURL }}">{{ sourceName .FeedURL }}</span>
+    <time datetime="{{ .PublishedAt.Format "2006-01-02T15:04:05Z07:00" }}" title="{{ .PublishedAt | formatDate }}">{{ .PublishedAt | relTime }}</time>
   </div>
   <h1 class="text-2xl md:text-[1.95rem] font-bold text-zinc-50 leading-tight tracking-tight">{{ .Title }}</h1>
 
@@ -23,7 +22,6 @@
   <div class="mt-8 pt-5 border-t border-line flex flex-wrap items-center gap-4">
     <a href="{{ .URL }}" target="_blank" rel="noopener noreferrer"
       class="inline-flex items-center gap-2 rounded-lg bg-accent text-ink-950 font-semibold px-5 py-2.5 text-sm hover:bg-accent-bright transition-colors">Read original <span aria-hidden="true">↗</span></a>
-    <p class="font-mono text-[11px] text-zinc-600 break-all">{{ .URL }}</p>
   </div>
 </article>
 {{ end }}

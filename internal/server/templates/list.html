@@ -15,7 +15,7 @@
     <select id="feed" name="feed" class="rounded-lg bg-ink-950 border border-line px-3 py-2 text-sm text-zinc-100 max-w-[16rem] focus:outline-none focus:border-accent transition-colors">
       <option value="">All sources</option>
       {{ range .Feeds }}
-      <option value="{{ .FeedURL }}" {{ if eq .FeedURL $.Feed }}selected{{ end }}>{{ .FeedURL }} ({{ .ArticleCount }})</option>
+      <option value="{{ .FeedURL }}" {{ if eq .FeedURL $.Feed }}selected{{ end }}>{{ sourceName .FeedURL }} ({{ .ArticleCount }})</option>
       {{ end }}
     </select>
   </div>
@@ -33,15 +33,18 @@
   <li class="reveal">
     <a href="/article/{{ $a.ID }}" class="block group relative overflow-hidden bg-ink-900 border border-line rounded-xl p-5 hover:border-accent/50 hover:bg-ink-850 transition-colors">
       <span class="absolute left-0 top-0 h-full w-[2px] bg-accent origin-top scale-y-0 group-hover:scale-y-100 transition-transform duration-300"></span>
-      <div class="flex items-center justify-between font-mono text-[11px] mb-2 gap-3">
-        <span class="truncate text-accent-dim">{{ $a.FeedURL }}</span>
-        <span class="shrink-0 text-fog">{{ $a.PublishedAt | formatDate }}</span>
+      <div class="flex items-center justify-between font-mono text-[11px] mb-2 gap-3 [overflow-wrap:anywhere]">
+        <span class="flex items-center gap-2 min-w-0">
+          <span class="truncate rounded border border-line bg-ink-950 px-2 py-0.5 text-accent-dim" title="{{ $a.FeedURL }}">{{ sourceName $a.FeedURL }}</span>
+          {{ with cveID $a.Title }}<span class="shrink-0 rounded border border-accent/40 bg-accent/10 px-2 py-0.5 text-accent">{{ . }}</span>{{ end }}
+        </span>
+        <time class="shrink-0 text-fog" datetime="{{ $a.PublishedAt.Format "2006-01-02T15:04:05Z07:00" }}" title="{{ $a.PublishedAt | formatDate }}">{{ $a.PublishedAt | relTime }}</time>
       </div>
       <h2 class="text-lg font-semibold text-zinc-100 leading-snug group-hover:text-accent transition-colors">{{ $a.Title }}</h2>
       <p class="mt-2 text-sm text-zinc-400 leading-relaxed line-clamp-3">
         {{ if $a.Summary }}{{ $a.Summary }}{{ else }}<span class="text-zinc-600 italic">No summary available.</span>{{ end }}
       </p>
-      <span class="inline-flex items-center gap-1.5 mt-3 font-mono text-[11px] uppercase tracking-widest text-accent group-hover:gap-2.5 transition-all">Read full article <span aria-hidden="true">→</span></span>
+      <span aria-hidden="true" class="absolute right-5 bottom-4 font-mono text-accent opacity-0 group-hover:opacity-100 transition-opacity">→</span>
     </a>
   </li>
   {{ end }}
