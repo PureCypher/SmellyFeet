@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Self-hosted IBM Plex (latin subset). Paths relative to /static/app.css. */
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/ibm-plex-sans-400.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/ibm-plex-sans-500.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/ibm-plex-sans-600.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/ibm-plex-sans-700.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/ibm-plex-mono-400.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/ibm-plex-mono-600.woff2") format("woff2"); }
+
+html { color-scheme: dark; }
+body {
+  background-color: #0a0a0c;
+  background-image:
+    radial-gradient(1100px 520px at 50% -8%, rgba(245,177,61,0.08), transparent 62%),
+    linear-gradient(180deg, #0c0c10 0%, #0a0a0c 55%);
+  background-attachment: fixed;
+}
+body::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+  background-size: 46px 46px;
+  -webkit-mask-image: radial-gradient(circle at 50% 0%, #000 0%, transparent 78%);
+          mask-image: radial-gradient(circle at 50% 0%, #000 0%, transparent 78%);
+}
+header, main, footer { position: relative; z-index: 1; }
+::selection { background: rgba(245,177,61,0.32); color: #fff; }
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: #0a0a0c; }
+::-webkit-scrollbar-thumb { background: #2a2a33; border-radius: 8px; border: 2px solid #0a0a0c; }
+::-webkit-scrollbar-thumb:hover { background: #3a3a46; }
+
+/* Full-text typography (replaces the unavailable Tailwind prose plugin) */
+.article-body {
+  white-space: pre-line;
+  font-size: 0.94rem;
+  line-height: 1.85;
+  color: #c4c7d0;
+  max-width: 72ch;
+  word-break: break-word;
+}
+.article-body a { color: #f5b13d; text-decoration: underline; text-underline-offset: 2px; }
+
+@keyframes riseIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.reveal { opacity: 0; animation: riseIn .5s cubic-bezier(.21,.7,.2,1) forwards; }
+@media (prefers-reduced-motion: reduce) { .reveal { animation: none; opacity: 1; } }
+
+/* Staggered reveal without inline styles (CSP style-src 'self'); list page size is 20. */
+.reveal:nth-child(2)  { animation-delay: 35ms; }
+.reveal:nth-child(3)  { animation-delay: 70ms; }
+.reveal:nth-child(4)  { animation-delay: 105ms; }
+.reveal:nth-child(5)  { animation-delay: 140ms; }
+.reveal:nth-child(6)  { animation-delay: 175ms; }
+.reveal:nth-child(7)  { animation-delay: 210ms; }
+.reveal:nth-child(8)  { animation-delay: 245ms; }
+.reveal:nth-child(9)  { animation-delay: 280ms; }
+.reveal:nth-child(10) { animation-delay: 315ms; }
+.reveal:nth-child(11) { animation-delay: 350ms; }
+.reveal:nth-child(12) { animation-delay: 385ms; }
+.reveal:nth-child(13) { animation-delay: 420ms; }
+.reveal:nth-child(14) { animation-delay: 455ms; }
+.reveal:nth-child(15) { animation-delay: 490ms; }
+.reveal:nth-child(16) { animation-delay: 525ms; }
+.reveal:nth-child(17) { animation-delay: 560ms; }
+.reveal:nth-child(18) { animation-delay: 595ms; }
+.reveal:nth-child(19) { animation-delay: 630ms; }
+.reveal:nth-child(20) { animation-delay: 665ms; }
