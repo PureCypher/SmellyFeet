@@ -24,6 +24,7 @@ func TestCacheControlPerRoute(t *testing.T) {
 		{"/static/app.css", "public, max-age=31536000, immutable"},
 		{"/healthz", "no-store"},
 		{"/article/notanumber", "no-store"},
+		{"/article/7", "public, max-age=300, s-maxage=3600"},
 	}
 	for _, tt := range tests {
 		if got := getPath(t, h, tt.path).Header().Get("Cache-Control"); got != tt.want {
@@ -40,5 +41,32 @@ func TestUpstreamErrorIsNeverCached(t *testing.T) {
 	}
 	if got := rec.Header().Get("Cache-Control"); got != "no-store" {
 		t.Fatalf("error Cache-Control = %q, want no-store", got)
+	}
+}
+
+func TestStaticMissingFileIsNoStore(t *testing.T) {
+	h := newTestServer(t, stubService{})
+	rec := getPath(t, h, "/static/does-not-exist.css")
+	if rec.Code != http.StatusNotFound {
+		t.Fatalf("status = %d, want 404", rec.Code)
+	}
+	if got := rec.Header().Get("Cache-Control"); got != "no-store" {
+		t.Fatalf("static 404 Cache-Control = %q, want no-store", got)
+	}
+}
+
+func TestRenderTemplateFailureIsNoStore(t *testing.T) {
+	srv, err := New(stubService{})
+	if err != nil {
+		t.Fatalf("New: %v", err)
+	}
+	rec := httptest.NewRecorder()
+	setCache(rec, cacheArticle) // simulate a handler that already chose a success cache policy
+	srv.render(rec, http.StatusOK, "no-such-template", nil)
+	if rec.Code != http.StatusInternalServerError {
+		t.Fatalf("status = %d, want 500", rec.Code)
+	}
+	if got := rec.Header().Get("Cache-Control"); got != "no-store" {
+		t.Fatalf("template-failure Cache-Control = %q, want no-store", got)
 	}
 }

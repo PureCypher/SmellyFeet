@@ -8,6 +8,7 @@ import (
 	"embed"
 	"encoding/hex"
 	"html/template"
+	"io/fs"
 	"log"
 	"net/http"
 	"regexp"
@@ -121,7 +122,9 @@ func (s *Server) Routes() http.Handler {
 
 	staticSrv := http.FileServerFS(staticFS)
 	mux.Handle("GET /static/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if strings.HasSuffix(r.URL.Path, "/") { // no directory listings
+		path := strings.TrimPrefix(r.URL.Path, "/")
+		if strings.HasSuffix(r.URL.Path, "/") || !staticFileExists(path) { // no directory listings, no cached 404s
+			setCache(w, cacheNone)
 			http.NotFound(w, r)
 			return
 		}
@@ -131,10 +134,17 @@ func (s *Server) Routes() http.Handler {
 	return withRequestLog(withSecurityHeaders(mux))
 }
 
+// staticFileExists reports whether path is a regular file in the embedded FS.
+func staticFileExists(path string) bool {
+	info, err := fs.Stat(staticFS, path)
+	return err == nil && !info.IsDir()
+}
+
 func (s *Server) render(w http.ResponseWriter, status int, name string, data any) {
 	var buf bytes.Buffer
 	if err := s.tmpl.ExecuteTemplate(&buf, name, data); err != nil {
 		log.Printf("template error (%s): %v", name, err)
+		setCache(w, cacheNone)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
