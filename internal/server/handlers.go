@@ -44,6 +44,7 @@ func (s *Server) handleHealthz(w http.ResponseWriter, r *http.Request) {
 type listView struct {
 	Title     string
 	Desc      string
+	OG        bool
 	OGArticle bool
 	Articles  []apiclient.Article
 	Feeds     []apiclient.Feed
@@ -91,6 +92,7 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 	s.render(w, http.StatusOK, "list", listView{
 		Title:    "Articles",
 		Desc:     "AI-summarized cybersecurity intelligence — the latest articles from monitored threat feeds.",
+		OG:       true,
 		Articles: res.Articles,
 		Feeds:    feeds,
 		Q:        q,
@@ -131,6 +133,7 @@ func (s *Server) handleArticle(w http.ResponseWriter, r *http.Request) {
 		"Title":     a.Title,
 		"Article":   a,
 		"Desc":      desc,
+		"OG":        true,
 		"OGArticle": true,
 	})
 }

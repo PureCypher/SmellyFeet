@@ -44,6 +44,17 @@ func TestListPageHasDescriptionAndStatsDoesNot(t *testing.T) {
 	}
 }
 
+func TestArticleWithoutSummaryStillHasOGTitle(t *testing.T) {
+	h := newTestServer(t, stubService{article: apiclient.Article{ID: 9, Title: "No summary article"}})
+	body := getPath(t, h, "/article/9").Body.String()
+	if !strings.Contains(body, `property="og:title" content="No summary article"`) {
+		t.Error("article without summary missing og:title")
+	}
+	if strings.Contains(body, `property="og:description"`) {
+		t.Error("article without summary should not emit og:description")
+	}
+}
+
 func TestTrimDesc(t *testing.T) {
 	tests := []struct {
 		name, in string

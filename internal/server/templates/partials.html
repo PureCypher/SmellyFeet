@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ .Title }} · Information Broker</title>
-  {{ if .Desc }}<meta name="description" content="{{ .Desc }}">
-  <meta property="og:site_name" content="Information Broker">
+  {{ if .OG }}<meta property="og:site_name" content="Information Broker">
   <meta property="og:title" content="{{ .Title }}">
   <meta property="og:type" content="{{ if .OGArticle }}article{{ else }}website{{ end }}">
-  <meta property="og:description" content="{{ .Desc }}">{{ end }}
+  {{ if .Desc }}<meta name="description" content="{{ .Desc }}">
+  <meta property="og:description" content="{{ .Desc }}">{{ end }}{{ end }}
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
   <link rel="stylesheet" href="/static/app.css?v={{ assetHash }}">
 </head>
