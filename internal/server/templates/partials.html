@@ -15,15 +15,15 @@
 </head>
 <body class="text-zinc-200 font-sans min-h-screen antialiased">
   <header class="sticky top-0 z-20 border-b border-line/70 bg-ink-950/80 backdrop-blur supports-[backdrop-filter]:bg-ink-950/55">
-    <div class="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
+    <div class="max-w-5xl mx-auto px-4 sm:px-5 min-h-16 py-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
       <a href="/" class="flex items-center gap-2.5">
         <span class="inline-block h-2 w-2 rounded-full bg-accent shadow-[0_0_12px_rgba(245,177,61,0.75)]"></span>
-        <span class="font-mono text-sm tracking-[0.22em] text-zinc-100 uppercase">information<span class="text-accent">_</span>broker</span>
+        <span class="font-mono text-xs sm:text-sm tracking-[0.14em] sm:tracking-[0.22em] text-zinc-100 uppercase">information<span class="text-accent">_</span>broker</span>
       </a>
-      <nav class="flex items-center gap-1 font-mono text-xs uppercase tracking-[0.18em]">
-        <a href="/" class="px-3 py-1.5 rounded-md text-fog hover:text-accent hover:bg-ink-800 transition-colors">Feed</a>
-        <a href="/stats" class="px-3 py-1.5 rounded-md text-fog hover:text-accent hover:bg-ink-800 transition-colors">Stats</a>
-        <a href="/about" class="px-3 py-1.5 rounded-md text-fog hover:text-accent hover:bg-ink-800 transition-colors">About</a>
+      <nav class="flex items-center gap-0.5 sm:gap-1 font-mono text-[10px] sm:text-xs uppercase tracking-[0.12em] sm:tracking-[0.18em]">
+        <a href="/" class="px-2 sm:px-3 py-1.5 rounded-md text-fog hover:text-accent hover:bg-ink-800 transition-colors">Feed</a>
+        <a href="/stats" class="px-2 sm:px-3 py-1.5 rounded-md text-fog hover:text-accent hover:bg-ink-800 transition-colors">Stats</a>
+        <a href="/about" class="px-2 sm:px-3 py-1.5 rounded-md text-fog hover:text-accent hover:bg-ink-800 transition-colors">About</a>
       </nav>
     </div>
   </header>
@@ -33,7 +33,10 @@
 {{ define "footer" }}
   </main>
   <footer class="max-w-5xl mx-auto px-5 py-10 mt-6 border-t border-line/50">
-    <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-600">Information Broker · threat intelligence feed</p>
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-600">Information Broker · threat intelligence feed</p>
+      <a href="/feed.xml" class="font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-600 hover:text-accent transition-colors">Atom feed</a>
+    </div>
   </footer>
 </body>
 </html>
