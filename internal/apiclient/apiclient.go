@@ -55,6 +55,7 @@ type ListParams struct {
 	Offset int
 	Feed   string
 	Q      string
+	Sort   string // "" = newest first (default), "oldest" = ascending
 }
 
 // Client calls the Information-Broker API.
@@ -108,6 +109,9 @@ func (c *Client) ListArticles(ctx context.Context, p ListParams) (ListResult, er
 	}
 	if p.Q != "" {
 		v.Set("q", p.Q)
+	}
+	if p.Sort == "oldest" {
+		v.Set("sort", p.Sort)
 	}
 	var res ListResult
 	err := c.getJSON(ctx, "/articles?"+v.Encode(), &res)

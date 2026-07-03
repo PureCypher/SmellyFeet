@@ -37,6 +37,19 @@ func parsePage(s string) int {
 	return n
 }
 
+// splitUpcoming partitions future-dated articles (upcoming webinars/events)
+// from the current stream, preserving order within each group.
+func splitUpcoming(articles []apiclient.Article, now time.Time) (upcoming, current []apiclient.Article) {
+	for _, a := range articles {
+		if a.PublishedAt.After(now) {
+			upcoming = append(upcoming, a)
+		} else {
+			current = append(current, a)
+		}
+	}
+	return upcoming, current
+}
+
 func (s *Server) handleHealthz(w http.ResponseWriter, r *http.Request) {
 	setCache(w, cacheNone)
 	w.WriteHeader(http.StatusOK)
@@ -49,9 +62,11 @@ type listView struct {
 	OG        bool
 	OGArticle bool
 	Articles  []apiclient.Article
+	Upcoming  []apiclient.Article
 	Feeds     []apiclient.Feed
 	Q         string
 	Feed      string
+	Sort      string
 	Page      int
 	HasPrev   bool
 	HasNext   bool
@@ -103,33 +118,45 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 	page := parsePage(r.URL.Query().Get("page"))
 	q := r.URL.Query().Get("q")
 	feed := r.URL.Query().Get("feed")
+	sort := r.URL.Query().Get("sort")
+	if sort != "oldest" {
+		sort = "" // whitelist: only "oldest" changes the order
+	}
 
 	res, err := s.svc.ListArticles(ctx, apiclient.ListParams{
 		Limit:  s.pageSize,
 		Offset: (page - 1) * s.pageSize,
 		Feed:   feed,
 		Q:      q,
+		Sort:   sort,
 	})
 	if err != nil {
 		s.renderError(w, err)
 		return
 	}
 
-	setCache(w, cacheList)
-
 	feeds, err := s.svc.ListFeeds(ctx)
 	if err != nil {
 		feeds = nil // non-fatal: filter dropdown simply shows "All feeds"
 	}
 
+	var upcoming []apiclient.Article
+	current := res.Articles
+	if sort == "" && page == 1 {
+		upcoming, current = splitUpcoming(res.Articles, time.Now())
+	}
+
+	setCache(w, cacheList)
 	s.render(w, http.StatusOK, "list", listView{
 		Title:    "Articles",
 		Desc:     "AI-summarized cybersecurity intelligence — the latest articles from monitored threat feeds.",
 		OG:       true,
-		Articles: res.Articles,
+		Articles: current,
+		Upcoming: upcoming,
 		Feeds:    feeds,
 		Q:        q,
 		Feed:     feed,
+		Sort:     sort,
 		Page:     page,
 		HasPrev:  page > 1,
 		HasNext:  len(res.Articles) == s.pageSize,

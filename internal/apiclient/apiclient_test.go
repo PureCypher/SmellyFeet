@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -94,6 +95,30 @@ func TestListFeeds(t *testing.T) {
 	}
 	if len(feeds) != 1 || feeds[0].FeedURL != "https://a/rss" || feeds[0].ArticleCount != 5 {
 		t.Fatalf("unexpected feeds: %+v", feeds)
+	}
+}
+
+func TestListArticlesSortParam(t *testing.T) {
+	var gotQuery string
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		gotQuery = r.URL.RawQuery
+		_, _ = w.Write([]byte(`{"articles":[],"count":0,"limit":0,"offset":0}`))
+	}))
+	defer srv.Close()
+	c := New(srv.URL)
+
+	if _, err := c.ListArticles(context.Background(), ListParams{Sort: "oldest"}); err != nil {
+		t.Fatalf("ListArticles: %v", err)
+	}
+	if !strings.Contains(gotQuery, "sort=oldest") {
+		t.Fatalf("query %q missing sort=oldest", gotQuery)
+	}
+
+	if _, err := c.ListArticles(context.Background(), ListParams{}); err != nil {
+		t.Fatalf("ListArticles: %v", err)
+	}
+	if strings.Contains(gotQuery, "sort=") {
+		t.Fatalf("query %q should not contain sort when unset", gotQuery)
 	}
 }
 

@@ -21,9 +21,13 @@ type stubService struct {
 	getErr   error
 	feedsErr error
 	statsErr error
+	lastList *apiclient.ListParams
 }
 
 func (s stubService) ListArticles(ctx context.Context, p apiclient.ListParams) (apiclient.ListResult, error) {
+	if s.lastList != nil {
+		*s.lastList = p
+	}
 	return s.list, s.listErr
 }
 func (s stubService) GetArticle(ctx context.Context, id int64) (apiclient.Article, error) {
