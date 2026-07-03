@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"smellyfeet/internal/apiclient"
@@ -41,14 +42,26 @@ func (s *Server) handleHealthz(w http.ResponseWriter, r *http.Request) {
 }
 
 type listView struct {
-	Title    string
-	Articles []apiclient.Article
-	Feeds    []apiclient.Feed
-	Q        string
-	Feed     string
-	Page     int
-	HasPrev  bool
-	HasNext  bool
+	Title     string
+	Desc      string
+	OGArticle bool
+	Articles  []apiclient.Article
+	Feeds     []apiclient.Feed
+	Q         string
+	Feed      string
+	Page      int
+	HasPrev   bool
+	HasNext   bool
+}
+
+// trimDesc collapses whitespace and truncates to n runes for meta descriptions.
+func trimDesc(s string, n int) string {
+	s = strings.Join(strings.Fields(s), " ")
+	r := []rune(s)
+	if len(r) <= n {
+		return s
+	}
+	return strings.TrimSpace(string(r[:n])) + "…"
 }
 
 func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
@@ -77,6 +90,7 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 
 	s.render(w, http.StatusOK, "list", listView{
 		Title:    "Articles",
+		Desc:     "AI-summarized cybersecurity intelligence — the latest articles from monitored threat feeds.",
 		Articles: res.Articles,
 		Feeds:    feeds,
 		Q:        q,
@@ -109,9 +123,15 @@ func (s *Server) handleArticle(w http.ResponseWriter, r *http.Request) {
 
 	setCache(w, cacheArticle)
 
+	desc := ""
+	if a.Summary != nil {
+		desc = trimDesc(*a.Summary, 200)
+	}
 	s.render(w, http.StatusOK, "article", map[string]any{
-		"Title":   a.Title,
-		"Article": a,
+		"Title":     a.Title,
+		"Article":   a,
+		"Desc":      desc,
+		"OGArticle": true,
 	})
 }
 
