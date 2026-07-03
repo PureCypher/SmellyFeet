@@ -7,13 +7,16 @@ import (
 	"crypto/sha256"
 	"embed"
 	"encoding/hex"
+	"fmt"
 	"html/template"
 	"io"
 	"io/fs"
 	"log"
 	"net/http"
+	"net/url"
 	"regexp"
 	"strings"
+	"time"
 
 	"smellyfeet/internal/apiclient"
 )
@@ -67,6 +70,9 @@ type Server struct {
 var funcMap = template.FuncMap{
 	"formatDate":   formatDate,
 	"cleanContent": cleanContent,
+	"sourceName":   sourceName,
+	"relTime":      relTime,
+	"cveID":        cveID,
 	"inc":          func(n int) int { return n + 1 },
 	"dec":          func(n int) int { return n - 1 },
 	"assetHash":    func() string { return assetHash },
@@ -102,6 +108,46 @@ func cleanContent(s string) string {
 	}
 	return strings.Join(out, "\n")
 }
+
+// sourceName returns a compact display name for a feed URL: the hostname
+// without a leading "www.". Returns the input unchanged if it doesn't parse.
+func sourceName(feedURL string) string {
+	u, err := url.Parse(feedURL)
+	if err != nil || u.Hostname() == "" {
+		return feedURL
+	}
+	return strings.TrimPrefix(u.Hostname(), "www.")
+}
+
+// relTimeAt renders t relative to now; dates outside the recent past
+// (including future-dated webinar feeds) fall back to the plain date.
+func relTimeAt(t, now time.Time) string {
+	d := now.Sub(t)
+	switch {
+	case d < 0 || d >= 7*24*time.Hour:
+		return t.Format("2006-01-02")
+	case d < time.Minute:
+		return "just now"
+	case d < time.Hour:
+		return fmt.Sprintf("%dm ago", int(d.Minutes()))
+	case d < 24*time.Hour:
+		return fmt.Sprintf("%dh ago", int(d.Hours()))
+	}
+	return fmt.Sprintf("%dd ago", int(d.Hours()/24))
+}
+
+func relTime(v any) string {
+	t, ok := asTime(v)
+	if !ok || t.IsZero() {
+		return "—"
+	}
+	return relTimeAt(t, time.Now())
+}
+
+var cveRe = regexp.MustCompile(`CVE-\d{4}-\d{4,}`)
+
+// cveID returns the first CVE identifier in s, or "".
+func cveID(s string) string { return cveRe.FindString(s) }
 
 // New constructs a Server with parsed templates.
 func New(svc ArticleService) (*Server, error) {
