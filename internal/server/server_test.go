@@ -13,15 +13,17 @@ import (
 
 // stubService implements ArticleService for tests.
 type stubService struct {
-	list     apiclient.ListResult
-	article  apiclient.Article
-	feeds    []apiclient.Feed
-	stats    apiclient.Stats
-	listErr  error
-	getErr   error
-	feedsErr error
-	statsErr error
-	lastList *apiclient.ListParams
+	list      apiclient.ListResult
+	article   apiclient.Article
+	feeds     []apiclient.Feed
+	stats     apiclient.Stats
+	digest    apiclient.DigestResult
+	listErr   error
+	getErr    error
+	feedsErr  error
+	statsErr  error
+	digestErr error
+	lastList  *apiclient.ListParams
 }
 
 func (s stubService) ListArticles(ctx context.Context, p apiclient.ListParams) (apiclient.ListResult, error) {
@@ -38,6 +40,9 @@ func (s stubService) ListFeeds(ctx context.Context) ([]apiclient.Feed, error) {
 }
 func (s stubService) GetStats(ctx context.Context) (apiclient.Stats, error) {
 	return s.stats, s.statsErr
+}
+func (s stubService) GetDigest(ctx context.Context, rangeParam string) (apiclient.DigestResult, error) {
+	return s.digest, s.digestErr
 }
 
 func newTestServer(t *testing.T, svc ArticleService) http.Handler {

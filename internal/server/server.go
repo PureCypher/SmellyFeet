@@ -58,6 +58,7 @@ type ArticleService interface {
 	GetArticle(ctx context.Context, id int64) (apiclient.Article, error)
 	ListFeeds(ctx context.Context) ([]apiclient.Feed, error)
 	GetStats(ctx context.Context) (apiclient.Stats, error)
+	GetDigest(ctx context.Context, rangeParam string) (apiclient.DigestResult, error)
 }
 
 // Server holds dependencies for the HTTP handlers.
@@ -163,6 +164,7 @@ func (s *Server) Routes() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", s.handleHealthz)
 	mux.HandleFunc("GET /{$}", s.handleList)
+	mux.HandleFunc("GET /digest", s.handleDigest)
 	mux.HandleFunc("GET /article/{id}", s.handleArticle)
 	mux.HandleFunc("GET /stats", s.handleStats)
 	mux.HandleFunc("GET /about", s.handleAbout)

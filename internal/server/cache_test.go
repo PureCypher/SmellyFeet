@@ -19,6 +19,7 @@ func TestCacheControlPerRoute(t *testing.T) {
 	h := newTestServer(t, stubService{})
 	tests := []struct{ path, want string }{
 		{"/", "public, max-age=60, s-maxage=120, stale-while-revalidate=300"},
+		{"/digest", "public, max-age=60, s-maxage=120, stale-while-revalidate=300"},
 		{"/stats", "public, max-age=30, s-maxage=60"},
 		{"/about", "public, max-age=3600, s-maxage=86400"},
 		{"/static/app.css", "public, max-age=31536000, immutable"},

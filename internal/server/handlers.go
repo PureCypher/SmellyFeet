@@ -163,6 +163,41 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+var validDigestRanges = map[string]bool{"daily": true, "weekly": true, "monthly": true}
+
+type digestView struct {
+	Title     string
+	Desc      string
+	OG        bool
+	OGArticle bool
+	Range     string
+	Important []apiclient.Article
+	Other     []apiclient.Article
+}
+
+func (s *Server) handleDigest(w http.ResponseWriter, r *http.Request) {
+	rangeParam := r.URL.Query().Get("range")
+	if !validDigestRanges[rangeParam] {
+		rangeParam = "daily"
+	}
+
+	res, err := s.svc.GetDigest(r.Context(), rangeParam)
+	if err != nil {
+		s.renderError(w, err)
+		return
+	}
+
+	setCache(w, cacheList)
+	s.render(w, http.StatusOK, "digest", digestView{
+		Title:     "Digest",
+		Desc:      "Cross-feed importance digest — stories covered by multiple sources, grouped by day, week, or month.",
+		OG:        true,
+		Range:     rangeParam,
+		Important: res.Important,
+		Other:     res.Other,
+	})
+}
+
 func (s *Server) handleArticle(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
 	id, err := strconv.ParseInt(idStr, 10, 64)
