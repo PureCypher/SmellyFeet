@@ -1,7 +1,17 @@
 # Digest Tab — Cross-Feed Importance Heuristic — Design
 
 **Date:** 2026-07-14
-**Status:** Approved
+**Status:** Superseded — see `2026-07-14-story-clustering-design.md`
+
+> **Superseded (2026-07-14):** the live `pg_trgm` title-similarity self-join described below
+> timed out in practice — trigram GIN indexes don't accelerate column-to-column self-joins, and
+> the GROUP-BY-normalized-title fallback was too strict to find real duplicates. It was replaced
+> end-to-end by a precomputed `ClusteringScheduler` (Ollama embeddings, cosine-similarity
+> clustering, `story_cluster_id` column) documented in `2026-07-14-story-clustering-design.md`.
+> The `/digest` route, its daily/weekly/monthly ranges, and the important/other split are still
+> live — only the mechanism that populates `cross_feed_count` changed. Do not implement against
+> this document; it is kept for historical context only.
+
 **Goal:** A new `/digest` tab with daily/weekly/monthly views that splits articles into
 "important" (covered by multiple feeds) vs. "everything else," using a free SQL heuristic —
 no new LLM calls, no scheduled job.
