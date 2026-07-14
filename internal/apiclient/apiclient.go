@@ -18,14 +18,15 @@ var ErrNotFound = errors.New("not found")
 
 // Article mirrors the JSON returned by the Information-Broker API.
 type Article struct {
-	ID          int64     `json:"id"`
-	Title       string    `json:"title"`
-	URL         string    `json:"url"`
-	Summary     *string   `json:"summary"`
-	Content     string    `json:"content"`
-	PublishedAt time.Time `json:"published_at"`
-	FeedURL     string    `json:"feed_url"`
-	ContentHash string    `json:"content_hash"`
+	ID             int64     `json:"id"`
+	Title          string    `json:"title"`
+	URL            string    `json:"url"`
+	Summary        *string   `json:"summary"`
+	Content        string    `json:"content"`
+	PublishedAt    time.Time `json:"published_at"`
+	FeedURL        string    `json:"feed_url"`
+	ContentHash    string    `json:"content_hash"`
+	CrossFeedCount int       `json:"cross_feed_count,omitempty"`
 }
 
 // ListResult is the envelope returned by GET /articles.
@@ -34,6 +35,14 @@ type ListResult struct {
 	Count    int       `json:"count"`
 	Limit    int       `json:"limit"`
 	Offset   int       `json:"offset"`
+}
+
+// DigestResult is the envelope returned by GET /articles/digest.
+type DigestResult struct {
+	Range     string    `json:"range"`
+	Since     time.Time `json:"since"`
+	Important []Article `json:"important"`
+	Other     []Article `json:"other"`
 }
 
 // Feed is one entry from GET /feeds.
@@ -115,6 +124,13 @@ func (c *Client) ListArticles(ctx context.Context, p ListParams) (ListResult, er
 	}
 	var res ListResult
 	err := c.getJSON(ctx, "/articles?"+v.Encode(), &res)
+	return res, err
+}
+
+// GetDigest fetches the daily/weekly/monthly cross-feed importance digest.
+func (c *Client) GetDigest(ctx context.Context, rangeParam string) (DigestResult, error) {
+	var res DigestResult
+	err := c.getJSON(ctx, "/articles/digest?range="+url.QueryEscape(rangeParam), &res)
 	return res, err
 }
 

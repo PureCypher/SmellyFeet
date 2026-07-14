@@ -140,3 +140,27 @@ func TestGetStats(t *testing.T) {
 		t.Fatalf("unexpected stats: %+v", s)
 	}
 }
+
+func TestGetDigest(t *testing.T) {
+	var gotPath string
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		gotPath = r.URL.RequestURI()
+		w.Write([]byte(`{"range":"weekly","since":"2026-07-07T00:00:00Z","important":[{"id":1,"title":"Big story","cross_feed_count":3}],"other":[{"id":2,"title":"Minor","cross_feed_count":0}]}`))
+	}))
+	defer srv.Close()
+
+	c := New(srv.URL)
+	res, err := c.GetDigest(context.Background(), "weekly")
+	if err != nil {
+		t.Fatalf("GetDigest error: %v", err)
+	}
+	if gotPath != "/articles/digest?range=weekly" {
+		t.Fatalf("unexpected request path: %s", gotPath)
+	}
+	if res.Range != "weekly" || len(res.Important) != 1 || res.Important[0].CrossFeedCount != 3 {
+		t.Fatalf("unexpected result: %+v", res)
+	}
+	if len(res.Other) != 1 || res.Other[0].ID != 2 {
+		t.Fatalf("unexpected other: %+v", res)
+	}
+}
