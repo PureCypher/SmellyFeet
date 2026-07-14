@@ -103,6 +103,30 @@ func topSources(feeds []apiclient.Feed) []sourceBar {
 	return out
 }
 
+// collectionVolume renders the day/week/month article-collection counts as
+// the same quantized-bar rows as topSources. This month's count is always
+// >= this week's >= today's (each is COUNT(*) over a growing fetch_time
+// window), so it's always the max — no need to scan for it like topSources does.
+func collectionVolume(stats apiclient.Stats) []sourceBar {
+	if stats.ArticlesThisMonth == 0 {
+		return nil
+	}
+	max := float64(stats.ArticlesThisMonth)
+	rows := []sourceBar{
+		{Name: "Today", Count: stats.ArticlesToday},
+		{Name: "This week", Count: stats.ArticlesThisWeek},
+		{Name: "This month", Count: stats.ArticlesThisMonth},
+	}
+	for i := range rows {
+		bar := int(math.Round(float64(rows[i].Count)/max*20)) * 5
+		if bar < 5 {
+			bar = 5
+		}
+		rows[i].Bar = bar
+	}
+	return rows
+}
+
 // trimDesc collapses whitespace and truncates to n runes for meta descriptions.
 func trimDesc(s string, n int) string {
 	s = strings.Join(strings.Fields(s), " ")
@@ -249,9 +273,10 @@ func (s *Server) handleStats(w http.ResponseWriter, r *http.Request) {
 
 	setCache(w, cacheStats)
 	s.render(w, http.StatusOK, "stats", map[string]any{
-		"Title":   "Statistics",
-		"Stats":   st,
-		"Sources": sources,
+		"Title":     "Statistics",
+		"Stats":     st,
+		"Sources":   sources,
+		"Collected": collectionVolume(st),
 	})
 }
 

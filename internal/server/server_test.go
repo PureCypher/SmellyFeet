@@ -224,6 +224,33 @@ func TestCleanContent(t *testing.T) {
 	}
 }
 
+func TestCollectionVolume(t *testing.T) {
+	rows := collectionVolume(apiclient.Stats{ArticlesToday: 50, ArticlesThisWeek: 300, ArticlesThisMonth: 1000})
+	if len(rows) != 3 {
+		t.Fatalf("rows = %+v, want 3", rows)
+	}
+	if rows[0].Name != "Today" || rows[0].Count != 50 || rows[0].Bar != 5 {
+		t.Errorf("today row = %+v, want Count 50, Bar 5 (1000 wide bar quantizes down)", rows[0])
+	}
+	if rows[2].Name != "This month" || rows[2].Count != 1000 || rows[2].Bar != 100 {
+		t.Errorf("this month row = %+v, want Count 1000, Bar 100 (the max)", rows[2])
+	}
+}
+
+func TestCollectionVolumeEmptyWhenNoArticles(t *testing.T) {
+	if rows := collectionVolume(apiclient.Stats{}); rows != nil {
+		t.Fatalf("expected nil rows for zero articles, got %+v", rows)
+	}
+}
+
+func TestStatsPageShowsCollectionVolume(t *testing.T) {
+	svc := stubService{stats: apiclient.Stats{ArticlesToday: 12, ArticlesThisWeek: 80, ArticlesThisMonth: 300}}
+	body := getPath(t, newTestServer(t, svc), "/stats").Body.String()
+	if !containsAll(body, "articles collected", "Today", "This week", "This month", "12", "80", "300") {
+		t.Fatalf("stats page missing collection-volume section: %s", body)
+	}
+}
+
 func TestAboutPage(t *testing.T) {
 	h := newTestServer(t, stubService{})
 	req := httptest.NewRequest(http.MethodGet, "/about", nil)

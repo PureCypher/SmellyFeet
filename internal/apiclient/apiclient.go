@@ -53,9 +53,12 @@ type Feed struct {
 
 // Stats is the payload from GET /stats.
 type Stats struct {
-	TotalArticles int        `json:"total_articles"`
-	TotalFeeds    int        `json:"total_feeds"`
-	LastFetch     *time.Time `json:"last_fetch"`
+	TotalArticles     int        `json:"total_articles"`
+	TotalFeeds        int        `json:"total_feeds"`
+	LastFetch         *time.Time `json:"last_fetch"`
+	ArticlesToday     int        `json:"articles_today"`
+	ArticlesThisWeek  int        `json:"articles_this_week"`
+	ArticlesThisMonth int        `json:"articles_this_month"`
 }
 
 // ListParams are the query options for ListArticles.
