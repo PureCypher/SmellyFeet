@@ -2,6 +2,20 @@
 
 **Date:** 2026-07-14
 **Status:** Approved (design only — implementation deferred to a separate follow-up pass)
+
+> **Superseded during implementation (2026-07-14, commit 7666922):** this document describes
+> embedding article **titles**. A live threshold spot-check during implementation found
+> title-only embeddings unreliable on this corpus — CVE advisory titles share so much
+> boilerplate ("... Elevation of Privilege Vulnerability") that different vulnerabilities
+> scored MORE similar (0.85+) than genuine cross-outlet duplicates of the same story
+> (0.67-0.74). The shipped implementation embeds the **summary** (the existing
+> Ollama-generated prose summary) instead of the title — same architecture, one field swap,
+> re-verified with real data (true duplicates 0.87-0.93, a different-story pair at 0.71,
+> cleanly separated by the existing 0.85 threshold). Everywhere this document says
+> `title_embedding` or "title embedding," read `summary_embedding` / "summary embedding."
+> The rest of the design (schema shape, job cadence, idle-gating, `story_cluster_id`
+> semantics, the digest query rewrite) is unchanged.
+
 **Goal:** Replace the digest feature's live exact-title-match heuristic with a precomputed,
 embedding-based story-clustering job, so the daily/weekly digest windows actually populate an
 "important" (cross-feed) bucket instead of sitting empty.

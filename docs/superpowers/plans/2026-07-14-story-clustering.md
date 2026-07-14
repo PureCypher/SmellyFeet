@@ -2,6 +2,21 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+> **Superseded during implementation (2026-07-14, commit 7666922):** every task below (and the
+> code blocks in them) embeds article **titles** (`title_embedding`, `it.title`, etc.). A live
+> threshold spot-check during Task 7 found title-only embeddings unreliable on this corpus —
+> different CVE advisories scored more similar (0.85+) than genuine cross-outlet duplicates of
+> the same story (0.67-0.74), because CVE titles share heavy boilerplate. The shipped
+> implementation embeds the **summary** instead — same architecture, one field swap (`title` →
+> `summary` in the query and the embed call, `title_embedding` → `summary_embedding` for the
+> column everywhere), plus excluding un-summarized and failed-summary (`'summary unavailable'`)
+> articles from the embed batch. Re-verified with real summary text: true duplicates scored
+> 0.87-0.93, a different-story pair scored 0.71, both sides of the existing 0.85 threshold. If
+> re-running any task from this plan from scratch, swap every `title`/`title_embedding`
+> reference for `summary`/`summary_embedding` and add the un-summarized/failed-summary
+> exclusion described above; everything else (schema shape, scheduler structure, idle-gating,
+> `story_cluster_id` semantics, the digest query rewrite) is unchanged.
+
 **Goal:** Replace the digest feature's live exact-title-match heuristic with a precomputed
 background job that embeds article titles via Ollama and incrementally clusters them, so
 daily/weekly digest windows actually populate an "important" (cross-feed) bucket.
