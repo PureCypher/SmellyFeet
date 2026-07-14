@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestListArticles(t *testing.T) {
@@ -159,6 +160,10 @@ func TestGetDigest(t *testing.T) {
 	}
 	if res.Range != "weekly" || len(res.Important) != 1 || res.Important[0].CrossFeedCount != 3 {
 		t.Fatalf("unexpected result: %+v", res)
+	}
+	wantSince := time.Date(2026, 7, 7, 0, 0, 0, 0, time.UTC)
+	if !res.Since.Equal(wantSince) {
+		t.Fatalf("Since = %v, want %v", res.Since, wantSince)
 	}
 	if len(res.Other) != 1 || res.Other[0].ID != 2 {
 		t.Fatalf("unexpected other: %+v", res)

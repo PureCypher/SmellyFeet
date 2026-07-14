@@ -169,8 +169,9 @@ type digestView struct {
 	Title     string
 	Desc      string
 	OG        bool
-	OGArticle bool
+	OGArticle bool // required by the shared header partial whenever OG is true; false = og:type "website"
 	Range     string
+	Since     time.Time
 	Important []apiclient.Article
 	Other     []apiclient.Article
 }
@@ -193,6 +194,7 @@ func (s *Server) handleDigest(w http.ResponseWriter, r *http.Request) {
 		Desc:      "Cross-feed importance digest — stories covered by multiple sources, grouped by day, week, or month.",
 		OG:        true,
 		Range:     rangeParam,
+		Since:     res.Since,
 		Important: res.Important,
 		Other:     res.Other,
 	})
