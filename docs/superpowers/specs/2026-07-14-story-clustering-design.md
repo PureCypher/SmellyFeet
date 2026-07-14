@@ -101,6 +101,17 @@ against existing seeds, not against every article ever processed. Cost is O(new 
 active clusters in the window), not O(n²) — the same complexity class problem that broke the
 original trigram self-join is deliberately avoided here by construction.
 
+**Ollama contention with summarization (added per explicit instruction).** RSS fetching runs
+continuously every 5 minutes (`RSSFetchInterval`, `monitor.go`) — there is no fixed "off
+hours" window in this architecture. The real signal for "articles aren't being actively
+processed" is the existing `SummarizationScheduler`'s queue state, already exposed via its
+exported `GetStats()` (`queue_depth`, `current_request`). Before each clustering-job cycle's
+embed/cluster steps run, check `GetStats()`; if `queue_depth > 0` or `current_request` is
+non-nil, skip this tick entirely (log and retry on the next ticker fire) rather than compete
+with in-flight summarization calls for Ollama. This ties resource-contention avoidance to
+actual system state instead of a guessed wall-clock window, and reuses instrumentation that
+already exists rather than adding new scheduling machinery.
+
 **35-day window, not 30:** matches the digest's largest window (30 days) with a few days of
 slack so a cluster "seed" from day 1 of a 30-day digest window is never missed because the job
 itself only looks back exactly 30 days.
