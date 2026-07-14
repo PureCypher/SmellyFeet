@@ -10,18 +10,18 @@
 
   <section class="mt-6 rounded-xl border border-accent/25 bg-accent/[0.06] p-5">
     <h2 class="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-accent mb-2">▍ AI Summary</h2>
-    <p class="text-[15px] text-zinc-100 leading-relaxed">{{ if .Summary }}{{ .Summary }}{{ else }}<span class="text-zinc-500 italic">No summary available.</span>{{ end }}</p>
+    <p class="text-[15px] text-zinc-100 leading-relaxed">{{ if .Summary }}{{ .Summary }}{{ else }}<span class="text-fog italic">No summary available.</span>{{ end }}</p>
   </section>
 
   <section class="mt-8">
     <h2 class="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-fog mb-3 flex items-center gap-2"><span class="h-px w-6 bg-line"></span>Full text</h2>
     {{ $body := cleanContent .Content }}
-    {{ if $body }}<div class="article-body">{{ $body }}</div>{{ else }}<p class="text-sm text-zinc-600 italic">No full text was stored for this article.</p>{{ end }}
+    {{ if $body }}<div class="article-body">{{ $body }}</div>{{ else }}<p class="text-sm text-fog italic">No full text was stored for this article.</p>{{ end }}
   </section>
 
   <div class="mt-8 pt-5 border-t border-line flex flex-wrap items-center gap-4">
     <a href="{{ .URL }}" target="_blank" rel="noopener noreferrer"
-      class="inline-flex items-center gap-2 rounded-lg bg-accent text-ink-950 font-semibold px-5 py-2.5 text-sm hover:bg-accent-bright transition-colors">Read original <span aria-hidden="true">↗</span></a>
+      class="inline-flex items-center gap-2 rounded-lg bg-accent text-ink-950 font-semibold px-5 py-2.5 text-sm hover:bg-accent-bright transition-colors">Read original <span aria-hidden="true">↗</span><span class="sr-only"> (opens in new tab)</span></a>
   </div>
 </article>
 {{ end }}

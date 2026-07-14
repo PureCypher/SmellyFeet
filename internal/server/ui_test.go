@@ -73,10 +73,16 @@ func TestStatsShowsTopSources(t *testing.T) {
 	}
 }
 
-func TestStatsOmitsSourcesOnFeedError(t *testing.T) {
+func TestStatsShowsUnavailableOnFeedError(t *testing.T) {
 	svc := stubService{feedsErr: errBoom}
 	body := getPath(t, newTestServer(t, svc), "/stats").Body.String()
-	if strings.Contains(body, "top sources") {
-		t.Error("top-sources section should be omitted when ListFeeds fails")
+	if !strings.Contains(body, "top sources") {
+		t.Error("top-sources heading should still render when ListFeeds fails")
+	}
+	if !strings.Contains(body, "unavailable") {
+		t.Error("expected an explicit unavailable message when ListFeeds fails")
+	}
+	if strings.Contains(body, "bar-") {
+		t.Error("no source bars should render when ListFeeds fails")
 	}
 }

@@ -44,6 +44,18 @@ func TestNoChipsWhenUnfiltered(t *testing.T) {
 	}
 }
 
+func TestSearchChipRequiresMinLength(t *testing.T) {
+	oneChar := getPath(t, newTestServer(t, stubService{}), "/?q=a").Body.String()
+	if strings.Contains(oneChar, "clear all") || strings.Contains(oneChar, "search:") {
+		t.Error("1-char query matches the backend's ignore-threshold and must not show a false active-filter chip")
+	}
+
+	twoChar := getPath(t, newTestServer(t, stubService{}), "/?q=ab").Body.String()
+	if !strings.Contains(twoChar, "search: “ab”") {
+		t.Error("2-char query meets the backend's threshold and should show the search chip")
+	}
+}
+
 func TestSourcePillIsFilterLink(t *testing.T) {
 	svc := stubService{list: apiclient.ListResult{Articles: []apiclient.Article{{
 		ID: 1, Title: "T", FeedURL: "https://www.brighttalk.com/channel/7451/feed/rss",

@@ -8,7 +8,7 @@
 <form method="get" action="/digest" class="mb-5 flex flex-wrap gap-3 items-end bg-ink-900 border border-line rounded-xl p-4">
   <div>
     <label for="range" class="block font-mono text-[10px] uppercase tracking-widest text-fog mb-1.5">Range</label>
-    <select id="range" name="range" class="rounded-lg bg-ink-950 border border-line px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-accent transition-colors">
+    <select id="range" name="range" class="rounded-lg bg-ink-950 border border-line px-3 py-2 text-sm text-zinc-100 focus:border-accent transition-colors">
       <option value="daily" {{ if eq .Range "daily" }}selected{{ end }}>Daily</option>
       <option value="weekly" {{ if eq .Range "weekly" }}selected{{ end }}>Weekly</option>
       <option value="monthly" {{ if eq .Range "monthly" }}selected{{ end }}>Monthly</option>
@@ -24,7 +24,7 @@
 {{ end }}
 
 {{ if .Important }}
-<p class="font-mono text-[11px] uppercase tracking-[0.2em] text-fog mb-3">Important</p>
+<h2 class="font-mono text-[11px] uppercase tracking-[0.2em] text-fog mb-3">Important</h2>
 <ul class="space-y-3 mb-8">
   {{ range .Important }}{{ template "articleCard" . }}{{ end }}
 </ul>

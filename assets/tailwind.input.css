@@ -29,6 +29,14 @@ body::before {
           mask-image: radial-gradient(circle at 50% 0%, #000 0%, transparent 78%);
 }
 header, main, footer { position: relative; z-index: 1; }
+
+/* Visible keyboard-focus indicator; :focus-visible only fires for keyboard/
+   programmatic focus, so mouse-click focus is unaffected. */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid #f5b13d;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
 ::selection { background: rgba(245,177,61,0.32); color: #fff; }
 ::-webkit-scrollbar { width: 11px; height: 11px; }
 ::-webkit-scrollbar-track { background: #0a0a0c; }

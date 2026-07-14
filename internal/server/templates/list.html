@@ -12,7 +12,7 @@
     </div>
     <h2 class="text-lg font-semibold text-zinc-100 leading-snug group-hover:text-accent transition-colors"><a href="/article/{{ .ID }}" class="after:absolute after:inset-0">{{ .Title }}</a></h2>
     <p class="mt-2 text-sm text-zinc-400 leading-relaxed line-clamp-3">
-      {{ if .Summary }}{{ .Summary }}{{ else }}<span class="text-zinc-600 italic">No summary available.</span>{{ end }}
+      {{ if .Summary }}{{ .Summary }}{{ else }}<span class="text-fog italic">No summary available.</span>{{ end }}
     </p>
     <span aria-hidden="true" class="absolute right-5 bottom-4 font-mono text-accent opacity-0 group-hover:opacity-100 transition-opacity">→</span>
   </div>
@@ -33,7 +33,7 @@
   </div>
   <div>
     <label for="feed" class="block font-mono text-[10px] uppercase tracking-widest text-fog mb-1.5">Source</label>
-    <select id="feed" name="feed" class="rounded-lg bg-ink-950 border border-line px-3 py-2 text-sm text-zinc-100 max-w-[16rem] focus:outline-none focus:border-accent transition-colors">
+    <select id="feed" name="feed" class="rounded-lg bg-ink-950 border border-line px-3 py-2 text-sm text-zinc-100 max-w-[16rem] focus:border-accent transition-colors">
       <option value="">All sources</option>
       {{ range .Feeds }}
       <option value="{{ .FeedURL }}" {{ if eq .FeedURL $.Feed }}selected{{ end }}>{{ sourceName .FeedURL }} ({{ .ArticleCount }})</option>
@@ -42,7 +42,7 @@
   </div>
   <div>
     <label for="sort" class="block font-mono text-[10px] uppercase tracking-widest text-fog mb-1.5">Sort</label>
-    <select id="sort" name="sort" class="rounded-lg bg-ink-950 border border-line px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-accent transition-colors">
+    <select id="sort" name="sort" class="rounded-lg bg-ink-950 border border-line px-3 py-2 text-sm text-zinc-100 focus:border-accent transition-colors">
       <option value="">Newest first</option>
       <option value="oldest" {{ if eq .Sort "oldest" }}selected{{ end }}>Oldest first</option>
     </select>
@@ -50,11 +50,11 @@
   <button type="submit" class="rounded-lg bg-accent text-ink-950 font-semibold px-5 py-2 text-sm hover:bg-accent-bright transition-colors">Apply</button>
 </form>
 
-{{ if or .Q .Feed (eq .Sort "oldest") }}
+{{ if or .QApplied .Feed (eq .Sort "oldest") }}
 <div class="mb-5 flex flex-wrap items-center gap-2 font-mono text-[11px]">
   <span class="uppercase tracking-[0.2em] text-fog">Filtered:</span>
   {{ if .Feed }}<a href="/?q={{ .Q | urlquery }}&amp;sort={{ .Sort }}" class="group inline-flex items-center gap-1.5 rounded border border-line bg-ink-900 px-2 py-1 text-zinc-300 hover:border-accent/60 transition-colors">source: {{ sourceName .Feed }} <span class="text-fog group-hover:text-accent">×</span></a>{{ end }}
-  {{ if .Q }}<a href="/?feed={{ .Feed | urlquery }}&amp;sort={{ .Sort }}" class="group inline-flex items-center gap-1.5 rounded border border-line bg-ink-900 px-2 py-1 text-zinc-300 hover:border-accent/60 transition-colors">search: “{{ .Q }}” <span class="text-fog group-hover:text-accent">×</span></a>{{ end }}
+  {{ if .QApplied }}<a href="/?feed={{ .Feed | urlquery }}&amp;sort={{ .Sort }}" class="group inline-flex items-center gap-1.5 rounded border border-line bg-ink-900 px-2 py-1 text-zinc-300 hover:border-accent/60 transition-colors">search: “{{ .Q }}” <span class="text-fog group-hover:text-accent">×</span></a>{{ end }}
   {{ if eq .Sort "oldest" }}<a href="/?q={{ .Q | urlquery }}&amp;feed={{ .Feed | urlquery }}" class="group inline-flex items-center gap-1.5 rounded border border-line bg-ink-900 px-2 py-1 text-zinc-300 hover:border-accent/60 transition-colors">oldest first <span class="text-fog group-hover:text-accent">×</span></a>{{ end }}
   <a href="/" class="text-fog underline underline-offset-2 hover:text-accent transition-colors">clear all</a>
 </div>
@@ -79,9 +79,9 @@
   {{ range .Articles }}{{ template "articleCard" . }}{{ end }}
 </ul>
 
-<nav class="mt-10 flex items-center justify-between font-mono text-xs">
-  {{ if .HasPrev }}<a href="?page={{ dec .Page }}&amp;q={{ .Q }}&amp;feed={{ .Feed }}&amp;sort={{ .Sort }}" class="px-4 py-2 rounded-lg border border-line text-zinc-300 hover:border-accent hover:text-accent transition-colors">← Prev</a>{{ else }}<span class="px-4 py-2 text-zinc-700">← Prev</span>{{ end }}
+<nav aria-label="Pagination" class="mt-10 flex items-center justify-between font-mono text-xs">
+  {{ if .HasPrev }}<a href="?page={{ dec .Page }}&amp;q={{ .Q | urlquery }}&amp;feed={{ .Feed | urlquery }}&amp;sort={{ .Sort }}" class="px-4 py-2 rounded-lg border border-line text-zinc-300 hover:border-accent hover:text-accent transition-colors">← Prev</a>{{ else }}<span class="px-4 py-2 text-zinc-700">← Prev</span>{{ end }}
   <span class="text-fog uppercase tracking-widest">Page {{ .Page }}</span>
-  {{ if .HasNext }}<a href="?page={{ inc .Page }}&amp;q={{ .Q }}&amp;feed={{ .Feed }}&amp;sort={{ .Sort }}" class="px-4 py-2 rounded-lg border border-line text-zinc-300 hover:border-accent hover:text-accent transition-colors">Next →</a>{{ else }}<span class="px-4 py-2 text-zinc-700">Next →</span>{{ end }}
+  {{ if .HasNext }}<a href="?page={{ inc .Page }}&amp;q={{ .Q | urlquery }}&amp;feed={{ .Feed | urlquery }}&amp;sort={{ .Sort }}" class="px-4 py-2 rounded-lg border border-line text-zinc-300 hover:border-accent hover:text-accent transition-colors">Next →</a>{{ else }}<span class="px-4 py-2 text-zinc-700">Next →</span>{{ end }}
 </nav>
 {{ template "footer" . }}{{ end }}

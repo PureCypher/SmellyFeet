@@ -214,5 +214,6 @@ func (s *Server) renderError(w http.ResponseWriter, err error) {
 	s.render(w, http.StatusBadGateway, "error", map[string]any{
 		"Title":   "Error",
 		"Message": "The article service is currently unavailable. Please try again later.",
+		"Nav":     "",
 	})
 }

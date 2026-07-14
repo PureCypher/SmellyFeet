@@ -21,7 +21,7 @@
 {{ end }}
 {{ if .Collected }}
 <section class="mt-10">
-  <p class="font-mono text-[11px] uppercase tracking-[0.25em] text-accent/80 mb-4">// articles collected</p>
+  <h2 class="font-mono text-[11px] uppercase tracking-[0.25em] text-accent/80 mb-4">// articles collected</h2>
   <ul class="space-y-2">
     {{ range .Collected }}
     <li class="flex items-center gap-3 font-mono text-xs">
@@ -33,9 +33,12 @@
   </ul>
 </section>
 {{ end }}
-{{ if .Sources }}
+{{ if or .Sources .SourcesUnavailable }}
 <section class="mt-10">
-  <p class="font-mono text-[11px] uppercase tracking-[0.25em] text-accent/80 mb-4">// top sources</p>
+  <h2 class="font-mono text-[11px] uppercase tracking-[0.25em] text-accent/80 mb-4">// top sources</h2>
+  {{ if .SourcesUnavailable }}
+  <p class="text-sm text-fog italic">Source breakdown unavailable — could not reach the feed service.</p>
+  {{ else }}
   <ul class="space-y-2">
     {{ range .Sources }}
     <li class="flex items-center gap-3 font-mono text-xs">
@@ -45,6 +48,7 @@
     </li>
     {{ end }}
   </ul>
+  {{ end }}
 </section>
 {{ end }}
 {{ template "footer" . }}{{ end }}

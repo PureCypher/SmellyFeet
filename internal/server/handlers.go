@@ -61,16 +61,24 @@ type listView struct {
 	Desc      string
 	OG        bool
 	OGArticle bool
+	Nav       string
 	Articles  []apiclient.Article
 	Upcoming  []apiclient.Article
 	Feeds     []apiclient.Feed
 	Q         string
+	QApplied  bool
 	Feed      string
 	Sort      string
 	Page      int
 	HasPrev   bool
 	HasNext   bool
 }
+
+// minSearchQueryLen mirrors the backend's own rule (Information-Broker api.go):
+// q shorter than this is ignored server-side, so the frontend must not treat
+// it as an active filter either (it would otherwise show a chip claiming a
+// filter that was never applied).
+const minSearchQueryLen = 2
 
 // sourceBar is one row of the stats top-sources chart. Bar is a quantized
 // width step (5..100 in steps of 5) rendered as a static bar-N CSS class,
@@ -175,10 +183,12 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 		Title:    "Articles",
 		Desc:     "AI-summarized cybersecurity intelligence — the latest articles from monitored threat feeds.",
 		OG:       true,
+		Nav:      "feed",
 		Articles: current,
 		Upcoming: upcoming,
 		Feeds:    feeds,
 		Q:        q,
+		QApplied: len(strings.TrimSpace(q)) >= minSearchQueryLen,
 		Feed:     feed,
 		Sort:     sort,
 		Page:     page,
@@ -194,6 +204,7 @@ type digestView struct {
 	Desc      string
 	OG        bool
 	OGArticle bool // required by the shared header partial whenever OG is true; false = og:type "website"
+	Nav       string
 	Range     string
 	Since     time.Time
 	Important []apiclient.Article
@@ -217,6 +228,7 @@ func (s *Server) handleDigest(w http.ResponseWriter, r *http.Request) {
 		Title:     "Digest",
 		Desc:      "Cross-feed importance digest — stories covered by multiple sources, grouped by day, week, or month.",
 		OG:        true,
+		Nav:       "digest",
 		Range:     rangeParam,
 		Since:     res.Since,
 		Important: res.Important,
@@ -229,14 +241,14 @@ func (s *Server) handleArticle(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil || id <= 0 {
 		setCache(w, cacheNone)
-		s.render(w, http.StatusNotFound, "notfound", map[string]any{"Title": "Not Found"})
+		s.render(w, http.StatusNotFound, "notfound", map[string]any{"Title": "Not Found", "Nav": ""})
 		return
 	}
 
 	a, err := s.svc.GetArticle(r.Context(), id)
 	if errors.Is(err, apiclient.ErrNotFound) {
 		setCache(w, cacheNone)
-		s.render(w, http.StatusNotFound, "notfound", map[string]any{"Title": "Not Found"})
+		s.render(w, http.StatusNotFound, "notfound", map[string]any{"Title": "Not Found", "Nav": ""})
 		return
 	}
 	if err != nil {
@@ -256,6 +268,7 @@ func (s *Server) handleArticle(w http.ResponseWriter, r *http.Request) {
 		"Desc":      desc,
 		"OG":        true,
 		"OGArticle": true,
+		"Nav":       "",
 	})
 }
 
@@ -267,20 +280,25 @@ func (s *Server) handleStats(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var sources []sourceBar
+	sourcesUnavailable := false
 	if feeds, err := s.svc.ListFeeds(r.Context()); err == nil {
 		sources = topSources(feeds)
-	} // non-fatal: section simply omitted
+	} else {
+		sourcesUnavailable = true // non-fatal: core stats still render, top-sources shows an explicit unavailable state
+	}
 
 	setCache(w, cacheStats)
 	s.render(w, http.StatusOK, "stats", map[string]any{
-		"Title":     "Statistics",
-		"Stats":     st,
-		"Sources":   sources,
-		"Collected": collectionVolume(st),
+		"Title":              "Statistics",
+		"Nav":                "stats",
+		"Stats":              st,
+		"Sources":            sources,
+		"SourcesUnavailable": sourcesUnavailable,
+		"Collected":          collectionVolume(st),
 	})
 }
 
 func (s *Server) handleAbout(w http.ResponseWriter, r *http.Request) {
 	setCache(w, cacheAbout)
-	s.render(w, http.StatusOK, "about", map[string]any{"Title": "About"})
+	s.render(w, http.StatusOK, "about", map[string]any{"Title": "About", "Nav": "about"})
 }
