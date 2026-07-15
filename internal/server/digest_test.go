@@ -23,11 +23,18 @@ func TestHandleDigestRangeWhitelist(t *testing.T) {
 	}
 }
 
-func TestHandleDigestUpstreamErrorRendersErrorPage(t *testing.T) {
+func TestHandleDigestUpstreamErrorRendersInlineCallout(t *testing.T) {
 	svc := stubService{digestErr: errors.New("boom")}
 	rec := getPath(t, newTestServer(t, svc), "/digest")
 	if rec.Code != 502 {
 		t.Fatalf("status = %d, want 502", rec.Code)
+	}
+	body := rec.Body.String()
+	if !strings.Contains(body, "Digest unavailable") {
+		t.Error("expected the inline critical callout, not the hard error page")
+	}
+	if !strings.Contains(body, `name="range"`) {
+		t.Error("the range form should stay usable even when the digest fetch fails")
 	}
 }
 

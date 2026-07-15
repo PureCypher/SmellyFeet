@@ -239,15 +239,16 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 var validDigestRanges = map[string]bool{"daily": true, "weekly": true, "monthly": true}
 
 type digestView struct {
-	Title     string
-	Desc      string
-	OG        bool
-	OGArticle bool // required by the shared header partial whenever OG is true; false = og:type "website"
-	Nav       string
-	Range     string
-	Since     time.Time
-	Important []apiclient.Article
-	Other     []apiclient.Article
+	Title       string
+	Desc        string
+	OG          bool
+	OGArticle   bool // required by the shared header partial whenever OG is true; false = og:type "website"
+	Nav         string
+	Range       string
+	Since       time.Time
+	Important   []apiclient.Article
+	Other       []apiclient.Article
+	FetchFailed bool
 }
 
 func (s *Server) handleDigest(w http.ResponseWriter, r *http.Request) {
@@ -258,7 +259,17 @@ func (s *Server) handleDigest(w http.ResponseWriter, r *http.Request) {
 
 	res, err := s.svc.GetDigest(r.Context(), rangeParam)
 	if err != nil {
-		s.renderError(w, err)
+		// Inline critical callout instead of the hard error page: the shell,
+		// nav, and range form stay usable so a visitor can switch range or
+		// navigate away rather than losing the whole page to one failed call.
+		setCache(w, cacheNone)
+		s.render(w, http.StatusBadGateway, "digest", digestView{
+			Title:       "Digest",
+			OG:          true,
+			Nav:         "digest",
+			Range:       rangeParam,
+			FetchFailed: true,
+		})
 		return
 	}
 
