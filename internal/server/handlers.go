@@ -2,6 +2,7 @@ package server
 
 import (
 	"errors"
+	"fmt"
 	"math"
 	"net/http"
 	"sort"
@@ -83,11 +84,15 @@ const minSearchQueryLen = 2
 
 // sourceBar is one row of the stats top-sources chart. Bar is a quantized
 // width step (5..100 in steps of 5) rendered as a static bar-N CSS class,
-// because CSP style-src 'self' forbids inline style widths.
+// because CSP style-src 'self' forbids inline style widths. FeedURL and
+// Latest are only populated for per-source rows (topSources), not the
+// day/week/month collectionVolume rows.
 type sourceBar struct {
-	Name  string
-	Count int
-	Bar   int
+	Name    string
+	Count   int
+	Bar     int
+	FeedURL string
+	Latest  *time.Time
 }
 
 const topSourcesMax = 15
@@ -107,7 +112,7 @@ func topSources(feeds []apiclient.Feed) []sourceBar {
 		if bar < 5 {
 			bar = 5
 		}
-		out = append(out, sourceBar{Name: sourceName(f.FeedURL), Count: f.ArticleCount, Bar: bar})
+		out = append(out, sourceBar{Name: sourceName(f.FeedURL), Count: f.ArticleCount, Bar: bar, FeedURL: f.FeedURL, Latest: f.LatestArticle})
 	}
 	return out
 }
@@ -134,6 +139,36 @@ func collectionVolume(stats apiclient.Stats) []sourceBar {
 		rows[i].Bar = bar
 	}
 	return rows
+}
+
+// healthStatus is the Signal Lamp ingestion-health indicator: a state
+// ("nodata"/"ok"/"degraded"/"failing") plus the sentence shown beside its
+// dot and text label. Never color-alone — the label and sentence always
+// carry the same information the dot color does (WCAG 1.4.1).
+type healthStatus struct {
+	State   string
+	Message string
+}
+
+// ingestionHealth derives the Signal Lamp health state from real /stats
+// fields only — never fabricated. The single unambiguous rule (see
+// docs/frontend/REDESIGN_PLAN.md's "/stats" route): a fresh install with no
+// article history ever is neutral "no data yet", not a red failure; any
+// history with zero successful fetches in the last 24h is FAILING
+// regardless of whether fetches were attempted at all (both cases mean no
+// fresh data arrived); otherwise DEGRADED if any fetch failed, else OK.
+func ingestionHealth(st apiclient.Stats) healthStatus {
+	if st.TotalArticles == 0 {
+		return healthStatus{State: "nodata", Message: "Nothing has been collected in the last 30 days."}
+	}
+	if st.SuccessfulFetches24h == 0 {
+		return healthStatus{State: "failing", Message: "No successful fetch in the last 24 hours."}
+	}
+	if st.FailedFetches24h > 0 {
+		total := st.SuccessfulFetches24h + st.FailedFetches24h
+		return healthStatus{State: "degraded", Message: fmt.Sprintf("%d of %d fetches failed in the last 24h", st.FailedFetches24h, total)}
+	}
+	return healthStatus{State: "ok", Message: fmt.Sprintf("all %d fetches succeeded in the last 24h", st.SuccessfulFetches24h)}
 }
 
 // trimDesc collapses whitespace and truncates to n runes for meta descriptions.
@@ -296,6 +331,7 @@ func (s *Server) handleStats(w http.ResponseWriter, r *http.Request) {
 		"Title":              "Statistics",
 		"Nav":                "stats",
 		"Stats":              st,
+		"Health":             ingestionHealth(st),
 		"Sources":            sources,
 		"SourcesUnavailable": sourcesUnavailable,
 		"Collected":          collectionVolume(st),

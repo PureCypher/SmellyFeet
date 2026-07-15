@@ -128,7 +128,7 @@ func TestGetStats(t *testing.T) {
 		if r.URL.Path != "/stats" {
 			t.Errorf("unexpected path: %s", r.URL.Path)
 		}
-		w.Write([]byte(`{"total_articles":100,"total_feeds":12,"last_fetch":null}`))
+		w.Write([]byte(`{"total_articles":100,"total_feeds":12,"last_fetch":null,"successful_fetches_24h":40,"failed_fetches_24h":2,"avg_fetch_time_ms":412.5}`))
 	}))
 	defer srv.Close()
 
@@ -139,6 +139,31 @@ func TestGetStats(t *testing.T) {
 	}
 	if s.TotalArticles != 100 || s.TotalFeeds != 12 {
 		t.Fatalf("unexpected stats: %+v", s)
+	}
+	if s.SuccessfulFetches24h != 40 || s.FailedFetches24h != 2 {
+		t.Fatalf("unexpected fetch-health fields: %+v", s)
+	}
+	if s.AvgFetchTimeMs == nil || *s.AvgFetchTimeMs != 412.5 {
+		t.Fatalf("unexpected avg fetch time: %+v", s.AvgFetchTimeMs)
+	}
+}
+
+func TestListFeedsDecodesLatestArticle(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(`{"feeds":[{"feed_url":"https://a/rss","article_count":5,"latest_article":"2026-07-15T09:32:11Z"},{"feed_url":"https://b/rss","article_count":1,"latest_article":null}],"count":2}`))
+	}))
+	defer srv.Close()
+
+	c := New(srv.URL)
+	feeds, err := c.ListFeeds(context.Background())
+	if err != nil {
+		t.Fatalf("ListFeeds error: %v", err)
+	}
+	if len(feeds) != 2 || feeds[0].LatestArticle == nil {
+		t.Fatalf("expected first feed to have a non-nil LatestArticle: %+v", feeds)
+	}
+	if feeds[1].LatestArticle != nil {
+		t.Fatalf("expected second feed's null latest_article to decode as nil: %+v", feeds[1])
 	}
 }
 

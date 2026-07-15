@@ -86,3 +86,55 @@ func TestStatsShowsUnavailableOnFeedError(t *testing.T) {
 		t.Error("no source bars should render when ListFeeds fails")
 	}
 }
+
+// TestIngestionHealthDerivation exhaustively covers every boundary of the
+// Signal Lamp status-derivation rule (REDESIGN_PLAN.md's "/stats" route).
+// This is the one place a wrong branch fabricates system state (a false
+// green over failing fetches, or a scary red on a fresh install), so every
+// condition combination gets its own case rather than a few spot checks.
+func TestIngestionHealthDerivation(t *testing.T) {
+	cases := []struct {
+		name      string
+		stats     apiclient.Stats
+		wantState string
+	}{
+		{"fresh install, no history at all", apiclient.Stats{TotalArticles: 0, SuccessfulFetches24h: 0, FailedFetches24h: 0}, "nodata"},
+		{"history exists, zero fetches attempted in 24h", apiclient.Stats{TotalArticles: 100, SuccessfulFetches24h: 0, FailedFetches24h: 0}, "failing"},
+		{"history exists, all attempts failed", apiclient.Stats{TotalArticles: 100, SuccessfulFetches24h: 0, FailedFetches24h: 5}, "failing"},
+		{"history exists, some failures", apiclient.Stats{TotalArticles: 100, SuccessfulFetches24h: 10, FailedFetches24h: 1}, "degraded"},
+		{"history exists, all succeeded", apiclient.Stats{TotalArticles: 100, SuccessfulFetches24h: 10, FailedFetches24h: 0}, "ok"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := ingestionHealth(tc.stats)
+			if got.State != tc.wantState {
+				t.Errorf("ingestionHealth(%+v).State = %q, want %q", tc.stats, got.State, tc.wantState)
+			}
+			if got.Message == "" {
+				t.Error("every health state must carry a non-empty message — never dot-alone")
+			}
+		})
+	}
+}
+
+func TestStatsHealthPanelRendersStateAndLabel(t *testing.T) {
+	svc := stubService{stats: apiclient.Stats{TotalArticles: 50, SuccessfulFetches24h: 3, FailedFetches24h: 2}}
+	body := getPath(t, newTestServer(t, svc), "/stats").Body.String()
+	if !strings.Contains(body, "DEGRADED") {
+		t.Error("expected the DEGRADED text label, not just a colored dot")
+	}
+	if !strings.Contains(body, "2 of 5 fetches failed") {
+		t.Error("expected the real fetch counts in the sentence, never invented")
+	}
+}
+
+func TestStatsHealthPanelNoDataOnFreshInstall(t *testing.T) {
+	svc := stubService{stats: apiclient.Stats{TotalArticles: 0}}
+	body := getPath(t, newTestServer(t, svc), "/stats").Body.String()
+	if !strings.Contains(body, "NO DATA YET") {
+		t.Error("a fresh install with zero articles must show NO DATA YET, never a red FAILING panel")
+	}
+	if strings.Contains(body, "FAILING") {
+		t.Error("must not show FAILING on a fresh install with no history")
+	}
+}

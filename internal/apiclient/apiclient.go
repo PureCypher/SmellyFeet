@@ -47,18 +47,22 @@ type DigestResult struct {
 
 // Feed is one entry from GET /feeds.
 type Feed struct {
-	FeedURL      string `json:"feed_url"`
-	ArticleCount int    `json:"article_count"`
+	FeedURL       string     `json:"feed_url"`
+	ArticleCount  int        `json:"article_count"`
+	LatestArticle *time.Time `json:"latest_article"`
 }
 
 // Stats is the payload from GET /stats.
 type Stats struct {
-	TotalArticles     int        `json:"total_articles"`
-	TotalFeeds        int        `json:"total_feeds"`
-	LastFetch         *time.Time `json:"last_fetch"`
-	ArticlesToday     int        `json:"articles_today"`
-	ArticlesThisWeek  int        `json:"articles_this_week"`
-	ArticlesThisMonth int        `json:"articles_this_month"`
+	TotalArticles        int        `json:"total_articles"`
+	TotalFeeds           int        `json:"total_feeds"`
+	LastFetch            *time.Time `json:"last_fetch"`
+	ArticlesToday        int        `json:"articles_today"`
+	ArticlesThisWeek     int        `json:"articles_this_week"`
+	ArticlesThisMonth    int        `json:"articles_this_month"`
+	SuccessfulFetches24h int        `json:"successful_fetches_24h"`
+	FailedFetches24h     int        `json:"failed_fetches_24h"`
+	AvgFetchTimeMs       *float64   `json:"avg_fetch_time_ms"`
 }
 
 // ListParams are the query options for ListArticles.

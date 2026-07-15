@@ -1,7 +1,7 @@
 {{ define "stats" }}{{ template "header" . }}
 <div class="mb-7">
   <p class="font-mono text-[11px] uppercase tracking-[0.25em] text-accent/80 mb-1.5">// system</p>
-  <h1 class="text-2xl font-semibold text-zinc-100 tracking-tight">Statistics</h1>
+  <h1 class="text-2xl font-semibold text-primary tracking-tight">Statistics</h1>
 </div>
 {{ with .Stats }}
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -11,44 +11,65 @@
   </div>
   <div class="bg-ink-900 border border-line rounded-xl p-6 hover:border-accent/40 transition-colors">
     <div class="font-mono text-[10px] uppercase tracking-widest text-fog">Sources</div>
-    <div class="font-mono text-4xl font-semibold text-zinc-100 mt-2 tabular-nums">{{ .TotalFeeds }}</div>
+    <div class="font-mono text-4xl font-semibold text-primary mt-2 tabular-nums">{{ .TotalFeeds }}</div>
   </div>
   <div class="bg-ink-900 border border-line rounded-xl p-6 hover:border-accent/40 transition-colors">
     <div class="font-mono text-[10px] uppercase tracking-widest text-fog">Last fetch</div>
-    <div class="font-mono text-lg font-medium text-zinc-100 mt-3" title="{{ .LastFetch | formatDate }}">{{ if .LastFetch }}{{ .LastFetch | relTime }}{{ else }}—{{ end }}</div>
+    <div class="font-mono text-lg font-medium text-primary mt-3">{{ if .LastFetch }}{{ .LastFetch | relTime }}{{ else }}—{{ end }}</div>
+    {{ if .LastFetch }}<div class="font-mono text-[10px] text-structural mt-1">{{ .LastFetch | formatDate }} UTC</div>{{ end }}
   </div>
 </div>
 {{ end }}
-{{ if .Collected }}
+
+{{ with .Health }}
+<section class="mt-10">
+  <h2 class="font-mono text-[11px] uppercase tracking-[0.25em] text-accent/80 mb-4">// ingestion health</h2>
+  <div class="rounded-xl border p-4 font-mono text-xs {{ if eq .State "ok" }}border-status-ok/25 bg-status-ok/[0.08]{{ else if eq .State "degraded" }}border-status-warn/25 bg-status-warn/[0.08]{{ else if eq .State "failing" }}border-status-critical/25 bg-status-critical/[0.08]{{ else }}border-line bg-ink-900{{ end }}">
+    <div class="flex items-center gap-2">
+      <span class="inline-block h-2 w-2 rounded-full shrink-0 {{ if eq .State "ok" }}bg-status-ok{{ else if eq .State "degraded" }}bg-status-warn{{ else if eq .State "failing" }}bg-status-critical{{ else }}bg-fog{{ end }}" aria-hidden="true"></span>
+      <span class="uppercase tracking-widest {{ if eq .State "ok" }}text-status-ok{{ else if eq .State "degraded" }}text-status-warn{{ else if eq .State "failing" }}text-status-critical{{ else }}text-fog{{ end }}">{{ if eq .State "ok" }}OK{{ else if eq .State "degraded" }}DEGRADED{{ else if eq .State "failing" }}FAILING{{ else }}NO DATA YET{{ end }}</span>
+    </div>
+    <p class="mt-1.5 text-body">{{ .Message }}</p>
+  </div>
+</section>
+{{ end }}
+
 <section class="mt-10">
   <h2 class="font-mono text-[11px] uppercase tracking-[0.25em] text-accent/80 mb-4">// articles collected</h2>
+  {{ if .Collected }}
   <ul class="space-y-2">
     {{ range .Collected }}
     <li class="flex items-center gap-3 font-mono text-xs">
-      <span class="w-40 md:w-56 truncate text-zinc-300">{{ .Name }}</span>
+      <span class="w-40 md:w-56 truncate text-body">{{ .Name }}</span>
       <span class="flex-1 h-2 rounded bg-ink-800 overflow-hidden"><span class="block h-full rounded bg-accent/70 bar-{{ .Bar }}"></span></span>
       <span class="w-14 text-right text-fog">{{ .Count }}</span>
     </li>
     {{ end }}
   </ul>
+  {{ else }}
+  <p class="text-sm text-fog italic">Nothing has been collected in the last 30 days.</p>
+  {{ end }}
 </section>
-{{ end }}
-{{ if or .Sources .SourcesUnavailable }}
+
 <section class="mt-10">
   <h2 class="font-mono text-[11px] uppercase tracking-[0.25em] text-accent/80 mb-4">// top sources</h2>
   {{ if .SourcesUnavailable }}
   <p class="text-sm text-fog italic">Source breakdown unavailable — could not reach the feed service.</p>
-  {{ else }}
+  {{ else if .Sources }}
   <ul class="space-y-2">
     {{ range .Sources }}
-    <li class="flex items-center gap-3 font-mono text-xs">
-      <span class="w-40 md:w-56 truncate text-zinc-300">{{ .Name }}</span>
-      <span class="flex-1 h-2 rounded bg-ink-800 overflow-hidden"><span class="block h-full rounded bg-accent/70 bar-{{ .Bar }}"></span></span>
-      <span class="w-14 text-right text-fog">{{ .Count }}</span>
+    <li class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 font-mono text-xs">
+      {{ if .FeedURL }}<a href="/?feed={{ .FeedURL | urlquery }}" class="sm:w-40 md:w-56 sm:truncate text-body hover:text-accent transition-colors">{{ .Name }}</a>{{ else }}<span class="sm:w-40 md:w-56 sm:truncate text-body">{{ .Name }}</span>{{ end }}
+      <div class="flex items-center gap-3">
+        <span class="flex-1 h-2 rounded bg-ink-800 overflow-hidden"><span class="block h-full rounded bg-accent/70 bar-{{ .Bar }}"></span></span>
+        <span class="w-14 text-right text-fog shrink-0">{{ .Count }}</span>
+        {{ if .Latest }}<span class="text-structural shrink-0 hidden sm:inline">· latest {{ .Latest | relTime }}</span>{{ end }}
+      </div>
     </li>
     {{ end }}
   </ul>
+  {{ else }}
+  <p class="text-sm text-fog italic">No sources have articles yet.</p>
   {{ end }}
 </section>
-{{ end }}
 {{ template "footer" . }}{{ end }}
