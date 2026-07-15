@@ -3,6 +3,7 @@ package server
 import (
 	"strings"
 	"testing"
+	"time"
 
 	"smellyfeet/internal/apiclient"
 )
@@ -63,5 +64,49 @@ func TestSourcePillIsFilterLink(t *testing.T) {
 	body := getPath(t, newTestServer(t, svc), "/").Body.String()
 	if !strings.Contains(body, `href="/?feed=https%3A%2F%2Fwww.brighttalk.com%2Fchannel%2F7451%2Ffeed%2Frss"`) {
 		t.Error("card pill should link to feed filter with escaped URL")
+	}
+}
+
+func TestCardShowsVisibleAbsoluteTime(t *testing.T) {
+	pub := time.Date(2026, 7, 14, 13, 41, 0, 0, time.UTC)
+	svc := stubService{list: apiclient.ListResult{Articles: []apiclient.Article{{
+		ID: 1, Title: "T", PublishedAt: pub,
+	}}}}
+	body := getPath(t, newTestServer(t, svc), "/").Body.String()
+	if !strings.Contains(body, "2026-07-14 13:41 UTC") {
+		t.Error("absolute timestamp must be visible text, not title-attribute only")
+	}
+}
+
+func TestSearchInputHasMinLength(t *testing.T) {
+	body := getPath(t, newTestServer(t, stubService{}), "/").Body.String()
+	if !strings.Contains(body, `minlength="2"`) {
+		t.Error("search input should carry a native minlength=2 constraint")
+	}
+}
+
+func TestFeedContextStripShowsRawURL(t *testing.T) {
+	body := getPath(t, newTestServer(t, stubService{}), "/?feed=https%3A%2F%2Fcvefeed.io%2Frssfeed%2Flatest.xml").Body.String()
+	if !strings.Contains(body, "Feed URL:") || !strings.Contains(body, "https://cvefeed.io/rssfeed/latest.xml") {
+		t.Error("raw feed URL should be visible text when a feed filter is active")
+	}
+}
+
+func TestDegradedCalloutWhenFeedsUnavailable(t *testing.T) {
+	svc := stubService{feedsErr: errBoom}
+	body := getPath(t, newTestServer(t, svc), "/").Body.String()
+	if !strings.Contains(body, "DEGRADED") {
+		t.Error("expected a DEGRADED callout when the feeds fetch fails")
+	}
+}
+
+func TestEmptyStateDistinguishesFilteredFromUnfiltered(t *testing.T) {
+	filtered := getPath(t, newTestServer(t, stubService{}), "/?q=zzznomatch").Body.String()
+	if !strings.Contains(filtered, "No articles match these filters") {
+		t.Error("filtered empty state should mention the active filters")
+	}
+	unfiltered := getPath(t, newTestServer(t, stubService{}), "/").Body.String()
+	if !strings.Contains(unfiltered, "No articles found.") {
+		t.Error("unfiltered empty state should stay the plain message")
 	}
 }

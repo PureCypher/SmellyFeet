@@ -57,21 +57,22 @@ func (s *Server) handleHealthz(w http.ResponseWriter, r *http.Request) {
 }
 
 type listView struct {
-	Title     string
-	Desc      string
-	OG        bool
-	OGArticle bool
-	Nav       string
-	Articles  []apiclient.Article
-	Upcoming  []apiclient.Article
-	Feeds     []apiclient.Feed
-	Q         string
-	QApplied  bool
-	Feed      string
-	Sort      string
-	Page      int
-	HasPrev   bool
-	HasNext   bool
+	Title            string
+	Desc             string
+	OG               bool
+	OGArticle        bool
+	Nav              string
+	Articles         []apiclient.Article
+	Upcoming         []apiclient.Article
+	Feeds            []apiclient.Feed
+	FeedsUnavailable bool
+	Q                string
+	QApplied         bool
+	Feed             string
+	Sort             string
+	Page             int
+	HasPrev          bool
+	HasNext          bool
 }
 
 // minSearchQueryLen mirrors the backend's own rule (Information-Broker api.go):
@@ -168,8 +169,10 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 	}
 
 	feeds, err := s.svc.ListFeeds(ctx)
+	feedsUnavailable := false
 	if err != nil {
-		feeds = nil // non-fatal: filter dropdown simply shows "All feeds"
+		feeds = nil             // non-fatal: filter dropdown simply shows "All feeds"
+		feedsUnavailable = true // surfaced as an explicit DEGRADED callout, not silently
 	}
 
 	var upcoming []apiclient.Article
@@ -180,20 +183,21 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 
 	setCache(w, cacheList)
 	s.render(w, http.StatusOK, "list", listView{
-		Title:    "Articles",
-		Desc:     "AI-summarized cybersecurity intelligence — the latest articles from monitored threat feeds.",
-		OG:       true,
-		Nav:      "feed",
-		Articles: current,
-		Upcoming: upcoming,
-		Feeds:    feeds,
-		Q:        q,
-		QApplied: len(strings.TrimSpace(q)) >= minSearchQueryLen,
-		Feed:     feed,
-		Sort:     sort,
-		Page:     page,
-		HasPrev:  page > 1,
-		HasNext:  len(res.Articles) == s.pageSize,
+		Title:            "Articles",
+		Desc:             "AI-summarized cybersecurity intelligence — the latest articles from monitored threat feeds.",
+		OG:               true,
+		Nav:              "feed",
+		Articles:         current,
+		Upcoming:         upcoming,
+		Feeds:            feeds,
+		FeedsUnavailable: feedsUnavailable,
+		Q:                q,
+		QApplied:         len(strings.TrimSpace(q)) >= minSearchQueryLen,
+		Feed:             feed,
+		Sort:             sort,
+		Page:             page,
+		HasPrev:          page > 1,
+		HasNext:          len(res.Articles) == s.pageSize,
 	})
 }
 
