@@ -144,6 +144,28 @@
   --container: 64rem;
   --container-narrow: 42rem;
   --measure-prose: 72ch;
+
+  /* RGB triplets (space-separated, no rgb() wrapper) for Tailwind's
+     rgb(var(--x-rgb) / <alpha-value>) opacity-modifier pattern in
+     tailwind.config.js — required because Tailwind cannot decompose an
+     opaque var() color reference into channels at build time. Keep in
+     sync with the hex values above. */
+  --surface-page-rgb: 10 10 12;
+  --surface-raised-rgb: 15 15 19;
+  --surface-hover-rgb: 21 21 27;
+  --surface-overlay-rgb: 28 28 36;
+  --border-default-rgb: 38 38 47;
+  --text-primary-rgb: 250 250 250;
+  --text-secondary-rgb: 228 228 231;
+  --text-body-rgb: 212 212 216;
+  --text-muted-rgb: 139 139 151;
+  --text-structural-rgb: 136 145 163;
+  --text-faint-rgb: 82 82 91;
+  --accent-rgb: 245 177 61;
+  --accent-bright-rgb: 255 201 100;
+  --accent-dim-rgb: 192 138 51;
+  --status-ok-rgb: 74 222 128;
+  --status-critical-rgb: 248 113 113;
 }
 
 html { color-scheme: dark; }
