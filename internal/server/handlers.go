@@ -166,9 +166,9 @@ func ingestionHealth(st apiclient.Stats) healthStatus {
 	}
 	if st.FailedFetches24h > 0 {
 		total := st.SuccessfulFetches24h + st.FailedFetches24h
-		return healthStatus{State: "degraded", Message: fmt.Sprintf("%d of %d fetches failed in the last 24h", st.FailedFetches24h, total)}
+		return healthStatus{State: "degraded", Message: fmt.Sprintf("%s of %s fetches failed in the last 24h", commas(st.FailedFetches24h), commas(total))}
 	}
-	return healthStatus{State: "ok", Message: fmt.Sprintf("all %d fetches succeeded in the last 24h", st.SuccessfulFetches24h)}
+	return healthStatus{State: "ok", Message: fmt.Sprintf("all %s fetches succeeded in the last 24h", commas(st.SuccessfulFetches24h))}
 }
 
 // trimDesc collapses whitespace and truncates to n runes for meta descriptions.

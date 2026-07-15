@@ -7,11 +7,11 @@
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
   <div class="bg-ink-900 border border-line rounded-xl p-6 hover:border-accent/40 transition-colors">
     <div class="font-mono text-[10px] uppercase tracking-widest text-fog">Total articles</div>
-    <div class="font-mono text-4xl font-semibold text-accent mt-2 tabular-nums">{{ .TotalArticles }}</div>
+    <div class="font-mono text-4xl font-semibold text-accent mt-2 tabular-nums">{{ .TotalArticles | commas }}</div>
   </div>
   <div class="bg-ink-900 border border-line rounded-xl p-6 hover:border-accent/40 transition-colors">
     <div class="font-mono text-[10px] uppercase tracking-widest text-fog">Sources</div>
-    <div class="font-mono text-4xl font-semibold text-primary mt-2 tabular-nums">{{ .TotalFeeds }}</div>
+    <div class="font-mono text-4xl font-semibold text-primary mt-2 tabular-nums">{{ .TotalFeeds | commas }}</div>
   </div>
   <div class="bg-ink-900 border border-line rounded-xl p-6 hover:border-accent/40 transition-colors">
     <div class="font-mono text-[10px] uppercase tracking-widest text-fog">Last fetch</div>
@@ -42,7 +42,7 @@
     <li class="flex items-center gap-3 font-mono text-xs">
       <span class="w-40 md:w-56 truncate text-body">{{ .Name }}</span>
       <span class="flex-1 h-2 rounded bg-ink-800 overflow-hidden"><span class="block h-full rounded bg-accent/70 bar-{{ .Bar }}"></span></span>
-      <span class="w-14 text-right text-fog">{{ .Count }}</span>
+      <span class="w-14 text-right text-fog">{{ .Count | commas }}</span>
     </li>
     {{ end }}
   </ul>

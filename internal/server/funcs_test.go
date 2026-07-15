@@ -5,6 +5,22 @@ import (
 	"time"
 )
 
+func TestCommas(t *testing.T) {
+	tests := []struct {
+		in   int
+		want string
+	}{
+		{0, "0"}, {5, "5"}, {130, "130"}, {983, "983"},
+		{1000, "1,000"}, {50913, "50,913"}, {10488, "10,488"},
+		{-1234, "-1,234"},
+	}
+	for _, tt := range tests {
+		if got := commas(tt.in); got != tt.want {
+			t.Errorf("commas(%d) = %q, want %q", tt.in, got, tt.want)
+		}
+	}
+}
+
 func TestSourceName(t *testing.T) {
 	tests := []struct{ name, in, want string }{
 		{"strips www and path", "https://www.brighttalk.com/channel/7451/feed/rss", "brighttalk.com"},

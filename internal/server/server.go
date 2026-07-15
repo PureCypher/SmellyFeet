@@ -74,9 +74,33 @@ var funcMap = template.FuncMap{
 	"sourceName":   sourceName,
 	"relTime":      relTime,
 	"cveID":        cveID,
+	"commas":       commas,
 	"inc":          func(n int) int { return n + 1 },
 	"dec":          func(n int) int { return n - 1 },
 	"assetHash":    func() string { return assetHash },
+}
+
+// commas formats an integer with thousands separators (50913 -> "50,913").
+// Hand-rolled rather than pulling in golang.org/x/text/message: the frontend's
+// go.mod is deliberately zero-dependency, and grouping digits by three is a
+// few lines either way.
+func commas(n int) string {
+	s := fmt.Sprintf("%d", n)
+	neg := strings.HasPrefix(s, "-")
+	if neg {
+		s = s[1:]
+	}
+	var b strings.Builder
+	for i, c := range s {
+		if i > 0 && (len(s)-i)%3 == 0 {
+			b.WriteByte(',')
+		}
+		b.WriteRune(c)
+	}
+	if neg {
+		return "-" + b.String()
+	}
+	return b.String()
 }
 
 // formatDate renders a time value for display, returning "—" for a nil or zero time.
