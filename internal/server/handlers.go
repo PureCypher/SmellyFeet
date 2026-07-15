@@ -236,7 +236,10 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-var validDigestRanges = map[string]bool{"daily": true, "weekly": true, "monthly": true}
+var validDigestRanges = map[string]bool{
+	"daily": true, "weekly": true, "monthly": true,
+	"quarterly": true, "halfyearly": true, "yearly": true,
+}
 
 type digestView struct {
 	Title       string
@@ -276,7 +279,7 @@ func (s *Server) handleDigest(w http.ResponseWriter, r *http.Request) {
 	setCache(w, cacheList)
 	s.render(w, http.StatusOK, "digest", digestView{
 		Title:     "Digest",
-		Desc:      "Cross-feed importance digest — stories covered by multiple sources, grouped by day, week, or month.",
+		Desc:      "Cross-feed importance digest — stories covered by multiple sources, for the current day, week, month, quarter, half-year, or year.",
 		OG:        true,
 		Nav:       "digest",
 		Range:     rangeParam,

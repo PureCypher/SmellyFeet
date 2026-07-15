@@ -14,6 +14,9 @@ func TestHandleDigestRangeWhitelist(t *testing.T) {
 		{"/digest", `<option value="daily" selected>`},
 		{"/digest?range=weekly", `<option value="weekly" selected>`},
 		{"/digest?range=monthly", `<option value="monthly" selected>`},
+		{"/digest?range=quarterly", `<option value="quarterly" selected>`},
+		{"/digest?range=halfyearly", `<option value="halfyearly" selected>`},
+		{"/digest?range=yearly", `<option value="yearly" selected>`},
 		{"/digest?range=garbage", `<option value="daily" selected>`},
 	} {
 		body := getPath(t, h, tt.path).Body.String()

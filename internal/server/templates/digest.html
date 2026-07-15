@@ -12,6 +12,9 @@
       <option value="daily" {{ if eq .Range "daily" }}selected{{ end }}>Daily</option>
       <option value="weekly" {{ if eq .Range "weekly" }}selected{{ end }}>Weekly</option>
       <option value="monthly" {{ if eq .Range "monthly" }}selected{{ end }}>Monthly</option>
+      <option value="quarterly" {{ if eq .Range "quarterly" }}selected{{ end }}>Quarterly</option>
+      <option value="halfyearly" {{ if eq .Range "halfyearly" }}selected{{ end }}>Half-yearly</option>
+      <option value="yearly" {{ if eq .Range "yearly" }}selected{{ end }}>Yearly</option>
     </select>
   </div>
   <button type="submit" class="rounded-lg bg-accent text-ink-950 font-semibold px-5 py-2 text-sm hover:bg-accent-bright transition-colors">Apply</button>
