@@ -3,8 +3,10 @@ package server
 import (
 	"encoding/json"
 	"net/http"
+	"net/url"
 	"strings"
 	"testing"
+	"time"
 )
 
 func newTestServerOpts(t *testing.T, svc ArticleService, opts ...Option) http.Handler {
@@ -16,6 +18,44 @@ func newTestServerOpts(t *testing.T, svc ArticleService, opts ...Option) http.Ha
 	return srv.Routes()
 }
 
+// aMeetup returns the first seed meetup. The seed content changes as the tracker
+// refreshes, so tests pull representative values from it rather than hardcoding.
+func aMeetup(t *testing.T) Meetup {
+	t.Helper()
+	seed, err := loadMeetupSeed()
+	if err != nil {
+		t.Fatalf("loadMeetupSeed: %v", err)
+	}
+	if len(seed.Meetups) == 0 {
+		t.Fatal("seed has no meetups")
+	}
+	return seed.Meetups[0]
+}
+
+// meetupsForCityFilter returns a seed meetup with a non-empty City and, if one
+// exists, another meetup in a different city (to check the filter excludes it).
+func meetupsForCityFilter(t *testing.T) (with Meetup, other Meetup) {
+	t.Helper()
+	seed, err := loadMeetupSeed()
+	if err != nil {
+		t.Fatalf("loadMeetupSeed: %v", err)
+	}
+	for _, m := range seed.Meetups {
+		if m.City == "" {
+			continue
+		}
+		if with.Slug == "" {
+			with = m
+		} else if !strings.EqualFold(m.City, with.City) {
+			return with, m
+		}
+	}
+	if with.Slug == "" {
+		t.Skip("no seed meetup has a city")
+	}
+	return with, Meetup{}
+}
+
 func TestMeetupsListRenders(t *testing.T) {
 	rec := getPath(t, newTestServer(t, stubService{}), "/meetups")
 	if rec.Code != http.StatusOK {
@@ -25,17 +65,30 @@ func TestMeetupsListRenders(t *testing.T) {
 	if !containsAll(body, "Community meetups", "bsides.org/chapters/", "/meetups/chapters") {
 		t.Errorf("list page missing structural content")
 	}
-	if !strings.Contains(body, "BSides Kent 2026") {
-		t.Errorf("list page missing a seed meetup title")
+	if m := aMeetup(t); !strings.Contains(body, m.Title) {
+		t.Errorf("list page missing seed meetup title %q", m.Title)
 	}
-	if !strings.Contains(body, "8 May 2026") {
-		t.Errorf("date-only event should show the date without a time")
+}
+
+func TestToItemDateOnlyFormatsWithoutTime(t *testing.T) {
+	srv, err := New(stubService{})
+	if err != nil {
+		t.Fatalf("New: %v", err)
+	}
+	m := Meetup{Slug: "x", Title: "T", DateOnly: true,
+		StartsAt: time.Date(2026, 5, 8, 12, 0, 0, 0, time.UTC)}
+	it := srv.toItem(m)
+	if !strings.Contains(it.StartsDisplay, "8 May 2026") {
+		t.Errorf("date-only StartsDisplay = %q, want the date", it.StartsDisplay)
+	}
+	if strings.Contains(it.StartsDisplay, ":") {
+		t.Errorf("date-only StartsDisplay must not include a clock time: %q", it.StartsDisplay)
 	}
 }
 
 func TestMeetupDetailAndNotFound(t *testing.T) {
 	h := newTestServer(t, stubService{})
-	ok := getPath(t, h, "/meetups/bsides-kent-2026")
+	ok := getPath(t, h, "/meetups/"+aMeetup(t).Slug)
 	if ok.Code != http.StatusOK {
 		t.Fatalf("detail status = %d", ok.Code)
 	}
@@ -49,7 +102,7 @@ func TestMeetupDetailAndNotFound(t *testing.T) {
 }
 
 func TestMeetupICS(t *testing.T) {
-	rec := getPath(t, newTestServer(t, stubService{}), "/meetups/bsides-kent-2026/ics")
+	rec := getPath(t, newTestServer(t, stubService{}), "/meetups/"+aMeetup(t).Slug+"/ics")
 	if rec.Code != http.StatusOK {
 		t.Fatalf("ics status = %d", rec.Code)
 	}
@@ -91,13 +144,13 @@ func TestChaptersCountryFilter(t *testing.T) {
 }
 
 func TestMeetupsCityFilter(t *testing.T) {
-	rec := getPath(t, newTestServer(t, stubService{}), "/meetups?city=Kent")
-	body := rec.Body.String()
-	if !strings.Contains(body, "BSides Kent 2026") {
-		t.Error("Kent filter should include BSides Kent")
+	with, other := meetupsForCityFilter(t)
+	body := getPath(t, newTestServer(t, stubService{}), "/meetups?city="+url.QueryEscape(with.City)).Body.String()
+	if !strings.Contains(body, with.Title) {
+		t.Errorf("city=%q should include %q", with.City, with.Title)
 	}
-	if strings.Contains(body, "BSides Copenhagen 2026") {
-		t.Error("Kent filter should exclude the Copenhagen event")
+	if other.Slug != "" && strings.Contains(body, other.Title) {
+		t.Errorf("city=%q should exclude %q (which is in %q)", with.City, other.Title, other.City)
 	}
 }
 
@@ -146,7 +199,8 @@ func TestAPIMeetupsReturnsJSON(t *testing.T) {
 }
 
 func TestAPIMeetupsCityFilter(t *testing.T) {
-	rec := getPath(t, newTestServer(t, stubService{}), "/api/meetups?city=Kent")
+	with, _ := meetupsForCityFilter(t)
+	rec := getPath(t, newTestServer(t, stubService{}), "/api/meetups?city="+url.QueryEscape(with.City))
 	var out struct {
 		Meetups []Meetup `json:"meetups"`
 	}
@@ -154,11 +208,11 @@ func TestAPIMeetupsCityFilter(t *testing.T) {
 		t.Fatalf("invalid json: %v", err)
 	}
 	if len(out.Meetups) == 0 {
-		t.Fatal("expected at least one Kent meetup in api response")
+		t.Fatalf("expected at least one meetup for city %q", with.City)
 	}
 	for _, m := range out.Meetups {
-		if !strings.EqualFold(m.City, "Kent") {
-			t.Errorf("city filter leaked %q", m.City)
+		if !strings.EqualFold(m.City, with.City) {
+			t.Errorf("city filter leaked %q (wanted %q)", m.City, with.City)
 		}
 	}
 }
