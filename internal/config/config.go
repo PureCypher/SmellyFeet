@@ -1,19 +1,28 @@
 // Package config loads frontend settings from the environment.
 package config
 
-import "os"
+import (
+	"os"
+	"strings"
+)
 
 // Config holds frontend runtime settings.
 type Config struct {
-	APIBaseURL string // base URL of the Information-Broker API
-	Port       string // port the frontend listens on
+	APIBaseURL     string // base URL of the Information-Broker API
+	Port           string // port the frontend listens on
+	MeetupsEnabled bool   // gate the Meetups tab + /meetups* + /api/meetups routes
+	MeetupsTZ      string // display timezone for meetup times
+	MeetupsWebhook string // relay target for propose-form submissions (empty = log only)
 }
 
 // Load reads configuration from the environment, applying defaults.
 func Load() Config {
 	return Config{
-		APIBaseURL: getenv("API_BASE_URL", "http://localhost:8080"),
-		Port:       getenv("PORT", "3000"),
+		APIBaseURL:     getenv("API_BASE_URL", "http://localhost:8080"),
+		Port:           getenv("PORT", "3000"),
+		MeetupsEnabled: getenvBool("MEETUPS_ENABLED", true),
+		MeetupsTZ:      getenv("MEETUPS_DEFAULT_TZ", "Europe/London"),
+		MeetupsWebhook: getenv("MEETUPS_NOTIFY_WEBHOOK", ""),
 	}
 }
 
@@ -22,4 +31,14 @@ func getenv(key, def string) string {
 		return v
 	}
 	return def
+}
+
+// getenvBool reads a boolean env var; empty is the default. "1"/"true"/"yes"
+// (any case) are true, everything else false.
+func getenvBool(key string, def bool) bool {
+	v := os.Getenv(key)
+	if v == "" {
+		return def
+	}
+	return v == "1" || strings.EqualFold(v, "true") || strings.EqualFold(v, "yes")
 }
