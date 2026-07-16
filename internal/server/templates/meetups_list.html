@@ -20,9 +20,6 @@
       {{ range .Tags }}<option value="{{ . }}"{{ if eq . $.Filter.Tag }} selected{{ end }}>{{ . }}</option>{{ end }}
     </select>
   </label>
-  <label class="flex items-center gap-2 px-1 py-2 text-body">
-    <input type="checkbox" name="online" value="1"{{ if .Filter.Online }} checked{{ end }}> Online only
-  </label>
   <button type="submit" class="rounded-md bg-accent text-ink-950 font-semibold px-4 py-2 uppercase tracking-widest hover:bg-accent-bright transition-colors">Filter</button>
   {{ if .Filter.Chapter }}<a href="/meetups" class="text-fog hover:text-accent py-2">Clear chapter: {{ .Filter.Chapter }}</a>{{ end }}
 </form>
