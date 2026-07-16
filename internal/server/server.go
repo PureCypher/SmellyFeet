@@ -66,18 +66,49 @@ type Server struct {
 	svc      ArticleService
 	tmpl     *template.Template
 	pageSize int
+
+	meetups        meetupSeed
+	displayTZ      *time.Location
+	meetupsEnabled bool
+	notifyWebhook  string
+	notify         func(context.Context, proposal) error
+	rl             *rateLimiter
 }
 
 var funcMap = template.FuncMap{
-	"formatDate":   formatDate,
-	"cleanContent": cleanContent,
-	"sourceName":   sourceName,
-	"relTime":      relTime,
-	"cveID":        cveID,
-	"commas":       commas,
-	"inc":          func(n int) int { return n + 1 },
-	"dec":          func(n int) int { return n - 1 },
-	"assetHash":    func() string { return assetHash },
+	"formatDate":     formatDate,
+	"cleanContent":   cleanContent,
+	"sourceName":     sourceName,
+	"relTime":        relTime,
+	"cveID":          cveID,
+	"commas":         commas,
+	"inc":            func(n int) int { return n + 1 },
+	"dec":            func(n int) int { return n - 1 },
+	"assetHash":      func() string { return assetHash },
+	"meetupsEnabled": func() bool { return meetupsNavEnabled },
+	"dict":           dict,
+}
+
+// meetupsNavEnabled gates the Meetups nav link in the shared header partial.
+// Set once by New; the frontend runs a single Server per process.
+// ponytail: package global mirrors the existing assetHash pattern.
+var meetupsNavEnabled = true
+
+// dict builds a map from alternating key/value pairs for passing multiple
+// named args into a sub-template.
+func dict(pairs ...any) (map[string]any, error) {
+	if len(pairs)%2 != 0 {
+		return nil, fmt.Errorf("dict: odd number of args")
+	}
+	m := make(map[string]any, len(pairs)/2)
+	for i := 0; i < len(pairs); i += 2 {
+		k, ok := pairs[i].(string)
+		if !ok {
+			return nil, fmt.Errorf("dict: key %d not a string", i)
+		}
+		m[k] = pairs[i+1]
+	}
+	return m, nil
 }
 
 // commas formats an integer with thousands separators (50913 -> "50,913").
@@ -174,13 +205,57 @@ var cveRe = regexp.MustCompile(`CVE-\d{4}-\d{4,}`)
 // cveID returns the first CVE identifier in s, or "".
 func cveID(s string) string { return cveRe.FindString(s) }
 
-// New constructs a Server with parsed templates.
-func New(svc ArticleService) (*Server, error) {
+// Option configures a Server at construction (functional options keep the
+// existing New(svc) callers valid).
+type Option func(*Server)
+
+// WithMeetupsEnabled toggles the Meetups tab and its routes.
+func WithMeetupsEnabled(b bool) Option { return func(s *Server) { s.meetupsEnabled = b } }
+
+// WithMeetupTZ sets the meetup display timezone by IANA name; an unknown name
+// keeps the current default.
+func WithMeetupTZ(name string) Option {
+	return func(s *Server) {
+		if loc, err := time.LoadLocation(name); err == nil {
+			s.displayTZ = loc
+		}
+	}
+}
+
+// WithNotifyWebhook sets the propose-form relay target.
+func WithNotifyWebhook(url string) Option { return func(s *Server) { s.notifyWebhook = url } }
+
+// WithNotifier overrides the proposal notifier (used in tests).
+func WithNotifier(fn func(context.Context, proposal) error) Option {
+	return func(s *Server) { s.notify = fn }
+}
+
+// New constructs a Server with parsed templates and the embedded meetup seed.
+func New(svc ArticleService, opts ...Option) (*Server, error) {
+	london, err := time.LoadLocation("Europe/London")
+	if err != nil {
+		return nil, fmt.Errorf("load default tz: %w", err)
+	}
+	s := &Server{svc: svc, pageSize: 20, meetupsEnabled: true, displayTZ: london}
+	for _, opt := range opts {
+		opt(s)
+	}
+	seed, err := loadMeetupSeed()
+	if err != nil {
+		return nil, fmt.Errorf("load meetup seed: %w", err)
+	}
+	s.meetups = seed
+	s.rl = newRateLimiter(5, 10*time.Minute)
+	if s.notify == nil {
+		s.notify = s.defaultNotify
+	}
 	tmpl, err := template.New("").Funcs(funcMap).ParseFS(templatesFS, "templates/*.html")
 	if err != nil {
 		return nil, err
 	}
-	return &Server{svc: svc, tmpl: tmpl, pageSize: 20}, nil
+	s.tmpl = tmpl
+	meetupsNavEnabled = s.meetupsEnabled
+	return s, nil
 }
 
 // Routes returns the configured HTTP handler.

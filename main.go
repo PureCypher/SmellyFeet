@@ -14,7 +14,11 @@ func main() {
 	cfg := config.Load()
 	client := apiclient.New(cfg.APIBaseURL)
 
-	srv, err := server.New(client)
+	srv, err := server.New(client,
+		server.WithMeetupsEnabled(cfg.MeetupsEnabled),
+		server.WithMeetupTZ(cfg.MeetupsTZ),
+		server.WithNotifyWebhook(cfg.MeetupsWebhook),
+	)
 	if err != nil {
 		log.Fatalf("init server: %v", err)
 	}

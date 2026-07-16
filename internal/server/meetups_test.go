@@ -181,3 +181,37 @@ func TestRateLimiter(t *testing.T) {
 		t.Error("request after window should be allowed")
 	}
 }
+
+func TestNewLoadsSeedAndDefaults(t *testing.T) {
+	srv, err := New(stubService{})
+	if err != nil {
+		t.Fatalf("New: %v", err)
+	}
+	if len(srv.meetups.Meetups) == 0 {
+		t.Error("New should load the meetup seed")
+	}
+	if !srv.meetupsEnabled {
+		t.Error("meetups should default to enabled")
+	}
+	if srv.displayTZ == nil {
+		t.Error("displayTZ should be set")
+	}
+	if !meetupsNavEnabled {
+		t.Error("nav gate global should be true after enabled New")
+	}
+}
+
+func TestWithMeetupsDisabled(t *testing.T) {
+	srv, err := New(stubService{}, WithMeetupsEnabled(false))
+	if err != nil {
+		t.Fatalf("New: %v", err)
+	}
+	if srv.meetupsEnabled {
+		t.Error("WithMeetupsEnabled(false) should disable meetups")
+	}
+	if meetupsNavEnabled {
+		t.Error("nav gate global should be false after disabled New")
+	}
+	// Restore the global so later tests (which assume enabled) are unaffected.
+	meetupsNavEnabled = true
+}
