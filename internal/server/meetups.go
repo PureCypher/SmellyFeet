@@ -24,7 +24,8 @@ type Meetup struct {
 	Description  string    `json:"description"` // plain multi-line text, NOT markdown
 	StartsAt     time.Time `json:"starts_at"`
 	EndsAt       time.Time `json:"ends_at"`
-	LocationType string    `json:"location_type"` // in_person | online | hybrid
+	DateOnly     bool      `json:"date_only,omitempty"` // display date without a clock time
+	LocationType string    `json:"location_type"`       // in_person | online | hybrid
 	VenueName    string    `json:"venue_name"`
 	VenueAddress string    `json:"venue_address"`
 	City         string    `json:"city"`

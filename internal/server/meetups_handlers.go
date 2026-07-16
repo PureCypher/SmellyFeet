@@ -21,7 +21,11 @@ type meetupItem struct {
 
 func (s *Server) toItem(m Meetup) meetupItem {
 	it := meetupItem{Meetup: m, IsOnline: m.LocationType == "online"}
-	it.StartsDisplay = m.StartsAt.In(s.displayTZ).Format("Mon 2 Jan 2006, 15:04")
+	if m.DateOnly {
+		it.StartsDisplay = m.StartsAt.In(s.displayTZ).Format("Mon 2 Jan 2006")
+	} else {
+		it.StartsDisplay = m.StartsAt.In(s.displayTZ).Format("Mon 2 Jan 2006, 15:04")
+	}
 	switch {
 	case m.LocationType == "online":
 		it.LocationLabel = "Online"
@@ -154,7 +158,11 @@ func (s *Server) handleMeetupDetail(w http.ResponseWriter, r *http.Request) {
 	}
 	if !m.EndsAt.IsZero() {
 		view.HasEnd = true
-		view.EndsDisplay = m.EndsAt.In(s.displayTZ).Format("15:04")
+		endFmt := "15:04"
+		if m.DateOnly {
+			endFmt = "Mon 2 Jan 2006"
+		}
+		view.EndsDisplay = m.EndsAt.In(s.displayTZ).Format(endFmt)
 	}
 	if m.LocationType != "online" {
 		addr := m.VenueAddress

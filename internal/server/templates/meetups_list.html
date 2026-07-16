@@ -64,6 +64,7 @@
   <h3 class="text-lg font-semibold text-secondary"><a href="/meetups/{{ .Slug }}" class="hover:text-accent">{{ .Title }}</a></h3>
   <p class="mt-1 text-sm text-body leading-relaxed">{{ .Summary }}</p>
   {{ if .Tags }}<div class="mt-2 flex flex-wrap gap-1.5 font-mono text-[10px] uppercase tracking-widest text-fog">{{ range .Tags }}<span class="px-1.5 py-0.5 rounded bg-ink-800">{{ . }}</span>{{ end }}</div>{{ end }}
+  {{ $s := or .RSVPURL .OnlineURL }}{{ if $s }}<div class="mt-2"><a href="{{ $s }}" rel="noopener nofollow" class="font-mono text-xs text-accent hover:text-accent-bright">Event site ↗</a></div>{{ end }}
 </article>
 {{ end }}
 

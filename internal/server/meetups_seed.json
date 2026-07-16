@@ -1,69 +1,67 @@
 {
   "meetups": [
     {
-      "slug": "example-london-autumn-social",
-      "title": "Example: London Infosec Autumn Social",
-      "summary": "Sample entry — an evening of lightning talks and hallway track for the London infosec community.",
-      "description": "This is an EXAMPLE meetup used to demonstrate the Meetups tab.\n\nExpect three lightning talks, an open CTF corner, and plenty of networking. Newcomers welcome — come say hi.\n\nReplace this entry with a real event by editing internal/server/meetups_seed.json.",
-      "starts_at": "2026-09-24T18:30:00+01:00",
-      "ends_at": "2026-09-24T21:00:00+01:00",
+      "slug": "bsides-kent-2026",
+      "title": "BSides Kent 2026",
+      "summary": "Security BSides community conference in Kent.",
+      "description": "Security BSides Kent — a community-run, volunteer-led cybersecurity conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-05-08T12:00:00Z",
+      "date_only": true,
       "location_type": "in_person",
-      "venue_name": "Example Venue",
-      "venue_address": "1 Example Street, London EC1A 1AA",
-      "city": "London",
-      "region": "Greater London",
-      "country": "UK",
-      "online_url": "",
-      "rsvp_url": "https://www.meetup.com/example-group/events/000000000/",
-      "chapter_name": "BSides London (community)",
-      "chapter_url": "https://bsides.org/chapters/",
-      "tags": [
-        "talks",
-        "ctf",
-        "networking"
-      ]
-    },
-    {
-      "slug": "example-online-workshop",
-      "title": "Example: Online Threat-Modelling Workshop",
-      "summary": "Sample entry — a hands-on online workshop on practical threat modelling.",
-      "description": "This is an EXAMPLE online meetup.\n\nA 90-minute hands-on session. Bring a laptop; a shared board link is sent to RSVPs.",
-      "starts_at": "2026-10-08T18:00:00+01:00",
-      "ends_at": "2026-10-08T19:30:00+01:00",
-      "location_type": "online",
       "venue_name": "",
       "venue_address": "",
-      "city": "",
+      "city": "Kent",
       "region": "",
-      "country": "",
-      "online_url": "https://example.com/online-workshop",
-      "rsvp_url": "https://lu.ma/example",
-      "chapter_name": "BSides Leeds (community)",
-      "chapter_url": "https://bsides.org/chapters/",
+      "country": "UK",
+      "online_url": "",
+      "rsvp_url": "https://bsideskent.org/",
+      "chapter_name": "BSides Kent",
+      "chapter_url": "https://bsideskent.org/",
       "tags": [
-        "workshop"
+        "conference"
       ]
     },
     {
-      "slug": "example-manchester-hybrid-meet",
-      "title": "Example: Manchester Hybrid Meet",
-      "summary": "Sample entry — in-person with a live stream for remote attendees.",
-      "description": "This is an EXAMPLE hybrid meetup.\n\nTalks in the room and streamed; Q&A takes questions from both.",
-      "starts_at": "2026-11-12T18:30:00+00:00",
-      "ends_at": "2026-11-12T21:00:00+00:00",
-      "location_type": "hybrid",
-      "venue_name": "Example Hall",
-      "venue_address": "10 Sample Road, Manchester M1 1AA",
-      "city": "Manchester",
-      "region": "North West England",
-      "country": "UK",
-      "online_url": "https://example.com/manchester-stream",
-      "rsvp_url": "https://www.eventbrite.co.uk/e/example-000000000",
-      "chapter_name": "BSides Manchester (community)",
-      "chapter_url": "https://bsides.org/chapters/",
+      "slug": "bsides-kobenhavn-2026",
+      "title": "BSides København 2026",
+      "summary": "Security BSides community conference in Copenhagen.",
+      "description": "Foreningen BSides København — the Copenhagen Security BSides conference. See the official site for venue, schedule, and tickets.",
+      "starts_at": "2026-11-14T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Copenhagen",
+      "region": "",
+      "country": "Denmark",
+      "online_url": "",
+      "rsvp_url": "https://bsideskbh.dk/",
+      "chapter_name": "BSides Copenhagen",
+      "chapter_url": "https://bsideskbh.dk/",
       "tags": [
-        "talks",
-        "networking"
+        "conference"
+      ]
+    },
+    {
+      "slug": "bsides-sandy-2026",
+      "title": "BSides Sandy 2026",
+      "summary": "Security BSides community conference near Salt Lake City.",
+      "description": "Security BSides Sandy (SLC) — a community cybersecurity conference at Miller Campus, Sandy, Utah.",
+      "starts_at": "2026-04-09T12:00:00Z",
+      "ends_at": "2026-04-10T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "Miller Campus",
+      "venue_address": "Miller Campus, Sandy, Utah",
+      "city": "Sandy",
+      "region": "Utah",
+      "country": "USA",
+      "online_url": "",
+      "rsvp_url": "",
+      "chapter_name": "BSides Sandy",
+      "chapter_url": "",
+      "tags": [
+        "conference"
       ]
     }
   ],
@@ -372,7 +370,7 @@
       "name": "BSides Copenhagen",
       "city": "Copenhagen",
       "country": "Denmark",
-      "website": ""
+      "website": "https://bsideskbh.dk/"
     },
     {
       "name": "BSides Quito",
@@ -936,7 +934,7 @@
       "name": "BSides Kent",
       "city": "Kent",
       "country": "UK",
-      "website": ""
+      "website": "https://bsideskent.org/"
     },
     {
       "name": "BSides Lancaster Lancashire",

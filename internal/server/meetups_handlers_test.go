@@ -25,14 +25,17 @@ func TestMeetupsListRenders(t *testing.T) {
 	if !containsAll(body, "Community meetups", "bsides.org/chapters/", "/meetups/chapters") {
 		t.Errorf("list page missing structural content")
 	}
-	if !strings.Contains(body, "Example: London Infosec Autumn Social") {
+	if !strings.Contains(body, "BSides Kent 2026") {
 		t.Errorf("list page missing a seed meetup title")
+	}
+	if !strings.Contains(body, "8 May 2026") {
+		t.Errorf("date-only event should show the date without a time")
 	}
 }
 
 func TestMeetupDetailAndNotFound(t *testing.T) {
 	h := newTestServer(t, stubService{})
-	ok := getPath(t, h, "/meetups/example-online-workshop")
+	ok := getPath(t, h, "/meetups/bsides-kent-2026")
 	if ok.Code != http.StatusOK {
 		t.Fatalf("detail status = %d", ok.Code)
 	}
@@ -46,7 +49,7 @@ func TestMeetupDetailAndNotFound(t *testing.T) {
 }
 
 func TestMeetupICS(t *testing.T) {
-	rec := getPath(t, newTestServer(t, stubService{}), "/meetups/example-online-workshop/ics")
+	rec := getPath(t, newTestServer(t, stubService{}), "/meetups/bsides-kent-2026/ics")
 	if rec.Code != http.StatusOK {
 		t.Fatalf("ics status = %d", rec.Code)
 	}
@@ -88,13 +91,13 @@ func TestChaptersCountryFilter(t *testing.T) {
 }
 
 func TestMeetupsCityFilter(t *testing.T) {
-	rec := getPath(t, newTestServer(t, stubService{}), "/meetups?city=London")
+	rec := getPath(t, newTestServer(t, stubService{}), "/meetups?city=Kent")
 	body := rec.Body.String()
-	if !strings.Contains(body, "Example: London Infosec Autumn Social") {
-		t.Error("London filter should include the London example")
+	if !strings.Contains(body, "BSides Kent 2026") {
+		t.Error("Kent filter should include BSides Kent")
 	}
-	if strings.Contains(body, "Example: Online Threat-Modelling Workshop") {
-		t.Error("London filter should exclude the online example")
+	if strings.Contains(body, "BSides København 2026") {
+		t.Error("Kent filter should exclude the Copenhagen event")
 	}
 }
 
@@ -143,7 +146,7 @@ func TestAPIMeetupsReturnsJSON(t *testing.T) {
 }
 
 func TestAPIMeetupsCityFilter(t *testing.T) {
-	rec := getPath(t, newTestServer(t, stubService{}), "/api/meetups?city=London")
+	rec := getPath(t, newTestServer(t, stubService{}), "/api/meetups?city=Kent")
 	var out struct {
 		Meetups []Meetup `json:"meetups"`
 	}
@@ -151,10 +154,10 @@ func TestAPIMeetupsCityFilter(t *testing.T) {
 		t.Fatalf("invalid json: %v", err)
 	}
 	if len(out.Meetups) == 0 {
-		t.Fatal("expected at least one London meetup in api response")
+		t.Fatal("expected at least one Kent meetup in api response")
 	}
 	for _, m := range out.Meetups {
-		if !strings.EqualFold(m.City, "London") {
+		if !strings.EqualFold(m.City, "Kent") {
 			t.Errorf("city filter leaked %q", m.City)
 		}
 	}
