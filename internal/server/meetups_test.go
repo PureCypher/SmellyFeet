@@ -84,9 +84,6 @@ func TestFilterMeetups(t *testing.T) {
 	if s := got(meetupFilter{City: "liverpool"}); len(s) != 2 {
 		t.Errorf("city filter = %v, want a,c", s)
 	}
-	if s := got(meetupFilter{Online: true}); len(s) != 2 { // online + hybrid
-		t.Errorf("online filter = %v, want b,c", s)
-	}
 	if s := got(meetupFilter{Tag: "CTF"}); len(s) != 1 || s[0] != "a" {
 		t.Errorf("tag filter = %v, want [a]", s)
 	}

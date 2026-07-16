@@ -104,15 +104,14 @@ type meetupFilter struct {
 	City    string
 	Tag     string
 	Chapter string
-	Online  bool
 }
 
 func (f meetupFilter) empty() bool {
-	return f.City == "" && f.Tag == "" && f.Chapter == "" && !f.Online
+	return f.City == "" && f.Tag == "" && f.Chapter == ""
 }
 
 // filterMeetups returns the meetups matching every set filter field
-// (case-insensitive). Online matches location_type online OR hybrid.
+// (case-insensitive).
 func filterMeetups(ms []Meetup, f meetupFilter) []Meetup {
 	if f.empty() {
 		return ms
@@ -123,9 +122,6 @@ func filterMeetups(ms []Meetup, f meetupFilter) []Meetup {
 			continue
 		}
 		if f.Chapter != "" && !strings.EqualFold(m.ChapterName, f.Chapter) {
-			continue
-		}
-		if f.Online && m.LocationType != "online" && m.LocationType != "hybrid" {
 			continue
 		}
 		if f.Tag != "" && !hasTag(m.Tags, f.Tag) {

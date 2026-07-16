@@ -62,7 +62,6 @@ func parseMeetupFilter(r *http.Request) meetupFilter {
 		City:    strings.TrimSpace(q.Get("city")),
 		Tag:     strings.TrimSpace(q.Get("tag")),
 		Chapter: strings.TrimSpace(q.Get("chapter")),
-		Online:  q.Get("online") == "1",
 	}
 }
 
@@ -255,7 +254,7 @@ func (s *Server) handleMeetupICS(w http.ResponseWriter, r *http.Request) {
 
 // handleAPIMeetups serves the seed as JSON for future bots. Everything is
 // published; there is no organizer PII on the Meetup type. Optional filters:
-// city, tag, online, from, to (RFC3339).
+// city, tag, from, to (RFC3339).
 func (s *Server) handleAPIMeetups(w http.ResponseWriter, r *http.Request) {
 	items := filterMeetups(s.meetups.Meetups, parseMeetupFilter(r))
 	if from, err := time.Parse(time.RFC3339, r.URL.Query().Get("from")); err == nil {
