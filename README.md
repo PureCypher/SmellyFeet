@@ -88,6 +88,21 @@ There's no database — meetups are published by editing the embedded seed,
 3. If you also changed templates, regenerate CSS with `bash scripts/build-css.sh`.
 4. Commit and redeploy. Publishing is just "edit the seed, redeploy" — git history is the audit log.
 
+### Refreshing tracked events
+
+Meetup events are tracked from each chapter's own website. To refresh them:
+
+```
+python3 scripts/import-chapter-events.py > /tmp/events.json
+```
+
+This scrapes every chapter's `website` for its next event date ("where" comes from the
+chapter's city/country) and prints candidate events. It is best-effort: heterogeneous
+sites mean a few dates may be CFP/ticket dates, and JS-only or cert-broken sites yield
+nothing (reported on stderr). **Review the dates**, then merge the good ones into the
+`meetups` array of `internal/server/meetups_seed.json` and redeploy. Manually-verified
+events (e.g. chapters whose date is only rendered client-side) can be pinned by hand.
+
 ### Attribution
 
 This is a community meetup tracker in the BSides spirit — it is **not** an official BSides mirror

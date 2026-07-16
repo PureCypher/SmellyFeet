@@ -96,7 +96,7 @@ func TestMeetupsCityFilter(t *testing.T) {
 	if !strings.Contains(body, "BSides Kent 2026") {
 		t.Error("Kent filter should include BSides Kent")
 	}
-	if strings.Contains(body, "BSides København 2026") {
+	if strings.Contains(body, "BSides Copenhagen 2026") {
 		t.Error("Kent filter should exclude the Copenhagen event")
 	}
 }
