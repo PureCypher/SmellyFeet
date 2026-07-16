@@ -268,6 +268,15 @@ func (s *Server) Routes() http.Handler {
 	mux.HandleFunc("GET /stats", s.handleStats)
 	mux.HandleFunc("GET /about", s.handleAbout)
 	mux.HandleFunc("GET /feed.xml", s.handleFeed)
+	if s.meetupsEnabled {
+		mux.HandleFunc("GET /meetups", s.handleMeetupsList)
+		mux.HandleFunc("GET /meetups/chapters", s.handleChapters)
+		mux.HandleFunc("GET /meetups/propose", s.handleProposeForm)
+		mux.HandleFunc("POST /meetups/propose", s.handleProposeSubmit)
+		mux.HandleFunc("GET /meetups/{slug}/ics", s.handleMeetupICS)
+		mux.HandleFunc("GET /meetups/{slug}", s.handleMeetupDetail)
+		mux.HandleFunc("GET /api/meetups", s.handleAPIMeetups)
+	}
 	mux.HandleFunc("GET /robots.txt", func(w http.ResponseWriter, r *http.Request) {
 		setCache(w, cacheAbout)
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
