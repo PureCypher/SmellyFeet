@@ -215,3 +215,27 @@ func TestWithMeetupsDisabled(t *testing.T) {
 	// Restore the global so later tests (which assume enabled) are unaffected.
 	meetupsNavEnabled = true
 }
+
+func TestValidateProposal(t *testing.T) {
+	valid := proposal{Title: "T", Contact: "me@example.com", City: "Leeds"}
+	if errs := validateProposal(valid); len(errs) != 0 {
+		t.Errorf("valid proposal reported errors: %v", errs)
+	}
+	if errs := validateProposal(proposal{Contact: "x", City: "Leeds"}); errs["title"] == "" {
+		t.Error("missing title should error")
+	}
+	if errs := validateProposal(proposal{Title: "T", City: "Leeds"}); errs["contact"] == "" {
+		t.Error("missing contact should error")
+	}
+	if errs := validateProposal(proposal{Title: "T", Contact: "x"}); errs["location"] == "" {
+		t.Error("missing city AND online_url should error")
+	}
+	online := proposal{Title: "T", Contact: "x", OnlineURL: "https://example.com/e"}
+	if errs := validateProposal(online); len(errs) != 0 {
+		t.Errorf("online-only proposal should be valid: %v", errs)
+	}
+	bad := proposal{Title: "T", Contact: "x", City: "Leeds", RSVPURL: "javascript:alert(1)"}
+	if errs := validateProposal(bad); errs["rsvp_url"] == "" {
+		t.Error("javascript: rsvp_url should error")
+	}
+}

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -54,4 +55,61 @@ func (s *Server) defaultNotify(ctx context.Context, p proposal) error {
 		return fmt.Errorf("webhook returned status %d", resp.StatusCode)
 	}
 	return nil
+}
+
+const (
+	maxTitleLen   = 200
+	maxContactLen = 200
+	maxSummaryLen = 500
+	maxNotesLen   = 4000
+)
+
+// proposalFromForm reads a proposal from POST form values. "website" is the
+// honeypot and is intentionally not copied here (the handler checks it).
+func proposalFromForm(r *http.Request) proposal {
+	g := func(k string) string { return strings.TrimSpace(r.PostFormValue(k)) }
+	return proposal{
+		Title:        g("title"),
+		Summary:      g("summary"),
+		StartsAt:     g("starts_at"),
+		City:         g("city"),
+		LocationType: g("location_type"),
+		OnlineURL:    g("online_url"),
+		RSVPURL:      g("rsvp_url"),
+		ChapterName:  g("chapter_name"),
+		Organizer:    g("organizer"),
+		Contact:      g("contact"),
+		Notes:        g("notes"),
+	}
+}
+
+// validateProposal returns a field->message map of problems; empty = valid.
+func validateProposal(p proposal) map[string]string {
+	errs := map[string]string{}
+	if p.Title == "" {
+		errs["title"] = "Please give the meetup a title."
+	} else if len(p.Title) > maxTitleLen {
+		errs["title"] = "Title is too long."
+	}
+	if p.Contact == "" {
+		errs["contact"] = "Please leave a contact email or handle so we can follow up."
+	} else if len(p.Contact) > maxContactLen {
+		errs["contact"] = "Contact is too long."
+	}
+	if p.City == "" && p.OnlineURL == "" {
+		errs["location"] = "Add a city or an online link."
+	}
+	if !httpURLOK(p.OnlineURL) {
+		errs["online_url"] = "Online link must start with http:// or https://."
+	}
+	if !httpURLOK(p.RSVPURL) {
+		errs["rsvp_url"] = "RSVP link must start with http:// or https://."
+	}
+	if len(p.Summary) > maxSummaryLen {
+		errs["summary"] = "Summary is too long."
+	}
+	if len(p.Notes) > maxNotesLen {
+		errs["notes"] = "Notes are too long."
+	}
+	return errs
 }
