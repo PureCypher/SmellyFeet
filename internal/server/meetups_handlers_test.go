@@ -228,13 +228,18 @@ func TestAPIMeetupsReturnsJSON(t *testing.T) {
 }
 
 func TestAPIMeetupsCityFilter(t *testing.T) {
-	rec := getPath(t, newTestServer(t, stubService{}), "/api/meetups?city=Liverpool")
+	rec := getPath(t, newTestServer(t, stubService{}), "/api/meetups?city=London")
 	var out struct {
 		Meetups []Meetup `json:"meetups"`
 	}
-	_ = json.Unmarshal(rec.Body.Bytes(), &out)
+	if err := json.Unmarshal(rec.Body.Bytes(), &out); err != nil {
+		t.Fatalf("invalid json: %v", err)
+	}
+	if len(out.Meetups) == 0 {
+		t.Fatal("expected at least one London meetup in api response")
+	}
 	for _, m := range out.Meetups {
-		if !strings.EqualFold(m.City, "Liverpool") {
+		if !strings.EqualFold(m.City, "London") {
 			t.Errorf("city filter leaked %q", m.City)
 		}
 	}

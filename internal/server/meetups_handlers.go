@@ -14,8 +14,10 @@ import (
 	"time"
 )
 
-// proposal is a submitted meetup suggestion. It is NEVER rendered on-site; it
-// is only relayed to the notify webhook, so no HTML sanitization is required.
+// proposal is a submitted meetup suggestion. Its content is relayed to the
+// notify webhook and, on a validation error, echoed back into the submitter's
+// own form (auto-escaped by html/template); it is never persisted or shown
+// to other visitors, so no HTML sanitizer is needed.
 type proposal struct {
 	Title        string
 	Summary      string
