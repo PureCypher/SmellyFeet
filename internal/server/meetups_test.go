@@ -1,6 +1,7 @@
 package server
 
 import (
+	"strings"
 	"testing"
 	"time"
 )
@@ -122,5 +123,41 @@ func TestSplitMeetups(t *testing.T) {
 	// past DESC by StartsAt: p2(-24h) then p1(-48h)
 	if len(gotPast) != 2 || gotPast[0] != "p2" || gotPast[1] != "p1" {
 		t.Errorf("past = %v, want [p2 p1]", gotPast)
+	}
+}
+
+func TestICSForMeetup(t *testing.T) {
+	now := time.Date(2026, 7, 16, 9, 0, 0, 0, time.UTC)
+	m := Meetup{
+		Slug: "x", Title: "Talks; food, fun", Summary: "line1\nline2",
+		StartsAt: time.Date(2026, 9, 24, 17, 30, 0, 0, time.UTC),
+		EndsAt:   time.Date(2026, 9, 24, 20, 0, 0, 0, time.UTC),
+		City:     "Liverpool", RSVPURL: "https://example.com/rsvp",
+	}
+	ics := icsForMeetup(m, now)
+	for _, want := range []string{
+		"BEGIN:VCALENDAR", "BEGIN:VEVENT", "END:VEVENT", "END:VCALENDAR",
+		"UID:x@smellyfeet",
+		"DTSTAMP:20260716T090000Z",
+		"DTSTART:20260924T173000Z",
+		"DTEND:20260924T200000Z",
+		`SUMMARY:Talks\; food\, fun`, // escaped ; and ,
+		"URL:https://example.com/rsvp",
+	} {
+		if !strings.Contains(ics, want) {
+			t.Errorf("ics missing %q\n---\n%s", want, ics)
+		}
+	}
+	if !strings.Contains(ics, "\r\n") {
+		t.Error("ICS lines must be CRLF-terminated")
+	}
+}
+
+func TestICSDefaultsEndTo2hAfterStart(t *testing.T) {
+	now := time.Date(2026, 7, 16, 9, 0, 0, 0, time.UTC)
+	m := Meetup{Slug: "y", Title: "T", StartsAt: time.Date(2026, 9, 1, 18, 0, 0, 0, time.UTC)}
+	ics := icsForMeetup(m, now)
+	if !strings.Contains(ics, "DTEND:20260901T200000Z") {
+		t.Errorf("missing 2h-default DTEND:\n%s", ics)
 	}
 }

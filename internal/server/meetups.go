@@ -168,3 +168,54 @@ func splitMeetups(ms []Meetup, now time.Time) (upcoming, past []Meetup) {
 	sort.SliceStable(past, func(i, j int) bool { return past[i].StartsAt.After(past[j].StartsAt) })
 	return upcoming, past
 }
+
+const icsStamp = "20060102T150405Z"
+
+// icsForMeetup renders a meetup as a minimal RFC5545 VEVENT. Times are emitted
+// in UTC. If EndsAt is unset, the event defaults to two hours. now is passed in
+// (not read from the clock) so output is deterministic and testable.
+func icsForMeetup(m Meetup, now time.Time) string {
+	end := m.EndsAt
+	if end.IsZero() {
+		end = m.StartsAt.Add(2 * time.Hour)
+	}
+	loc := "Online"
+	if m.LocationType != "online" {
+		if m.VenueName != "" {
+			loc = m.VenueName
+		} else if m.City != "" {
+			loc = m.City
+		}
+	}
+	link := m.RSVPURL
+	if link == "" {
+		link = m.OnlineURL
+	}
+	lines := []string{
+		"BEGIN:VCALENDAR",
+		"VERSION:2.0",
+		"PRODID:-//SmellyFeet//Meetups//EN",
+		"CALSCALE:GREGORIAN",
+		"METHOD:PUBLISH",
+		"BEGIN:VEVENT",
+		"UID:" + m.Slug + "@smellyfeet",
+		"DTSTAMP:" + now.UTC().Format(icsStamp),
+		"DTSTART:" + m.StartsAt.UTC().Format(icsStamp),
+		"DTEND:" + end.UTC().Format(icsStamp),
+		"SUMMARY:" + icsEscape(m.Title),
+		"DESCRIPTION:" + icsEscape(m.Summary),
+		"LOCATION:" + icsEscape(loc),
+	}
+	if link != "" {
+		lines = append(lines, "URL:"+link)
+	}
+	lines = append(lines, "END:VEVENT", "END:VCALENDAR")
+	return strings.Join(lines, "\r\n") + "\r\n"
+}
+
+// icsEscape escapes text per RFC5545 §3.3.11 (backslash, semicolon, comma,
+// newline).
+func icsEscape(s string) string {
+	r := strings.NewReplacer(`\`, `\\`, `;`, `\;`, `,`, `\,`, "\n", `\n`, "\r", "")
+	return r.Replace(s)
+}
