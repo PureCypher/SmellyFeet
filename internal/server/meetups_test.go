@@ -161,3 +161,23 @@ func TestICSDefaultsEndTo2hAfterStart(t *testing.T) {
 		t.Errorf("missing 2h-default DTEND:\n%s", ics)
 	}
 }
+
+func TestRateLimiter(t *testing.T) {
+	rl := newRateLimiter(3, time.Minute)
+	base := time.Date(2026, 7, 16, 12, 0, 0, 0, time.UTC)
+	for i := 0; i < 3; i++ {
+		if !rl.allowAt("1.2.3.4", base) {
+			t.Fatalf("request %d should be allowed", i)
+		}
+	}
+	if rl.allowAt("1.2.3.4", base) {
+		t.Error("4th request in window should be blocked")
+	}
+	if !rl.allowAt("5.6.7.8", base) {
+		t.Error("a different key should be allowed")
+	}
+	// After the window elapses, the key is allowed again.
+	if !rl.allowAt("1.2.3.4", base.Add(2*time.Minute)) {
+		t.Error("request after window should be allowed")
+	}
+}
