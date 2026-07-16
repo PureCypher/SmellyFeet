@@ -29,16 +29,12 @@ func TestLoadFromEnv(t *testing.T) {
 func TestLoadMeetupDefaults(t *testing.T) {
 	t.Setenv("MEETUPS_ENABLED", "")
 	t.Setenv("MEETUPS_DEFAULT_TZ", "")
-	t.Setenv("MEETUPS_NOTIFY_WEBHOOK", "")
 	c := Load()
 	if !c.MeetupsEnabled {
 		t.Error("MeetupsEnabled should default to true")
 	}
 	if c.MeetupsTZ != "Europe/London" {
 		t.Errorf("MeetupsTZ = %q, want Europe/London", c.MeetupsTZ)
-	}
-	if c.MeetupsWebhook != "" {
-		t.Errorf("MeetupsWebhook = %q, want empty", c.MeetupsWebhook)
 	}
 }
 

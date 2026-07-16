@@ -63,8 +63,6 @@ seed file rather than a database, so the app stays a stateless, GET-first proxy.
 | `GET /meetups/{slug}`         | Meetup detail page                                                              |
 | `GET /meetups/{slug}/ics`     | Download an `.ics` calendar file for the meetup                                |
 | `GET /meetups/chapters`       | Chapter directory (discovery only — see attribution below)                     |
-| `GET /meetups/propose`        | Propose-a-meetup form                                                          |
-| `POST /meetups/propose`       | Submit a proposed meetup                                                       |
 | `GET /api/meetups`            | Read-only JSON of the current listings. Filters: `?city=`, `?tag=`, `?from=`, `?to=` (RFC3339) |
 
 All of the above (and the nav tab) are gated by `MEETUPS_ENABLED`.
@@ -75,7 +73,6 @@ All of the above (and the nav tab) are gated by `MEETUPS_ENABLED`.
 |---------------------------|------------------|------------------------------------------------------------------------------|
 | `MEETUPS_ENABLED`         | `true`           | Gates the Meetups tab and every `/meetups*` + `/api/meetups` route          |
 | `MEETUPS_DEFAULT_TZ`      | `Europe/London`  | IANA timezone used to display meetup times                                 |
-| `MEETUPS_NOTIFY_WEBHOOK`  | *(empty)*        | Webhook that propose-form submissions are relayed to (e.g. a Discord webhook). Empty = proposals are logged server-side instead |
 
 ### Adding a meetup
 
@@ -90,13 +87,6 @@ There's no database — meetups are published by editing the embedded seed,
    `http://` or `https://` — anything else fails validation at startup.
 3. If you also changed templates, regenerate CSS with `bash scripts/build-css.sh`.
 4. Commit and redeploy. Publishing is just "edit the seed, redeploy" — git history is the audit log.
-
-### Moderation flow
-
-The propose form is same-origin only and never writes to the seed directly. A submission is
-relayed to `MEETUPS_NOTIFY_WEBHOOK` (e.g. a Discord webhook) if one is configured, or logged
-server-side otherwise. From there: curate the submission, add it to
-`internal/server/meetups_seed.json`, commit, and redeploy.
 
 ### Attribution
 

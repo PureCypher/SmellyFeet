@@ -1,11 +1,8 @@
 package server
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
-	"net/http/httptest"
-	"net/url"
 	"strings"
 	"testing"
 )
@@ -25,7 +22,7 @@ func TestMeetupsListRenders(t *testing.T) {
 		t.Fatalf("status = %d", rec.Code)
 	}
 	body := rec.Body.String()
-	if !containsAll(body, "Community meetups", "bsides.org/chapters/", "/meetups/propose") {
+	if !containsAll(body, "Community meetups", "bsides.org/chapters/", "/meetups/chapters") {
 		t.Errorf("list page missing structural content")
 	}
 	if !strings.Contains(body, "Example: London Infosec Autumn Social") {
@@ -116,107 +113,6 @@ func TestMeetupsNavLinkPresentWhenEnabled(t *testing.T) {
 	body := getPath(t, newTestServer(t, stubService{}), "/about").Body.String()
 	if !strings.Contains(body, `href="/meetups"`) {
 		t.Error("nav should show Meetups link when enabled")
-	}
-}
-
-func postForm(t *testing.T, h http.Handler, path string, form url.Values) *httptest.ResponseRecorder {
-	t.Helper()
-	req := httptest.NewRequest(http.MethodPost, path, strings.NewReader(form.Encode()))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	rec := httptest.NewRecorder()
-	h.ServeHTTP(rec, req)
-	return rec
-}
-
-func TestProposeFormRenders(t *testing.T) {
-	rec := getPath(t, newTestServer(t, stubService{}), "/meetups/propose")
-	if rec.Code != http.StatusOK {
-		t.Fatalf("status = %d", rec.Code)
-	}
-	if !containsAll(rec.Body.String(), "Propose a meetup", `name="title"`, `name="website"`) {
-		t.Error("propose form missing fields/honeypot")
-	}
-}
-
-func TestProposeValidSubmitFiresWebhook(t *testing.T) {
-	var got []proposal
-	h := newTestServerOpts(t, stubService{}, WithNotifier(func(_ context.Context, p proposal) error {
-		got = append(got, p)
-		return nil
-	}))
-	rec := postForm(t, h, "/meetups/propose", url.Values{
-		"title": {"Real Meetup"}, "contact": {"me@example.com"}, "city": {"Liverpool"},
-	})
-	if rec.Code != http.StatusOK {
-		t.Fatalf("status = %d", rec.Code)
-	}
-	if len(got) != 1 || got[0].Title != "Real Meetup" {
-		t.Fatalf("notifier got %+v, want one proposal", got)
-	}
-	if !strings.Contains(rec.Body.String(), "pending review") {
-		t.Error("expected success flash")
-	}
-}
-
-func TestProposeHoneypotSilentlySkipsWebhook(t *testing.T) {
-	var got []proposal
-	h := newTestServerOpts(t, stubService{}, WithNotifier(func(_ context.Context, p proposal) error {
-		got = append(got, p)
-		return nil
-	}))
-	rec := postForm(t, h, "/meetups/propose", url.Values{
-		"title": {"Spam"}, "contact": {"x@y.z"}, "city": {"Leeds"}, "website": {"http://spam"},
-	})
-	if rec.Code != http.StatusOK {
-		t.Fatalf("status = %d", rec.Code)
-	}
-	if len(got) != 0 {
-		t.Errorf("honeypot should skip notify, got %+v", got)
-	}
-}
-
-func TestProposeInvalidReRendersWithError(t *testing.T) {
-	var got []proposal
-	h := newTestServerOpts(t, stubService{}, WithNotifier(func(_ context.Context, p proposal) error {
-		got = append(got, p)
-		return nil
-	}))
-	rec := postForm(t, h, "/meetups/propose", url.Values{"contact": {"x@y.z"}, "city": {"Leeds"}}) // no title
-	if rec.Code != http.StatusBadRequest {
-		t.Fatalf("status = %d, want 400", rec.Code)
-	}
-	if len(got) != 0 {
-		t.Error("invalid proposal must not notify")
-	}
-	if !strings.Contains(rec.Body.String(), "give the meetup a title") {
-		t.Error("expected title error message")
-	}
-}
-
-func TestProposeNotifyErrorShows502(t *testing.T) {
-	h := newTestServerOpts(t, stubService{}, WithNotifier(func(_ context.Context, _ proposal) error {
-		return errBoom
-	}))
-	rec := postForm(t, h, "/meetups/propose", url.Values{
-		"title": {"T"}, "contact": {"x@y.z"}, "city": {"Leeds"},
-	})
-	if rec.Code != http.StatusBadGateway {
-		t.Fatalf("status = %d, want 502", rec.Code)
-	}
-	if !strings.Contains(rec.Body.String(), "try again") {
-		t.Error("expected a soft-failure message")
-	}
-}
-
-func TestProposeRateLimited(t *testing.T) {
-	h := newTestServerOpts(t, stubService{}, WithNotifier(func(_ context.Context, _ proposal) error { return nil }))
-	form := url.Values{"title": {"T"}, "contact": {"x@y.z"}, "city": {"Leeds"}}
-	var last int
-	for i := 0; i < 7; i++ {
-		last = postForm(t, h, "/meetups/propose", form).Code
-	}
-	if last != http.StatusTooManyRequests {
-		t.Errorf("7th submit = %d, want 429", last)
 	}
 }
 

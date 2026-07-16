@@ -162,26 +162,6 @@ func TestICSDefaultsEndTo2hAfterStart(t *testing.T) {
 	}
 }
 
-func TestRateLimiter(t *testing.T) {
-	rl := newRateLimiter(3, time.Minute)
-	base := time.Date(2026, 7, 16, 12, 0, 0, 0, time.UTC)
-	for i := 0; i < 3; i++ {
-		if !rl.allowAt("1.2.3.4", base) {
-			t.Fatalf("request %d should be allowed", i)
-		}
-	}
-	if rl.allowAt("1.2.3.4", base) {
-		t.Error("4th request in window should be blocked")
-	}
-	if !rl.allowAt("5.6.7.8", base) {
-		t.Error("a different key should be allowed")
-	}
-	// After the window elapses, the key is allowed again.
-	if !rl.allowAt("1.2.3.4", base.Add(2*time.Minute)) {
-		t.Error("request after window should be allowed")
-	}
-}
-
 func TestNewLoadsSeedAndDefaults(t *testing.T) {
 	srv, err := New(stubService{})
 	if err != nil {
@@ -214,28 +194,4 @@ func TestWithMeetupsDisabled(t *testing.T) {
 	}
 	// Restore the global so later tests (which assume enabled) are unaffected.
 	meetupsNavEnabled = true
-}
-
-func TestValidateProposal(t *testing.T) {
-	valid := proposal{Title: "T", Contact: "me@example.com", City: "Leeds"}
-	if errs := validateProposal(valid); len(errs) != 0 {
-		t.Errorf("valid proposal reported errors: %v", errs)
-	}
-	if errs := validateProposal(proposal{Contact: "x", City: "Leeds"}); errs["title"] == "" {
-		t.Error("missing title should error")
-	}
-	if errs := validateProposal(proposal{Title: "T", City: "Leeds"}); errs["contact"] == "" {
-		t.Error("missing contact should error")
-	}
-	if errs := validateProposal(proposal{Title: "T", Contact: "x"}); errs["location"] == "" {
-		t.Error("missing city AND online_url should error")
-	}
-	online := proposal{Title: "T", Contact: "x", OnlineURL: "https://example.com/e"}
-	if errs := validateProposal(online); len(errs) != 0 {
-		t.Errorf("online-only proposal should be valid: %v", errs)
-	}
-	bad := proposal{Title: "T", Contact: "x", City: "Leeds", RSVPURL: "javascript:alert(1)"}
-	if errs := validateProposal(bad); errs["rsvp_url"] == "" {
-		t.Error("javascript: rsvp_url should error")
-	}
 }

@@ -12,7 +12,6 @@ type Config struct {
 	Port           string // port the frontend listens on
 	MeetupsEnabled bool   // gate the Meetups tab + /meetups* + /api/meetups routes
 	MeetupsTZ      string // display timezone for meetup times
-	MeetupsWebhook string // relay target for propose-form submissions (empty = log only)
 }
 
 // Load reads configuration from the environment, applying defaults.
@@ -22,7 +21,6 @@ func Load() Config {
 		Port:           getenv("PORT", "3000"),
 		MeetupsEnabled: getenvBool("MEETUPS_ENABLED", true),
 		MeetupsTZ:      getenv("MEETUPS_DEFAULT_TZ", "Europe/London"),
-		MeetupsWebhook: getenv("MEETUPS_NOTIFY_WEBHOOK", ""),
 	}
 }
 

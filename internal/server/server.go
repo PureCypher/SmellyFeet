@@ -70,9 +70,6 @@ type Server struct {
 	meetups        meetupSeed
 	displayTZ      *time.Location
 	meetupsEnabled bool
-	notifyWebhook  string
-	notify         func(context.Context, proposal) error
-	rl             *rateLimiter
 }
 
 var funcMap = template.FuncMap{
@@ -86,30 +83,12 @@ var funcMap = template.FuncMap{
 	"dec":            func(n int) int { return n - 1 },
 	"assetHash":      func() string { return assetHash },
 	"meetupsEnabled": func() bool { return meetupsNavEnabled },
-	"dict":           dict,
 }
 
 // meetupsNavEnabled gates the Meetups nav link in the shared header partial.
 // Set once by New; the frontend runs a single Server per process.
 // ponytail: package global mirrors the existing assetHash pattern.
 var meetupsNavEnabled = true
-
-// dict builds a map from alternating key/value pairs for passing multiple
-// named args into a sub-template.
-func dict(pairs ...any) (map[string]any, error) {
-	if len(pairs)%2 != 0 {
-		return nil, fmt.Errorf("dict: odd number of args")
-	}
-	m := make(map[string]any, len(pairs)/2)
-	for i := 0; i < len(pairs); i += 2 {
-		k, ok := pairs[i].(string)
-		if !ok {
-			return nil, fmt.Errorf("dict: key %d not a string", i)
-		}
-		m[k] = pairs[i+1]
-	}
-	return m, nil
-}
 
 // commas formats an integer with thousands separators (50913 -> "50,913").
 // Hand-rolled rather than pulling in golang.org/x/text/message: the frontend's
@@ -222,14 +201,6 @@ func WithMeetupTZ(name string) Option {
 	}
 }
 
-// WithNotifyWebhook sets the propose-form relay target.
-func WithNotifyWebhook(url string) Option { return func(s *Server) { s.notifyWebhook = url } }
-
-// WithNotifier overrides the proposal notifier (used in tests).
-func WithNotifier(fn func(context.Context, proposal) error) Option {
-	return func(s *Server) { s.notify = fn }
-}
-
 // New constructs a Server with parsed templates and the embedded meetup seed.
 func New(svc ArticleService, opts ...Option) (*Server, error) {
 	london, err := time.LoadLocation("Europe/London")
@@ -245,10 +216,6 @@ func New(svc ArticleService, opts ...Option) (*Server, error) {
 		return nil, fmt.Errorf("load meetup seed: %w", err)
 	}
 	s.meetups = seed
-	s.rl = newRateLimiter(5, 10*time.Minute)
-	if s.notify == nil {
-		s.notify = s.defaultNotify
-	}
 	tmpl, err := template.New("").Funcs(funcMap).ParseFS(templatesFS, "templates/*.html")
 	if err != nil {
 		return nil, err
@@ -271,8 +238,6 @@ func (s *Server) Routes() http.Handler {
 	if s.meetupsEnabled {
 		mux.HandleFunc("GET /meetups", s.handleMeetupsList)
 		mux.HandleFunc("GET /meetups/chapters", s.handleChapters)
-		mux.HandleFunc("GET /meetups/propose", s.handleProposeForm)
-		mux.HandleFunc("POST /meetups/propose", s.handleProposeSubmit)
 		mux.HandleFunc("GET /meetups/{slug}/ics", s.handleMeetupICS)
 		mux.HandleFunc("GET /meetups/{slug}", s.handleMeetupDetail)
 		mux.HandleFunc("GET /api/meetups", s.handleAPIMeetups)

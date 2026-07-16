@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"sort"
 	"strings"
-	"sync"
 	"time"
 
 	_ "time/tzdata" // embed the tz database so IANA zones resolve in scratch containers
@@ -220,37 +219,3 @@ func icsEscape(s string) string {
 	r := strings.NewReplacer(`\`, `\\`, `;`, `\;`, `,`, `\,`, "\n", `\n`, "\r", "")
 	return r.Replace(s)
 }
-
-// rateLimiter is a naive per-key fixed-window limiter.
-// ponytail: unbounded map keyed by IP, pruned per-key on access; add a
-// background sweep or a shared store only if this ever runs multi-instance.
-type rateLimiter struct {
-	mu     sync.Mutex
-	hits   map[string][]time.Time
-	max    int
-	window time.Duration
-}
-
-func newRateLimiter(max int, window time.Duration) *rateLimiter {
-	return &rateLimiter{hits: map[string][]time.Time{}, max: max, window: window}
-}
-
-func (rl *rateLimiter) allowAt(key string, now time.Time) bool {
-	rl.mu.Lock()
-	defer rl.mu.Unlock()
-	cutoff := now.Add(-rl.window)
-	kept := rl.hits[key][:0]
-	for _, t := range rl.hits[key] {
-		if t.After(cutoff) {
-			kept = append(kept, t)
-		}
-	}
-	if len(kept) >= rl.max {
-		rl.hits[key] = kept
-		return false
-	}
-	rl.hits[key] = append(kept, now)
-	return true
-}
-
-func (rl *rateLimiter) allow(key string) bool { return rl.allowAt(key, time.Now()) }
