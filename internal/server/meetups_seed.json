@@ -86,6 +86,48 @@
       ]
     },
     {
+      "slug": "black-hat-usa-2026-2026",
+      "title": "Black Hat USA 2026",
+      "summary": "Security conference in Las Vegas.",
+      "description": "Black Hat USA 2026 — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-08-01T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Las Vegas",
+      "region": "",
+      "country": "USA",
+      "online_url": "",
+      "rsvp_url": "https://www.blackhat.com/",
+      "chapter_name": "",
+      "chapter_url": "https://www.blackhat.com/",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
+      "slug": "def-con-34-2026",
+      "title": "DEF CON 34 2026",
+      "summary": "Security conference in Las Vegas.",
+      "description": "DEF CON 34 — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-08-06T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Las Vegas",
+      "region": "",
+      "country": "USA",
+      "online_url": "",
+      "rsvp_url": "https://defcon.org/",
+      "chapter_name": "",
+      "chapter_url": "https://defcon.org/",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
       "slug": "bsides-greenville-sc-2026",
       "title": "BSides Greenville SC 2026",
       "summary": "Security BSides community conference in Greenville, SC.",
@@ -128,6 +170,27 @@
       ]
     },
     {
+      "slug": "sec-t-2026",
+      "title": "SEC-T 2026",
+      "summary": "Security conference in Stockholm.",
+      "description": "SEC-T — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-09-09T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Stockholm",
+      "region": "",
+      "country": "Sweden",
+      "online_url": "",
+      "rsvp_url": "https://sec-t.org",
+      "chapter_name": "",
+      "chapter_url": "https://sec-t.org",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
       "slug": "bsides-belfast-northern-ireland-2026",
       "title": "BSides Belfast Northern Ireland 2026",
       "summary": "Security BSides community conference in Belfast, Northern Ireland.",
@@ -144,6 +207,27 @@
       "rsvp_url": "https://bsidesbelfast.org/",
       "chapter_name": "BSides Belfast Northern Ireland",
       "chapter_url": "https://bsidesbelfast.org/",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
+      "slug": "labscon-2026",
+      "title": "Labscon 2026",
+      "summary": "Security conference in Scottsdale, Arizona.",
+      "description": "Labscon — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-09-16T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Scottsdale, Arizona",
+      "region": "",
+      "country": "USA",
+      "online_url": "",
+      "rsvp_url": "https://www.labscon.io",
+      "chapter_name": "",
+      "chapter_url": "https://www.labscon.io",
       "tags": [
         "conference"
       ]
@@ -186,6 +270,27 @@
       "rsvp_url": "http://HoustonBSides.org",
       "chapter_name": "BSides Houston TX",
       "chapter_url": "http://HoustonBSides.org",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
+      "slug": "44con-2026",
+      "title": "44con 2026",
+      "summary": "Security conference in London.",
+      "description": "44con — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-09-17T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "London",
+      "region": "",
+      "country": "UK",
+      "online_url": "",
+      "rsvp_url": "https://44con.com/",
+      "chapter_name": "",
+      "chapter_url": "https://44con.com/",
       "tags": [
         "conference"
       ]
@@ -338,6 +443,48 @@
       ]
     },
     {
+      "slug": "cansecwest-2026",
+      "title": "CanSecWest 2026",
+      "summary": "Security conference in Vancouver.",
+      "description": "CanSecWest — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-09-30T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Vancouver",
+      "region": "",
+      "country": "Canada",
+      "online_url": "",
+      "rsvp_url": "https://www.secwest.net/",
+      "chapter_name": "",
+      "chapter_url": "https://www.secwest.net/",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
+      "slug": "romhack-camp-2026",
+      "title": "RomHack Camp 2026",
+      "summary": "Security conference in Rome.",
+      "description": "RomHack Camp — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-10-02T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Rome",
+      "region": "",
+      "country": "Italy",
+      "online_url": "",
+      "rsvp_url": "https://cfp.romhack.io",
+      "chapter_name": "",
+      "chapter_url": "https://cfp.romhack.io",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
       "slug": "bsides-toronto-ont-2026",
       "title": "BSides Toronto ONT 2026",
       "summary": "Security BSides community conference in Toronto, ONT.",
@@ -417,6 +564,90 @@
       "rsvp_url": "https://www.bsidesatl.info/",
       "chapter_name": "BSides Atlanta GA",
       "chapter_url": "https://www.bsidesatl.info/",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
+      "slug": "hacker-halted-2026-2026",
+      "title": "Hacker Halted 2026",
+      "summary": "Security conference in Atlanta.",
+      "description": "Hacker Halted 2026 — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-10-04T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Atlanta",
+      "region": "",
+      "country": "USA",
+      "online_url": "",
+      "rsvp_url": "https://hackerhalted.com/",
+      "chapter_name": "",
+      "chapter_url": "https://hackerhalted.com/",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
+      "slug": "no-hat-2026",
+      "title": "No Hat 2026",
+      "summary": "Security conference in Bergamo.",
+      "description": "No Hat — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-10-10T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Bergamo",
+      "region": "",
+      "country": "Italy",
+      "online_url": "",
+      "rsvp_url": "https://nohat.it",
+      "chapter_name": "",
+      "chapter_url": "https://nohat.it",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
+      "slug": "virus-bulletin-2026",
+      "title": "Virus Bulletin 2026",
+      "summary": "Security conference in Seville.",
+      "description": "Virus Bulletin — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-10-14T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Seville",
+      "region": "",
+      "country": "Spain",
+      "online_url": "",
+      "rsvp_url": "https://www.virusbulletin.com/conference/vb2026/",
+      "chapter_name": "",
+      "chapter_url": "https://www.virusbulletin.com/conference/vb2026/",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
+      "slug": "hack-lu-2026",
+      "title": "hack.lu 2026",
+      "summary": "Security conference in Luxembourg.",
+      "description": "hack.lu — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-10-20T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Luxembourg",
+      "region": "",
+      "country": "Luxembourg",
+      "online_url": "",
+      "rsvp_url": "https://hack.lu",
+      "chapter_name": "",
+      "chapter_url": "https://hack.lu",
       "tags": [
         "conference"
       ]
@@ -522,6 +753,48 @@
       "rsvp_url": "https://bsideslisbon.org/",
       "chapter_name": "BSides Lisbon",
       "chapter_url": "https://bsideslisbon.org/",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
+      "slug": "nullcon-berlin-2026",
+      "title": "NullCon Berlin 2026",
+      "summary": "Security conference in Berlin.",
+      "description": "NullCon Berlin — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-11-02T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Berlin",
+      "region": "",
+      "country": "Germany",
+      "online_url": "",
+      "rsvp_url": "https://nullcon.net/event/nullcon-berlin-2026/cfp/",
+      "chapter_name": "",
+      "chapter_url": "https://nullcon.net/event/nullcon-berlin-2026/cfp/",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
+      "slug": "blackalps-2026",
+      "title": "BlackAlps 2026",
+      "summary": "Security conference in Yverdon les Bains.",
+      "description": "BlackAlps — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-11-05T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Yverdon les Bains",
+      "region": "",
+      "country": "Switzerland",
+      "online_url": "",
+      "rsvp_url": "https://blackalps.ch",
+      "chapter_name": "",
+      "chapter_url": "https://blackalps.ch",
       "tags": [
         "conference"
       ]
@@ -653,6 +926,27 @@
       ]
     },
     {
+      "slug": "grehack-2026",
+      "title": "GreHack 2026",
+      "summary": "Security conference in Grenoble.",
+      "description": "GreHack — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-11-13T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Grenoble",
+      "region": "",
+      "country": "France",
+      "online_url": "",
+      "rsvp_url": "https://grehack.fr",
+      "chapter_name": "",
+      "chapter_url": "https://grehack.fr",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
       "slug": "bsides-perth-2026",
       "title": "BSides Perth 2026",
       "summary": "Security BSides community conference in Perth.",
@@ -695,6 +989,69 @@
       ]
     },
     {
+      "slug": "hardwear-io-nl-2026-2026",
+      "title": "hardwear.io NL 2026",
+      "summary": "Security conference in The Hague.",
+      "description": "hardwear.io NL 2026 — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-11-16T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "The Hague",
+      "region": "",
+      "country": "Netherlands",
+      "online_url": "",
+      "rsvp_url": "https://hardwear.io/",
+      "chapter_name": "",
+      "chapter_url": "https://hardwear.io/",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
+      "slug": "deepsec-2026",
+      "title": "DeepSec 2026",
+      "summary": "Security conference in Vienna.",
+      "description": "DeepSec — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-11-17T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Vienna",
+      "region": "",
+      "country": "Austria",
+      "online_url": "",
+      "rsvp_url": "https://www.deepsec.net",
+      "chapter_name": "",
+      "chapter_url": "https://www.deepsec.net",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
+      "slug": "code-blue-2026",
+      "title": "Code Blue 2026",
+      "summary": "Security conference in Tokyo.",
+      "description": "Code Blue — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-11-17T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Tokyo",
+      "region": "",
+      "country": "Japan",
+      "online_url": "",
+      "rsvp_url": "https://codeblue.jp/",
+      "chapter_name": "",
+      "chapter_url": "https://codeblue.jp/",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
       "slug": "bsides-amsterdam-2026",
       "title": "BSides Amsterdam 2026",
       "summary": "Security BSides community conference in Amsterdam.",
@@ -732,6 +1089,27 @@
       "rsvp_url": "http://www.bsidesaberystwyth.org",
       "chapter_name": "BSides Aberystwyth",
       "chapter_url": "http://www.bsidesaberystwyth.org",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
+      "slug": "avar-2026",
+      "title": "AVAR 2026",
+      "summary": "Security conference in Hyderabad.",
+      "description": "AVAR — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2026-12-02T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Hyderabad",
+      "region": "",
+      "country": "India",
+      "online_url": "",
+      "rsvp_url": "https://aavar.org/conferences",
+      "chapter_name": "",
+      "chapter_url": "https://aavar.org/conferences",
       "tags": [
         "conference"
       ]
@@ -842,6 +1220,27 @@
       ]
     },
     {
+      "slug": "insomni-hack-2027",
+      "title": "Insomni'hack 2027",
+      "summary": "Security conference in Lausanne.",
+      "description": "Insomni'hack — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2027-02-01T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Lausanne",
+      "region": "",
+      "country": "Switzerland",
+      "online_url": "",
+      "rsvp_url": "https://insomnihack.ch",
+      "chapter_name": "",
+      "chapter_url": "https://insomnihack.ch",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
       "slug": "bsides-jacksonville-fl-2027",
       "title": "BSides Jacksonville FL 2027",
       "summary": "Security BSides community conference in Jacksonville, FL.",
@@ -858,6 +1257,27 @@
       "rsvp_url": "https://bsidesjax.org/",
       "chapter_name": "BSides Jacksonville FL",
       "chapter_url": "https://bsidesjax.org/",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
+      "slug": "reverse-2027",
+      "title": "REverse 2027",
+      "summary": "Security conference in Orlando.",
+      "description": "REverse — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2027-03-11T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Orlando",
+      "region": "",
+      "country": "Florida",
+      "online_url": "",
+      "rsvp_url": "https://re-verse.io/",
+      "chapter_name": "",
+      "chapter_url": "https://re-verse.io/",
       "tags": [
         "conference"
       ]
@@ -921,6 +1341,27 @@
       "rsvp_url": "https://bsidesdayton.com/",
       "chapter_name": "BSides Dayton OH",
       "chapter_url": "https://bsidesdayton.com/",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
+      "slug": "northsec-2027",
+      "title": "NorthSec 2027",
+      "summary": "Security conference in Montreal.",
+      "description": "NorthSec — security conference. See the official site for the schedule, tickets, and CFP.",
+      "starts_at": "2027-05-20T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Montreal",
+      "region": "",
+      "country": "Canada",
+      "online_url": "",
+      "rsvp_url": "https://nsec.io/cfp/",
+      "chapter_name": "",
+      "chapter_url": "https://nsec.io/cfp/",
       "tags": [
         "conference"
       ]
