@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"sort"
+	"strings"
 	"time"
 
 	_ "time/tzdata" // embed the tz database so IANA zones resolve in scratch containers
@@ -95,4 +97,74 @@ func httpURLOK(s string) bool {
 		return false
 	}
 	return (u.Scheme == "http" || u.Scheme == "https") && u.Host != ""
+}
+
+type meetupFilter struct {
+	City    string
+	Tag     string
+	Chapter string
+	Online  bool
+}
+
+func (f meetupFilter) empty() bool {
+	return f.City == "" && f.Tag == "" && f.Chapter == "" && !f.Online
+}
+
+// filterMeetups returns the meetups matching every set filter field
+// (case-insensitive). Online matches location_type online OR hybrid.
+func filterMeetups(ms []Meetup, f meetupFilter) []Meetup {
+	if f.empty() {
+		return ms
+	}
+	out := make([]Meetup, 0, len(ms))
+	for _, m := range ms {
+		if f.City != "" && !strings.EqualFold(m.City, f.City) {
+			continue
+		}
+		if f.Chapter != "" && !strings.EqualFold(m.ChapterName, f.Chapter) {
+			continue
+		}
+		if f.Online && m.LocationType != "online" && m.LocationType != "hybrid" {
+			continue
+		}
+		if f.Tag != "" && !hasTag(m.Tags, f.Tag) {
+			continue
+		}
+		out = append(out, m)
+	}
+	return out
+}
+
+func hasTag(tags []string, want string) bool {
+	for _, t := range tags {
+		if strings.EqualFold(t, want) {
+			return true
+		}
+	}
+	return false
+}
+
+// isPast reports whether the meetup has finished as of now (using EndsAt when
+// set, else StartsAt).
+func isPast(m Meetup, now time.Time) bool {
+	end := m.EndsAt
+	if end.IsZero() {
+		end = m.StartsAt
+	}
+	return end.Before(now)
+}
+
+// splitMeetups partitions meetups into upcoming (StartsAt ASC) and past
+// (StartsAt DESC). Input order is not mutated.
+func splitMeetups(ms []Meetup, now time.Time) (upcoming, past []Meetup) {
+	for _, m := range ms {
+		if isPast(m, now) {
+			past = append(past, m)
+		} else {
+			upcoming = append(upcoming, m)
+		}
+	}
+	sort.SliceStable(upcoming, func(i, j int) bool { return upcoming[i].StartsAt.Before(upcoming[j].StartsAt) })
+	sort.SliceStable(past, func(i, j int) bool { return past[i].StartsAt.After(past[j].StartsAt) })
+	return upcoming, past
 }
