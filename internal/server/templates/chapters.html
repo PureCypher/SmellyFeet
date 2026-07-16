@@ -4,6 +4,20 @@
   <h1 class="text-3xl font-bold text-primary tracking-tight">BSides chapters</h1>
   <p class="mt-2 text-[15px] leading-relaxed text-body max-w-2xl">A discovery list of BSides-community chapters relevant to this audience. This is <span class="text-body font-semibold">not an official mirror</span> — always check the official <a href="https://bsides.org/chapters/" rel="noopener nofollow" class="text-accent hover:text-accent-bright">bsides.org/chapters/</a> for approved chapters and contact details.</p>
 </div>
+
+<form method="get" action="/meetups/chapters" class="mb-4 flex flex-wrap items-end gap-3 font-mono text-xs">
+  <label class="flex flex-col gap-1">
+    <span class="text-fog uppercase tracking-widest text-[10px]">Country</span>
+    <select name="country" class="rounded-md bg-ink-900 border border-line px-3 py-2 text-body">
+      <option value="">All countries</option>
+      {{ range .Countries }}<option value="{{ . }}"{{ if eq . $.Country }} selected{{ end }}>{{ . }}</option>{{ end }}
+    </select>
+  </label>
+  <button type="submit" class="rounded-md bg-accent text-ink-950 font-semibold px-4 py-2 uppercase tracking-widest hover:bg-accent-bright transition-colors">Filter</button>
+  {{ if .Country }}<a href="/meetups/chapters" class="text-fog hover:text-accent py-2">Clear</a>{{ end }}
+</form>
+<p class="mb-4 font-mono text-[11px] text-fog">{{ len .Chapters }} chapter{{ if ne (len .Chapters) 1 }}s{{ end }}{{ if .Country }} in {{ .Country }}{{ end }}.</p>
+
 <div class="grid gap-3 sm:grid-cols-2">
   {{ range .Chapters }}
   <div class="rounded-xl bg-ink-900 border border-line p-4">

@@ -300,17 +300,44 @@ type chaptersView struct {
 	OG, OGArticle bool
 	Nav           string
 	Chapters      []Chapter
+	Countries     []string // distinct sorted country list for the filter dropdown
+	Country       string   // currently selected country filter ("" = all)
 }
 
 func (s *Server) handleChapters(w http.ResponseWriter, r *http.Request) {
+	country := strings.TrimSpace(r.URL.Query().Get("country"))
+	chapters := s.meetups.Chapters
+	if country != "" {
+		filtered := make([]Chapter, 0, len(chapters))
+		for _, c := range chapters {
+			if strings.EqualFold(c.Country, country) {
+				filtered = append(filtered, c)
+			}
+		}
+		chapters = filtered
+	}
 	setCache(w, cacheList)
 	s.render(w, http.StatusOK, "chapters", chaptersView{
-		Title:    "Chapters",
-		Desc:     "Discovery list of BSides-community chapters — not an official mirror.",
-		OG:       true,
-		Nav:      "meetups",
-		Chapters: s.meetups.Chapters,
+		Title:     "Chapters",
+		Desc:      "Discovery list of BSides-community chapters — not an official mirror.",
+		OG:        true,
+		Nav:       "meetups",
+		Chapters:  chapters,
+		Countries: chapterCountries(s.meetups.Chapters),
+		Country:   country,
 	})
+}
+
+// chapterCountries returns the distinct, sorted country names in the seed for
+// the chapters filter dropdown.
+func chapterCountries(chapters []Chapter) []string {
+	set := map[string]bool{}
+	for _, c := range chapters {
+		if c.Country != "" {
+			set[c.Country] = true
+		}
+	}
+	return sortedKeys(set)
 }
 
 func (s *Server) handleMeetupICS(w http.ResponseWriter, r *http.Request) {

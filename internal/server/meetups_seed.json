@@ -17,7 +17,11 @@
       "rsvp_url": "https://www.meetup.com/example-group/events/000000000/",
       "chapter_name": "BSides London (community)",
       "chapter_url": "https://bsides.org/chapters/",
-      "tags": ["talks", "ctf", "networking"]
+      "tags": [
+        "talks",
+        "ctf",
+        "networking"
+      ]
     },
     {
       "slug": "example-online-workshop",
@@ -36,7 +40,9 @@
       "rsvp_url": "https://lu.ma/example",
       "chapter_name": "BSides Leeds (community)",
       "chapter_url": "https://bsides.org/chapters/",
-      "tags": ["workshop"]
+      "tags": [
+        "workshop"
+      ]
     },
     {
       "slug": "example-manchester-hybrid-meet",
@@ -55,14 +61,1410 @@
       "rsvp_url": "https://www.eventbrite.co.uk/e/example-000000000",
       "chapter_name": "BSides Manchester (community)",
       "chapter_url": "https://bsides.org/chapters/",
-      "tags": ["talks", "networking"]
+      "tags": [
+        "talks",
+        "networking"
+      ]
     }
   ],
   "chapters": [
-    { "name": "BSides London", "city": "London", "country": "UK", "website": "https://bsides.london/" },
-    { "name": "BSides Leeds", "city": "Leeds", "country": "UK", "website": "http://www.bsidesleeds.com/" },
-    { "name": "BSides Manchester", "city": "Manchester", "country": "UK", "website": "https://bsidesmcr.co.uk" },
-    { "name": "BSides Belfast", "city": "Belfast", "country": "UK", "website": "https://bsidesbelfast.org/" },
-    { "name": "BSides Cambridge", "city": "Cambridge", "country": "UK", "website": "https://bsidescambridge.uk/" }
+    {
+      "name": "BSides Tirana",
+      "city": "Tirana",
+      "country": "Albania",
+      "website": ""
+    },
+    {
+      "name": "BSides Luanda",
+      "city": "Luanda",
+      "country": "Angola",
+      "website": "https://www.bsidesluanda.org"
+    },
+    {
+      "name": "BSides Adelaide South Australia",
+      "city": "Adelaide, South Australia",
+      "country": "Australia",
+      "website": "https://bsidesadelaide.com.au"
+    },
+    {
+      "name": "BSides Ballarat Victoria",
+      "city": "Ballarat, Victoria",
+      "country": "Australia",
+      "website": "http://bsidesballarat.org"
+    },
+    {
+      "name": "BSides Brisbane",
+      "city": "Brisbane",
+      "country": "Australia",
+      "website": "https://bsidesbrisbane.com/"
+    },
+    {
+      "name": "BSides Canberra",
+      "city": "Canberra",
+      "country": "Australia",
+      "website": "https://bsidescbr.com.au/"
+    },
+    {
+      "name": "BSides Melbourne",
+      "city": "Melbourne",
+      "country": "Australia",
+      "website": "https://bsidesmelbourne.com/"
+    },
+    {
+      "name": "BSides Moves year to year",
+      "city": "Moves year to year",
+      "country": "Australia",
+      "website": "http://bsidesicsdownunder.com/"
+    },
+    {
+      "name": "BSides Perth",
+      "city": "Perth",
+      "country": "Australia",
+      "website": "https://bsidesperth.com.au/"
+    },
+    {
+      "name": "BSides Sydney",
+      "city": "Sydney",
+      "country": "Australia",
+      "website": "https://bsides.sydney"
+    },
+    {
+      "name": "BSides Innsbruck",
+      "city": "Innsbruck",
+      "country": "Austria",
+      "website": ""
+    },
+    {
+      "name": "BSides Vienna",
+      "city": "Vienna",
+      "country": "Austria",
+      "website": "https://bsidesvienna.at/"
+    },
+    {
+      "name": "BSides Manama",
+      "city": "Manama",
+      "country": "Bahrain",
+      "website": "https://linktr.ee/BSidesManama"
+    },
+    {
+      "name": "BSides Hasselt",
+      "city": "Hasselt",
+      "country": "Belgium",
+      "website": "https://www.bsides-limburg.be/"
+    },
+    {
+      "name": "BSides Cotonou",
+      "city": "Cotonou",
+      "country": "Benin",
+      "website": ""
+    },
+    {
+      "name": "BSides Cochabamba",
+      "city": "Cochabamba",
+      "country": "Bolivia",
+      "website": "https://bsidescochabamba.n3tw4lk3rs.com/"
+    },
+    {
+      "name": "BSides La Paz",
+      "city": "La Paz",
+      "country": "Bolivia",
+      "website": ""
+    },
+    {
+      "name": "BSides Curitiba Paraná",
+      "city": "Curitiba, Paraná",
+      "country": "Brazil",
+      "website": "https://bsidescwb.com.br/"
+    },
+    {
+      "name": "BSides Florianópolis Santa Catarina",
+      "city": "Florianópolis, Santa Catarina",
+      "country": "Brazil",
+      "website": "https://www.bsidesfloripa.org"
+    },
+    {
+      "name": "BSides Rio de Janeiro Rio de Janeiro",
+      "city": "Rio de Janeiro, Rio de Janeiro",
+      "country": "Brazil",
+      "website": ""
+    },
+    {
+      "name": "BSides Sao Paulo",
+      "city": "Sao Paulo",
+      "country": "Brazil",
+      "website": "https://securitybsides.com.br/"
+    },
+    {
+      "name": "BSides São Paulo São Paulo",
+      "city": "São Paulo, São Paulo",
+      "country": "Brazil",
+      "website": ""
+    },
+    {
+      "name": "BSides Vitoria Espírito Santo",
+      "city": "Vitoria, Espírito Santo",
+      "country": "Brazil",
+      "website": "https://bsides.vix.br/"
+    },
+    {
+      "name": "BSides Sofia",
+      "city": "Sofia",
+      "country": "Bulgaria",
+      "website": "https://securitybsides.bg"
+    },
+    {
+      "name": "BSides Burlington Ontario",
+      "city": "Burlington, Ontario",
+      "country": "Canada",
+      "website": "https://bsidesburlington.ca"
+    },
+    {
+      "name": "BSides Calgary",
+      "city": "Calgary",
+      "country": "Canada",
+      "website": "https://www.bsidescalgary.org/"
+    },
+    {
+      "name": "BSides Edmonton Alberta",
+      "city": "Edmonton, Alberta",
+      "country": "Canada",
+      "website": "https://www.bsidesedmonton.org/"
+    },
+    {
+      "name": "BSides Halifax NS",
+      "city": "Halifax, NS",
+      "country": "Canada",
+      "website": "https://halifaxbsides.ca"
+    },
+    {
+      "name": "BSides London Ontario",
+      "city": "London, Ontario",
+      "country": "Canada",
+      "website": "https://www.bsideslondon.ca"
+    },
+    {
+      "name": "BSides Montreal",
+      "city": "Montreal",
+      "country": "Canada",
+      "website": "https://bsidesmtl.ca/"
+    },
+    {
+      "name": "BSides Ottawa ONT",
+      "city": "Ottawa, ONT",
+      "country": "Canada",
+      "website": "https://bsidesottawa.ca/"
+    },
+    {
+      "name": "BSides Regina",
+      "city": "Regina",
+      "country": "Canada",
+      "website": "https://bsidesregina.ca/"
+    },
+    {
+      "name": "BSides Saskatoon Saskatchewan",
+      "city": "Saskatoon, Saskatchewan",
+      "country": "Canada",
+      "website": "https://bsidesyxe.ca"
+    },
+    {
+      "name": "BSides St. John's Newfoundland and Labrador",
+      "city": "St. John's, Newfoundland and Labrador",
+      "country": "Canada",
+      "website": "https://bsidesstjohns.com/"
+    },
+    {
+      "name": "BSides Toronto ONT",
+      "city": "Toronto, ONT",
+      "country": "Canada",
+      "website": "https://www.bsidesto.ca"
+    },
+    {
+      "name": "BSides Vancouver BC",
+      "city": "Vancouver, BC",
+      "country": "Canada",
+      "website": "https://www.bsidesvancouver.com/"
+    },
+    {
+      "name": "BSides Victoria BC",
+      "city": "Victoria, BC",
+      "country": "Canada",
+      "website": "https://bsidesvi.com/"
+    },
+    {
+      "name": "BSides Grand Cayman",
+      "city": "Grand Cayman",
+      "country": "Cayman Islands",
+      "website": "https://bsides.ky/"
+    },
+    {
+      "name": "BSides Santiago",
+      "city": "Santiago",
+      "country": "Chile",
+      "website": "https://bsidescl.org/"
+    },
+    {
+      "name": "BSides Hong Kong",
+      "city": "Hong Kong",
+      "country": "China",
+      "website": "https://www.bsideshk.org/"
+    },
+    {
+      "name": "BSides Bogota",
+      "city": "Bogota",
+      "country": "Colombia",
+      "website": "https://www.bsidesco.org/"
+    },
+    {
+      "name": "BSides San Jose",
+      "city": "San Jose",
+      "country": "Costa Rica",
+      "website": ""
+    },
+    {
+      "name": "BSides Osijek",
+      "city": "Osijek",
+      "country": "Croatia",
+      "website": "https://www.bsidesosijek.org/"
+    },
+    {
+      "name": "BSides Rijeka",
+      "city": "Rijeka",
+      "country": "Croatia",
+      "website": "https://www.bsidesrijeka.com/"
+    },
+    {
+      "name": "BSides Varazdin",
+      "city": "Varazdin",
+      "country": "Croatia",
+      "website": "https://bsidesvarazdin.org/"
+    },
+    {
+      "name": "BSides Zadar",
+      "city": "Zadar",
+      "country": "Croatia",
+      "website": ""
+    },
+    {
+      "name": "BSides Zagreb",
+      "city": "Zagreb",
+      "country": "Croatia",
+      "website": "http://www.bsideszagreb.com"
+    },
+    {
+      "name": "BSides Limassol",
+      "city": "Limassol",
+      "country": "Cyprus",
+      "website": "https://bsidescyprus.com/"
+    },
+    {
+      "name": "BSides",
+      "city": "",
+      "country": "Czechia",
+      "website": "https://www.bsidesprg.cz"
+    },
+    {
+      "name": "BSides Aarhus",
+      "city": "Aarhus",
+      "country": "Denmark",
+      "website": "https://www.bsidesaarhus.dk"
+    },
+    {
+      "name": "BSides Copenhagen",
+      "city": "Copenhagen",
+      "country": "Denmark",
+      "website": ""
+    },
+    {
+      "name": "BSides Quito",
+      "city": "Quito",
+      "country": "Ecuador",
+      "website": ""
+    },
+    {
+      "name": "BSides San Salvador",
+      "city": "San Salvador",
+      "country": "El Salvador",
+      "website": ""
+    },
+    {
+      "name": "BSides Tallinn",
+      "city": "Tallinn",
+      "country": "Estonia",
+      "website": "https://tallinn.bsides.ee/"
+    },
+    {
+      "name": "BSides Helsinki",
+      "city": "Helsinki",
+      "country": "Finland",
+      "website": ""
+    },
+    {
+      "name": "BSides Berlin",
+      "city": "Berlin",
+      "country": "Germany",
+      "website": "https://bsides.berlin/"
+    },
+    {
+      "name": "BSides Cologne",
+      "city": "Cologne",
+      "country": "Germany",
+      "website": "https://bsidescologne.org"
+    },
+    {
+      "name": "BSides Dresden",
+      "city": "Dresden",
+      "country": "Germany",
+      "website": "https://bsidesdresden.com/"
+    },
+    {
+      "name": "BSides Frankfurt",
+      "city": "Frankfurt",
+      "country": "Germany",
+      "website": "https://bsidesfrankfurt.org/"
+    },
+    {
+      "name": "BSides Hamburg",
+      "city": "Hamburg",
+      "country": "Germany",
+      "website": "https://www.elbsides.eu/"
+    },
+    {
+      "name": "BSides Munich",
+      "city": "Munich",
+      "country": "Germany",
+      "website": "https://bsidesmunich.org/"
+    },
+    {
+      "name": "BSides Accra",
+      "city": "Accra",
+      "country": "Ghana",
+      "website": ""
+    },
+    {
+      "name": "BSides Athens",
+      "city": "Athens",
+      "country": "Greece",
+      "website": "https://bsidesath.gr/"
+    },
+    {
+      "name": "BSides Guatemala City",
+      "city": "Guatemala City",
+      "country": "Guatemala",
+      "website": ""
+    },
+    {
+      "name": "BSides Budapest",
+      "city": "Budapest",
+      "country": "Hungary",
+      "website": "https://bsidesbud.com/"
+    },
+    {
+      "name": "BSides Reykjavik",
+      "city": "Reykjavik",
+      "country": "Iceland",
+      "website": "https://bsidesreykjavik.com/"
+    },
+    {
+      "name": "BSides Agra Uttar Pradesh",
+      "city": "Agra, Uttar Pradesh",
+      "country": "India",
+      "website": "https://bsidesagra.com/"
+    },
+    {
+      "name": "BSides Ahmedabad",
+      "city": "Ahmedabad",
+      "country": "India",
+      "website": "http://bsidesahmedabad.in/"
+    },
+    {
+      "name": "BSides Amaravati Andhra Pradesh",
+      "city": "Amaravati, Andhra Pradesh",
+      "country": "India",
+      "website": "https://www.bsidesamaravati.in/"
+    },
+    {
+      "name": "BSides Bangalore",
+      "city": "Bangalore",
+      "country": "India",
+      "website": "https://bsidesbangalore.in/"
+    },
+    {
+      "name": "BSides Chennai Tamil nadu",
+      "city": "Chennai, Tamil nadu",
+      "country": "India",
+      "website": "https://bsideschennai.in"
+    },
+    {
+      "name": "BSides Cochin/Kochi",
+      "city": "Cochin/Kochi",
+      "country": "India",
+      "website": "https://bsideskochi.in/"
+    },
+    {
+      "name": "BSides Coimbatore TamilNadu",
+      "city": "Coimbatore, TamilNadu",
+      "country": "India",
+      "website": "https://www.bsidescoimbatore.in"
+    },
+    {
+      "name": "BSides Dehradun Uttarakhand",
+      "city": "Dehradun, Uttarakhand",
+      "country": "India",
+      "website": "https://bsidesdehradun.com"
+    },
+    {
+      "name": "BSides Indore Madhya Pradesh",
+      "city": "Indore, Madhya Pradesh",
+      "country": "India",
+      "website": "https://www.bsidesindore.in/"
+    },
+    {
+      "name": "BSides Jaipur",
+      "city": "Jaipur",
+      "country": "India",
+      "website": "https://bsidesjaipur.com"
+    },
+    {
+      "name": "BSides Kolkata",
+      "city": "Kolkata",
+      "country": "India",
+      "website": "https://www.bsideskolkata.in/"
+    },
+    {
+      "name": "BSides Mumbai",
+      "city": "Mumbai",
+      "country": "India",
+      "website": "http://bsidesmumbai.in/"
+    },
+    {
+      "name": "BSides Mussoorie Uttrakhand",
+      "city": "Mussoorie, Uttrakhand",
+      "country": "India",
+      "website": ""
+    },
+    {
+      "name": "BSides Noida Uttar Pradesh",
+      "city": "Noida, Uttar Pradesh",
+      "country": "India",
+      "website": "http://www.bsidesnoida.in"
+    },
+    {
+      "name": "BSides Odisha",
+      "city": "Odisha",
+      "country": "India",
+      "website": "https://bsidesodisha.in/"
+    },
+    {
+      "name": "BSides Patna Bihar",
+      "city": "Patna, Bihar",
+      "country": "India",
+      "website": "http://Bsidespatna.in"
+    },
+    {
+      "name": "BSides Vadodara Gujarat",
+      "city": "Vadodara, Gujarat",
+      "country": "India",
+      "website": "https://bsidesvadodara.in"
+    },
+    {
+      "name": "BSides Visakhapatnam Andhra Pradesh",
+      "city": "Visakhapatnam, Andhra Pradesh",
+      "country": "India",
+      "website": "https://www.bsidesvizag.in"
+    },
+    {
+      "name": "BSides Dublin",
+      "city": "Dublin",
+      "country": "Ireland",
+      "website": "https://bsidesdub.ie/"
+    },
+    {
+      "name": "BSides Tel Aviv",
+      "city": "Tel Aviv",
+      "country": "Israel",
+      "website": "https://www.bsidestlv.com/"
+    },
+    {
+      "name": "BSides Milano",
+      "city": "Milano",
+      "country": "Italy",
+      "website": "https://milano.securitybsides.it"
+    },
+    {
+      "name": "BSides Roma",
+      "city": "Roma",
+      "country": "Italy",
+      "website": "http://roma.securitybsides.it/"
+    },
+    {
+      "name": "BSides Tokyo",
+      "city": "Tokyo",
+      "country": "Japan",
+      "website": "https://bsides.tokyo/"
+    },
+    {
+      "name": "BSides Amman Amman",
+      "city": "Amman, Amman",
+      "country": "Jordan",
+      "website": "https://bsidesamman.org"
+    },
+    {
+      "name": "BSides Mombasa",
+      "city": "Mombasa",
+      "country": "Kenya",
+      "website": ""
+    },
+    {
+      "name": "BSides Nairobi",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "website": "https://bsidesnairobi.ke/"
+    },
+    {
+      "name": "BSides Prishtina",
+      "city": "Prishtina",
+      "country": "Kosova",
+      "website": "https://www.bsidesprishtina.org/"
+    },
+    {
+      "name": "BSides Riga",
+      "city": "Riga",
+      "country": "Latvia",
+      "website": "https://riga.bsides.lv"
+    },
+    {
+      "name": "BSides Vilnius",
+      "city": "Vilnius",
+      "country": "Lithuania",
+      "website": "https://bsidesvilnius.lt/"
+    },
+    {
+      "name": "BSides Luxembourg",
+      "city": "Luxembourg",
+      "country": "Luxembourg",
+      "website": "https://bsides.lu/"
+    },
+    {
+      "name": "BSides Mexico City",
+      "city": "Mexico City",
+      "country": "Mexico",
+      "website": "https://bsidescdmx.org/"
+    },
+    {
+      "name": "BSides Chisinau",
+      "city": "Chisinau",
+      "country": "Moldova",
+      "website": "https://bsideschisinau.com/"
+    },
+    {
+      "name": "BSides Yangon",
+      "city": "Yangon",
+      "country": "Myanmar",
+      "website": "http://bsidesmyanmar.org/"
+    },
+    {
+      "name": "BSides Santiago de Querétaro Querétaro",
+      "city": "Santiago de Querétaro, Querétaro",
+      "country": "México",
+      "website": "https://bsidesqueretaro.org.mx/"
+    },
+    {
+      "name": "BSides Kathmandu",
+      "city": "Kathmandu",
+      "country": "Nepal",
+      "website": "https://bsidesktm.com/"
+    },
+    {
+      "name": "BSides Amsterdam",
+      "city": "Amsterdam",
+      "country": "Netherlands",
+      "website": "https://bsidesams.org"
+    },
+    {
+      "name": "BSides Groningen",
+      "city": "Groningen",
+      "country": "Netherlands",
+      "website": "https://bsidesgrunn.org/"
+    },
+    {
+      "name": "BSides The Hague",
+      "city": "The Hague",
+      "country": "Netherlands",
+      "website": "https://bsidesthehague.nl/"
+    },
+    {
+      "name": "BSides Lafia Nasarawa",
+      "city": "Lafia, Nasarawa",
+      "country": "Nigeria",
+      "website": "https://securitybsideslafia.bsideslafia.workers.dev"
+    },
+    {
+      "name": "BSides Bergen",
+      "city": "Bergen",
+      "country": "Norway",
+      "website": "https://bsidesbergen.no"
+    },
+    {
+      "name": "BSides Kristiansand Agder",
+      "city": "Kristiansand, Agder",
+      "country": "Norway",
+      "website": "https://bsideskrs.no/"
+    },
+    {
+      "name": "BSides Oslo",
+      "city": "Oslo",
+      "country": "Norway",
+      "website": "https://bsidesoslo.no/"
+    },
+    {
+      "name": "BSides Stavanger Rogaland",
+      "city": "Stavanger, Rogaland",
+      "country": "Norway",
+      "website": ""
+    },
+    {
+      "name": "BSides Bahawalpur",
+      "city": "Bahawalpur",
+      "country": "Pakistan",
+      "website": "http://www.bsidesbwp.com"
+    },
+    {
+      "name": "BSides",
+      "city": "",
+      "country": "Panamá",
+      "website": "https://bsidespa.org/"
+    },
+    {
+      "name": "BSides Lima",
+      "city": "Lima",
+      "country": "Peru",
+      "website": "https://linktr.ee/bsidesperu"
+    },
+    {
+      "name": "BSides Kraków",
+      "city": "Kraków",
+      "country": "Poland",
+      "website": "https://bsideskrakow.pl/"
+    },
+    {
+      "name": "BSides Lisbon",
+      "city": "Lisbon",
+      "country": "Portugal",
+      "website": "https://bsideslisbon.org/"
+    },
+    {
+      "name": "BSides Porto",
+      "city": "Porto",
+      "country": "Portugal",
+      "website": "https://bsidesporto.org/"
+    },
+    {
+      "name": "BSides Bucharest",
+      "city": "Bucharest",
+      "country": "Romania",
+      "website": "http://bsidesbucharest.org/"
+    },
+    {
+      "name": "BSides Riyadh",
+      "city": "Riyadh",
+      "country": "Saudi Arabia",
+      "website": ""
+    },
+    {
+      "name": "BSides Belgrade",
+      "city": "Belgrade",
+      "country": "Serbia",
+      "website": "http://bsidesbeg.org"
+    },
+    {
+      "name": "BSides Singapore",
+      "city": "Singapore",
+      "country": "Singapore",
+      "website": "https://bsidessg.org/"
+    },
+    {
+      "name": "BSides Bratislava",
+      "city": "Bratislava",
+      "country": "Slovakia",
+      "website": "https://www.bsidesba.sk/"
+    },
+    {
+      "name": "BSides Ljubljana",
+      "city": "Ljubljana",
+      "country": "Slovenia",
+      "website": "https://BSidesLjubljana.si"
+    },
+    {
+      "name": "BSides Maribor",
+      "city": "Maribor",
+      "country": "Slovenia",
+      "website": "https://bsidesmaribor.si/"
+    },
+    {
+      "name": "BSides mogadishu banaadir",
+      "city": "mogadishu, banaadir",
+      "country": "somalia",
+      "website": "http://bsidesmog.org"
+    },
+    {
+      "name": "BSides Cape Town",
+      "city": "Cape Town",
+      "country": "South Africa",
+      "website": "https://bsidescapetown.co.za/"
+    },
+    {
+      "name": "BSides Johannesburg",
+      "city": "Johannesburg",
+      "country": "South Africa",
+      "website": "https://www.bsidesjoburg.co.za"
+    },
+    {
+      "name": "BSides Barcelona",
+      "city": "Barcelona",
+      "country": "Spain",
+      "website": "https://bsides.barcelona/"
+    },
+    {
+      "name": "BSides Malaga",
+      "city": "Malaga",
+      "country": "Spain",
+      "website": "https://bsidesmalaga.com/"
+    },
+    {
+      "name": "BSides Göteborg",
+      "city": "Göteborg",
+      "country": "Sweden",
+      "website": "https://bsidesgbg.com"
+    },
+    {
+      "name": "BSides Stockholm",
+      "city": "Stockholm",
+      "country": "Sweden",
+      "website": "https://bsidesstockholm.se/"
+    },
+    {
+      "name": "BSides Umea",
+      "city": "Umea",
+      "country": "Sweden",
+      "website": "https://indico.neic.no/category/29/"
+    },
+    {
+      "name": "BSides Zurich",
+      "city": "Zurich",
+      "country": "Switzerland",
+      "website": "https://bsideszh.ch/"
+    },
+    {
+      "name": "BSides Dubai",
+      "city": "Dubai",
+      "country": "UAE",
+      "website": "https://bsidesdubai.ae/"
+    },
+    {
+      "name": "BSides Aberystwyth",
+      "city": "Aberystwyth",
+      "country": "UK",
+      "website": "http://www.bsidesaberystwyth.org"
+    },
+    {
+      "name": "BSides Basingstoke",
+      "city": "Basingstoke",
+      "country": "UK",
+      "website": "https://www.bsidesbasingstoke.com/"
+    },
+    {
+      "name": "BSides Belfast Northern Ireland",
+      "city": "Belfast, Northern Ireland",
+      "country": "UK",
+      "website": "https://bsidesbelfast.org/"
+    },
+    {
+      "name": "BSides Bournemouth Dorset",
+      "city": "Bournemouth, Dorset",
+      "country": "UK",
+      "website": "https://bsides-bournemouth.org/"
+    },
+    {
+      "name": "BSides Bristol",
+      "city": "Bristol",
+      "country": "UK",
+      "website": "http://bsidesot.uk"
+    },
+    {
+      "name": "BSides Cambridge Cambridgeshire",
+      "city": "Cambridge, Cambridgeshire",
+      "country": "UK",
+      "website": "https://bsidescambridge.uk/"
+    },
+    {
+      "name": "BSides Cardiff Wales",
+      "city": "Cardiff, Wales",
+      "country": "UK",
+      "website": "https://www.bsides.cymru"
+    },
+    {
+      "name": "BSides Cheltenham",
+      "city": "Cheltenham",
+      "country": "UK",
+      "website": "https://www.cheltenhambsides.org.uk/"
+    },
+    {
+      "name": "BSides Dundee",
+      "city": "Dundee",
+      "country": "UK",
+      "website": "http://www.bsidesdundee.org.uk/"
+    },
+    {
+      "name": "BSides Eastbourne",
+      "city": "Eastbourne",
+      "country": "UK",
+      "website": "https://bsideseastbourne.com/"
+    },
+    {
+      "name": "BSides Edinburgh/Glasgow",
+      "city": "Edinburgh/Glasgow",
+      "country": "UK",
+      "website": "http://bsidesscotland.org.uk/"
+    },
+    {
+      "name": "BSides Exeter",
+      "city": "Exeter",
+      "country": "UK",
+      "website": "https://bsidesexeter.co.uk"
+    },
+    {
+      "name": "BSides Kent",
+      "city": "Kent",
+      "country": "UK",
+      "website": ""
+    },
+    {
+      "name": "BSides Lancaster Lancashire",
+      "city": "Lancaster, Lancashire",
+      "country": "UK",
+      "website": "http://Www.bsideslancashire.org"
+    },
+    {
+      "name": "BSides Leeds",
+      "city": "Leeds",
+      "country": "UK",
+      "website": "http://www.bsidesleeds.com/"
+    },
+    {
+      "name": "BSides London",
+      "city": "London",
+      "country": "UK",
+      "website": "https://bsides.london/"
+    },
+    {
+      "name": "BSides Manchester",
+      "city": "Manchester",
+      "country": "UK",
+      "website": "https://bsidesmcr.co.uk"
+    },
+    {
+      "name": "BSides Newcastle Upon Tyne",
+      "city": "Newcastle Upon Tyne",
+      "country": "UK",
+      "website": "https://bsidesnewcastle.org/"
+    },
+    {
+      "name": "BSides (multiple locations) CT",
+      "city": "(multiple locations), CT",
+      "country": "USA",
+      "website": "https://bsidesct.org/"
+    },
+    {
+      "name": "BSides ALBANY NY",
+      "city": "ALBANY, NY",
+      "country": "USA",
+      "website": ""
+    },
+    {
+      "name": "BSides Albuquerque NM",
+      "city": "Albuquerque, NM",
+      "country": "USA",
+      "website": "https://bsidesabq.org/"
+    },
+    {
+      "name": "BSides Arlington VA",
+      "city": "Arlington, VA",
+      "country": "USA",
+      "website": "http://bsidesnova.org/"
+    },
+    {
+      "name": "BSides Atlanta GA",
+      "city": "Atlanta, GA",
+      "country": "USA",
+      "website": "https://www.bsidesatl.info/"
+    },
+    {
+      "name": "BSides Augusta GA",
+      "city": "Augusta, GA",
+      "country": "USA",
+      "website": "https://BSidesAugusta.org/"
+    },
+    {
+      "name": "BSides Austin TX",
+      "city": "Austin, TX",
+      "country": "USA",
+      "website": "https://bsidesaustin.com/"
+    },
+    {
+      "name": "BSides Baltimore MD",
+      "city": "Baltimore, MD",
+      "country": "USA",
+      "website": "https://www.bsidescharm.org/"
+    },
+    {
+      "name": "BSides Birmingham AL",
+      "city": "Birmingham, AL",
+      "country": "USA",
+      "website": "http://bsidesbham.org/"
+    },
+    {
+      "name": "BSides Bloomington IN",
+      "city": "Bloomington, IN",
+      "country": "USA",
+      "website": "https://bsidesbloomington.org"
+    },
+    {
+      "name": "BSides Boise ID",
+      "city": "Boise, ID",
+      "country": "USA",
+      "website": "https://www.bsidesboise.com"
+    },
+    {
+      "name": "BSides Boulder CO",
+      "city": "Boulder, CO",
+      "country": "USA",
+      "website": "https://bsidesboulder.org/"
+    },
+    {
+      "name": "BSides Bozeman Montana",
+      "city": "Bozeman, Montana",
+      "country": "USA",
+      "website": ""
+    },
+    {
+      "name": "BSides Buffalo NY",
+      "city": "Buffalo, NY",
+      "country": "USA",
+      "website": "https://www.bsidesbuffalo.org"
+    },
+    {
+      "name": "BSides Cambridge MA",
+      "city": "Cambridge, MA",
+      "country": "USA",
+      "website": "https://bsidescambridgema.org/"
+    },
+    {
+      "name": "BSides Charleston SC",
+      "city": "Charleston, SC",
+      "country": "USA",
+      "website": "https://bsidescharleston.org/"
+    },
+    {
+      "name": "BSides Charlotte NC",
+      "city": "Charlotte, NC",
+      "country": "USA",
+      "website": "https://bsidesclt.org/"
+    },
+    {
+      "name": "BSides Chattanooga TN",
+      "city": "Chattanooga, TN",
+      "country": "USA",
+      "website": "http://bsidescha.com/"
+    },
+    {
+      "name": "BSides Chicago IL",
+      "city": "Chicago, IL",
+      "country": "USA",
+      "website": "https://bsideschicago.org/"
+    },
+    {
+      "name": "BSides Chicago, IL Illinois",
+      "city": "Chicago, IL, Illinois",
+      "country": "USA",
+      "website": "https://bsides312.org"
+    },
+    {
+      "name": "BSides Cincinnati OH",
+      "city": "Cincinnati, OH",
+      "country": "USA",
+      "website": "https://bsidescincy.org/"
+    },
+    {
+      "name": "BSides Cleveland OH",
+      "city": "Cleveland, OH",
+      "country": "USA",
+      "website": "https://bsidescle.com/wp/"
+    },
+    {
+      "name": "BSides Colorado Springs CO",
+      "city": "Colorado Springs, CO",
+      "country": "USA",
+      "website": "https://www.bsidescos.org"
+    },
+    {
+      "name": "BSides Columbus OH",
+      "city": "Columbus, OH",
+      "country": "USA",
+      "website": "https://bsidescolumbus.com/"
+    },
+    {
+      "name": "BSides Dallas/Fort Worth TX",
+      "city": "Dallas/Fort Worth, TX",
+      "country": "USA",
+      "website": "http://bsidesdfw.com/"
+    },
+    {
+      "name": "BSides Dayton OH",
+      "city": "Dayton, OH",
+      "country": "USA",
+      "website": "https://bsidesdayton.com/"
+    },
+    {
+      "name": "BSides Denver CO",
+      "city": "Denver, CO",
+      "country": "USA",
+      "website": "https://bsidesden.org/"
+    },
+    {
+      "name": "BSides Des Moines IA",
+      "city": "Des Moines, IA",
+      "country": "USA",
+      "website": "http://www.bsidesdsm.org"
+    },
+    {
+      "name": "BSides Detroit MI",
+      "city": "Detroit, MI",
+      "country": "USA",
+      "website": ""
+    },
+    {
+      "name": "BSides Fort Myers Florida",
+      "city": "Fort Myers, Florida",
+      "country": "USA",
+      "website": "https://bsidesswfl.org/"
+    },
+    {
+      "name": "BSides Fort Wayne IN",
+      "city": "Fort Wayne, IN",
+      "country": "USA",
+      "website": "https://bsidesfortwayne.org/"
+    },
+    {
+      "name": "BSides Glassboro NJ",
+      "city": "Glassboro, NJ",
+      "country": "USA",
+      "website": "https://bsidessouthjersey.org/"
+    },
+    {
+      "name": "BSides Glen Head NY",
+      "city": "Glen Head, NY",
+      "country": "USA",
+      "website": "http://bsidesli.org/"
+    },
+    {
+      "name": "BSides Greensboro NC",
+      "city": "Greensboro, NC",
+      "country": "USA",
+      "website": "https://www.bsidestriad.org"
+    },
+    {
+      "name": "BSides Greenville SC",
+      "city": "Greenville, SC",
+      "country": "USA",
+      "website": "http://www.bsidesgreenville.org/"
+    },
+    {
+      "name": "BSides Harrisburg PA",
+      "city": "Harrisburg, PA",
+      "country": "USA",
+      "website": "http://www.bsideshbg.com/"
+    },
+    {
+      "name": "BSides Honolulu HI",
+      "city": "Honolulu, HI",
+      "country": "USA",
+      "website": "https://www.bsideshawaii.org/"
+    },
+    {
+      "name": "BSides Houston TX",
+      "city": "Houston, TX",
+      "country": "USA",
+      "website": "http://HoustonBSides.org"
+    },
+    {
+      "name": "BSides Idaho Falls ID",
+      "city": "Idaho Falls, ID",
+      "country": "USA",
+      "website": "https://www.bsidesidahofalls.org"
+    },
+    {
+      "name": "BSides Jackson Mississippi",
+      "city": "Jackson, Mississippi",
+      "country": "USA",
+      "website": "https://isc2chapter-cms.org/"
+    },
+    {
+      "name": "BSides Jacksonville FL",
+      "city": "Jacksonville, FL",
+      "country": "USA",
+      "website": "https://bsidesjax.org/"
+    },
+    {
+      "name": "BSides Johnstown PA",
+      "city": "Johnstown, PA",
+      "country": "USA",
+      "website": "https://www.bsidesfloodcity.com"
+    },
+    {
+      "name": "BSides Kansas City MO",
+      "city": "Kansas City, MO",
+      "country": "USA",
+      "website": "http://www.bsideskc.org/"
+    },
+    {
+      "name": "BSides Knoxville TN",
+      "city": "Knoxville, TN",
+      "country": "USA",
+      "website": "https://www.10-sec.org/bsides-knoxville"
+    },
+    {
+      "name": "BSides Las Vegas NV",
+      "city": "Las Vegas, NV",
+      "country": "USA",
+      "website": "https://www.bsideslv.org/"
+    },
+    {
+      "name": "BSides LIttle Rock AR",
+      "city": "LIttle Rock, AR",
+      "country": "USA",
+      "website": "https://groups.google.com/g/BSides-Little-Rock-2013"
+    },
+    {
+      "name": "BSides McAllen TX",
+      "city": "McAllen, TX",
+      "country": "USA",
+      "website": "https://bsides.org/w/page/138014721/BSidesRGV"
+    },
+    {
+      "name": "BSides Melbourne FL",
+      "city": "Melbourne, FL",
+      "country": "USA",
+      "website": "https://bsidesspacecoast.com"
+    },
+    {
+      "name": "BSides Memphis TN",
+      "city": "Memphis, TN",
+      "country": "USA",
+      "website": "https://bsidesmemphis.org/"
+    },
+    {
+      "name": "BSides Milwaukee Wisconsin",
+      "city": "Milwaukee, Wisconsin",
+      "country": "USA",
+      "website": "http://Bsidesmke.org"
+    },
+    {
+      "name": "BSides Minneapolis MN",
+      "city": "Minneapolis, MN",
+      "country": "USA",
+      "website": "https://bsidesmsp.org/"
+    },
+    {
+      "name": "BSides Nashville TN",
+      "city": "Nashville, TN",
+      "country": "USA",
+      "website": "https://bsidesnash.org/"
+    },
+    {
+      "name": "BSides Navarre FL",
+      "city": "Navarre, FL",
+      "country": "USA",
+      "website": "https://bsidespensacola.org/"
+    },
+    {
+      "name": "BSides New Orleans LA",
+      "city": "New Orleans, LA",
+      "country": "USA",
+      "website": "https://bsidesnola.notion.site/Home-315249e7315f802298e5c97d61538355"
+    },
+    {
+      "name": "BSides New York City NY",
+      "city": "New York City, NY",
+      "country": "USA",
+      "website": "https://bsidesnyc.org/"
+    },
+    {
+      "name": "BSides Orlando FL",
+      "city": "Orlando, FL",
+      "country": "USA",
+      "website": "http://www.bsidesorlando.org/"
+    },
+    {
+      "name": "BSides Pensacola Florida",
+      "city": "Pensacola, Florida",
+      "country": "USA",
+      "website": "https://bsidespensacola.org/"
+    },
+    {
+      "name": "BSides Peoria IL",
+      "city": "Peoria, IL",
+      "country": "USA",
+      "website": "https://bsidespeoria.com/"
+    },
+    {
+      "name": "BSides Philadelphia PA",
+      "city": "Philadelphia, PA",
+      "country": "USA",
+      "website": "https://bsidesphilly.org/"
+    },
+    {
+      "name": "BSides Phoenix Arizona",
+      "city": "Phoenix, Arizona",
+      "country": "USA",
+      "website": "https://bsidesphoenix.org/"
+    },
+    {
+      "name": "BSides Pittsburgh PA",
+      "city": "Pittsburgh, PA",
+      "country": "USA",
+      "website": "http://www.bsidespgh.com/"
+    },
+    {
+      "name": "BSides Portland Maine",
+      "city": "Portland, Maine",
+      "country": "USA",
+      "website": "http://www.bsidesmaine.org"
+    },
+    {
+      "name": "BSides Portland OR",
+      "city": "Portland, OR",
+      "country": "USA",
+      "website": "https://bsidespdx.org/"
+    },
+    {
+      "name": "BSides Raleigh/Durham NC",
+      "city": "Raleigh/Durham, NC",
+      "country": "USA",
+      "website": "https://bsidesrdu.org/"
+    },
+    {
+      "name": "BSides Roanoke VA",
+      "city": "Roanoke, VA",
+      "country": "USA",
+      "website": "https://bsidesroa.org"
+    },
+    {
+      "name": "BSides Rochester NY",
+      "city": "Rochester, NY",
+      "country": "USA",
+      "website": "http://bsidesroc.com/"
+    },
+    {
+      "name": "BSides Sacramento CA",
+      "city": "Sacramento, CA",
+      "country": "USA",
+      "website": "https://bsidessac.org/"
+    },
+    {
+      "name": "BSides Saint Louis MO",
+      "city": "Saint Louis, MO",
+      "country": "USA",
+      "website": "https://www.bsidesstl.org/"
+    },
+    {
+      "name": "BSides Salt Lake City UT",
+      "city": "Salt Lake City, UT",
+      "country": "USA",
+      "website": "https://bsidesslc.org"
+    },
+    {
+      "name": "BSides San Antonio TX",
+      "city": "San Antonio, TX",
+      "country": "USA",
+      "website": "https://bsidessatx.com/"
+    },
+    {
+      "name": "BSides San Diego CA",
+      "city": "San Diego, CA",
+      "country": "USA",
+      "website": "https://www.bsidessd.org"
+    },
+    {
+      "name": "BSides San Francisco CA",
+      "city": "San Francisco, CA",
+      "country": "USA",
+      "website": "https://bsidessf.org/"
+    },
+    {
+      "name": "BSides Sandy UT",
+      "city": "Sandy, UT",
+      "country": "USA",
+      "website": "https://www.bsidesslc.org/"
+    },
+    {
+      "name": "BSides Seattle WA",
+      "city": "Seattle, WA",
+      "country": "USA",
+      "website": "https://bsidesseattle.com/"
+    },
+    {
+      "name": "BSides South Florida Florida",
+      "city": "South Florida, Florida",
+      "country": "USA",
+      "website": "http://bsidessouthflorida.org"
+    },
+    {
+      "name": "BSides Springfield MO",
+      "city": "Springfield, MO",
+      "country": "USA",
+      "website": "http://bsidessgf.org"
+    },
+    {
+      "name": "BSides St Louis MO",
+      "city": "St Louis, MO",
+      "country": "USA",
+      "website": "https://bsidesstl.org/"
+    },
+    {
+      "name": "BSides St. Petersburg FL",
+      "city": "St. Petersburg, FL",
+      "country": "USA",
+      "website": "https://www.bsidesstpete.com"
+    },
+    {
+      "name": "BSides Tampa FL",
+      "city": "Tampa, FL",
+      "country": "USA",
+      "website": "https://bsidestampa.net/"
+    },
+    {
+      "name": "BSides Tulsa OK",
+      "city": "Tulsa, OK",
+      "country": "USA",
+      "website": "https://bsidesok.com/"
+    },
+    {
+      "name": "BSides Virginia Beach Virginia",
+      "city": "Virginia Beach, Virginia",
+      "country": "USA",
+      "website": "https://bsideshamptonroads.org/"
+    },
+    {
+      "name": "BSides Washington DC DC",
+      "city": "Washington DC, DC",
+      "country": "USA",
+      "website": "https://bsidesdc.org"
+    },
+    {
+      "name": "BSides Wilmington DE",
+      "city": "Wilmington, DE",
+      "country": "USA",
+      "website": "http://bsidesdelaware.com/"
+    }
   ]
 }

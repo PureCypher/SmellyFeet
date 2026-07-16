@@ -71,6 +71,25 @@ func TestChaptersPage(t *testing.T) {
 	}
 }
 
+func TestChaptersCountryFilter(t *testing.T) {
+	h := newTestServer(t, stubService{})
+	all := getPath(t, h, "/meetups/chapters").Body.String()
+	if !strings.Contains(all, "All countries") {
+		t.Error("chapters page missing the country filter dropdown")
+	}
+	// The real seed has both UK and USA chapters; each card renders "City, Country".
+	if !strings.Contains(all, ", UK") || !strings.Contains(all, ", USA") {
+		t.Fatal("unfiltered chapters should include both UK and USA chapters")
+	}
+	uk := getPath(t, h, "/meetups/chapters?country=UK").Body.String()
+	if !strings.Contains(uk, ", UK") {
+		t.Error("UK filter should still show UK chapters")
+	}
+	if strings.Contains(uk, ", USA") {
+		t.Error("UK filter must exclude USA chapters (a US card leaked through)")
+	}
+}
+
 func TestMeetupsCityFilter(t *testing.T) {
 	rec := getPath(t, newTestServer(t, stubService{}), "/meetups?city=London")
 	body := rec.Body.String()
