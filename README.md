@@ -90,6 +90,19 @@ There's no database — meetups are published by editing the embedded seed,
 
 ### Refreshing tracked events
 
+The tracker refreshes **fully autonomously**: a weekly cron on the host runs
+`scripts/cron-refresh.sh`, which resets to `origin/main`, re-scrapes every source with
+`scripts/import-events.py --apply`, and rebuilds the container. No human in the loop and
+no hand-pinned events — the tracker is exactly what the sources yield each week. A safety
+floor skips the deploy if a scrape collapses (< 30 events). Install the cron with:
+
+```
+crontab -l 2>/dev/null | grep -q cron-refresh || \
+  (crontab -l 2>/dev/null; echo "0 4 * * 1 /home/pure/smellyfeet-frontend/scripts/cron-refresh.sh") | crontab -
+```
+
+To refresh manually / preview without deploying:
+
 Meetup events are tracked from each chapter's own website. To refresh them:
 
 ```

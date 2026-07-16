@@ -25,7 +25,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SEED = os.path.join(ROOT, "internal/server/meetups_seed.json")
 TODAY = datetime.date.today()
 HORIZON = TODAY + datetime.timedelta(days=730)
-UA = "SmellyFeet-meetup-tracker/1.0 (+https://feed.purecypher.com)"
+UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+      "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 "
+      "SmellyFeet-meetup-tracker/1.0 (+https://feed.purecypher.com)")
 
 CONFSEC = "https://raw.githubusercontent.com/cryptax/confsec/master/README.md"
 DEFCON_CAL = "https://forum.defcon.org/calendar"
@@ -236,8 +238,16 @@ def main():
         seen.add(e["slug"])
         merged.append(e)
     merged.sort(key=lambda e: e["starts_at"])
-    print(json.dumps(merged, indent=2, ensure_ascii=False))
-    print(f"sources={tally} total_after_dedup={len(merged)}", file=sys.stderr)
+    if "--apply" in sys.argv:
+        seed = json.load(open(SEED))
+        seed["meetups"] = merged            # fully autonomous: only what the sources yield
+        with open(SEED, "w") as f:
+            json.dump(seed, f, indent=2, ensure_ascii=False)
+            f.write("\n")
+        print(f"applied: {len(merged)} events sources={tally}", file=sys.stderr)
+    else:
+        print(json.dumps(merged, indent=2, ensure_ascii=False))
+        print(f"sources={tally} total_after_dedup={len(merged)}", file=sys.stderr)
 
 
 if __name__ == "__main__":
