@@ -1,0 +1,36 @@
+{{ define "meetup_detail" }}{{ template "header" . }}
+<div class="mb-6">
+  <a href="/meetups" class="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-fog hover:text-accent transition-colors">← All meetups</a>
+</div>
+<article>
+  <div class="flex flex-wrap items-center gap-2 mb-2 font-mono text-[11px] uppercase tracking-widest">
+    <span class="text-accent">{{ .M.StartsDisplay }}{{ if .HasEnd }} – {{ .EndsDisplay }}{{ end }}</span>
+    <span class="text-fog">· {{ .TZLabel }}</span>
+    <span class="text-fog">· {{ .M.LocationLabel }}</span>
+  </div>
+  <h1 class="text-3xl font-bold text-primary tracking-tight">{{ .M.Title }}</h1>
+  {{ if .M.ChapterName }}<p class="mt-1.5 font-mono text-xs text-fog">{{ if .M.ChapterURL }}<a href="{{ .M.ChapterURL }}" rel="noopener nofollow" class="text-accent hover:text-accent-bright">{{ .M.ChapterName }}</a>{{ else }}{{ .M.ChapterName }}{{ end }}</p>{{ end }}
+
+  <div class="mt-6 flex flex-wrap gap-3">
+    {{ if .M.RSVPURL }}<a href="{{ .M.RSVPURL }}" rel="noopener nofollow" class="rounded-md bg-accent text-ink-950 font-semibold px-5 py-2.5 font-mono text-xs uppercase tracking-widest hover:bg-accent-bright transition-colors">RSVP / details ↗</a>{{ end }}
+    {{ if .M.OnlineURL }}<a href="{{ .M.OnlineURL }}" rel="noopener nofollow" class="rounded-md border border-line px-5 py-2.5 font-mono text-xs uppercase tracking-widest text-body hover:border-accent/50 hover:text-accent transition-colors">Join online ↗</a>{{ end }}
+    <a href="/meetups/{{ .M.Slug }}/ics" class="rounded-md border border-line px-5 py-2.5 font-mono text-xs uppercase tracking-widest text-body hover:border-accent/50 hover:text-accent transition-colors">Add to calendar</a>
+  </div>
+
+  {{ if .M.Description }}<div class="mt-8 text-[15px] leading-relaxed text-body max-w-2xl meetup-desc">{{ .M.Description }}</div>{{ end }}
+
+  <dl class="mt-8 grid gap-3 sm:grid-cols-2 font-mono text-xs">
+    {{ if .M.VenueName }}<div class="rounded-lg bg-ink-900 border border-line p-4"><dt class="text-fog uppercase tracking-widest text-[10px]">Venue</dt><dd class="mt-1 text-body">{{ .M.VenueName }}{{ if .M.VenueAddress }}<br>{{ .M.VenueAddress }}{{ end }}</dd>{{ if .MapURL }}<dd class="mt-1"><a href="{{ .MapURL }}" rel="noopener nofollow" class="text-accent hover:text-accent-bright">View map ↗</a></dd>{{ end }}</div>{{ end }}
+    {{ if .M.Tags }}<div class="rounded-lg bg-ink-900 border border-line p-4"><dt class="text-fog uppercase tracking-widest text-[10px]">Tags</dt><dd class="mt-1.5 flex flex-wrap gap-1.5">{{ range .M.Tags }}<span class="px-1.5 py-0.5 rounded bg-ink-800 text-fog">{{ . }}</span>{{ end }}</dd></div>{{ end }}
+  </dl>
+</article>
+
+{{ if .Related }}
+<section class="mt-10">
+  <h2 class="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-fog mb-4 flex items-center gap-2"><span class="h-px w-6 bg-line"></span>Related meetups</h2>
+  <div class="grid gap-3">{{ range .Related }}{{ template "meetup_card" . }}{{ end }}</div>
+</section>
+{{ end }}
+
+{{ template "meetups_attribution" . }}
+{{ template "footer" . }}{{ end }}

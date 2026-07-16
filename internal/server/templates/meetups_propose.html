@@ -1,0 +1,45 @@
+{{ define "meetups_propose" }}{{ template "header" . }}
+<div class="mb-8">
+  <p class="font-mono text-[11px] uppercase tracking-[0.25em] text-accent/80 mb-1.5">// propose</p>
+  <h1 class="text-3xl font-bold text-primary tracking-tight">Propose a meetup</h1>
+  <p class="mt-2 text-[15px] leading-relaxed text-body max-w-2xl">Tell us about a BSides-spirit infosec meetup and we'll review it before it appears here. We only publish a link to your event — RSVPs happen on your own page (Meetup.com, Luma, Eventbrite, chapter site).</p>
+</div>
+
+{{ if .Success }}
+<div role="status" class="rounded-xl border border-status-ok/50 bg-status-ok/[0.08] p-4 text-body mb-6">Thanks — your meetup has been submitted and is pending review.</div>
+{{ end }}
+{{ if .TopError }}
+<div role="alert" class="rounded-xl border border-status-critical/50 bg-status-critical/[0.08] p-4 text-body mb-6">{{ .TopError }}</div>
+{{ end }}
+
+<form method="post" action="/meetups/propose" class="grid gap-4 max-w-2xl text-sm">
+  <p class="hidden" aria-hidden="true"><label>Leave this field empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label></p>
+
+  {{ template "propose_field" dict "Name" "title" "Label" "Title *" "Val" .Values.Title "Err" (index .Errors "title") }}
+  {{ template "propose_field" dict "Name" "summary" "Label" "One-line summary" "Val" .Values.Summary "Err" (index .Errors "summary") }}
+  {{ template "propose_field" dict "Name" "starts_at" "Label" "Date & time" "Val" .Values.StartsAt "Err" "" }}
+  {{ template "propose_field" dict "Name" "city" "Label" "City" "Val" .Values.City "Err" (index .Errors "location") }}
+  {{ template "propose_field" dict "Name" "online_url" "Label" "Online link (if online/hybrid)" "Val" .Values.OnlineURL "Err" (index .Errors "online_url") }}
+  {{ template "propose_field" dict "Name" "rsvp_url" "Label" "RSVP / event link" "Val" .Values.RSVPURL "Err" (index .Errors "rsvp_url") }}
+  {{ template "propose_field" dict "Name" "chapter_name" "Label" "Chapter (if any)" "Val" .Values.ChapterName "Err" "" }}
+  {{ template "propose_field" dict "Name" "organizer" "Label" "Your name" "Val" .Values.Organizer "Err" "" }}
+  {{ template "propose_field" dict "Name" "contact" "Label" "Contact email or handle *" "Val" .Values.Contact "Err" (index .Errors "contact") }}
+
+  <label class="flex flex-col gap-1">
+    <span class="font-mono text-[11px] uppercase tracking-widest text-fog">Notes</span>
+    <textarea name="notes" rows="4" class="rounded-md bg-ink-900 border border-line px-3 py-2 text-body">{{ .Values.Notes }}</textarea>
+    {{ with index .Errors "notes" }}<span class="text-status-critical text-xs">{{ . }}</span>{{ end }}
+  </label>
+
+  <div><button type="submit" class="rounded-md bg-accent text-ink-950 font-semibold px-6 py-2.5 font-mono text-xs uppercase tracking-widest hover:bg-accent-bright transition-colors">Submit for review</button></div>
+</form>
+{{ template "meetups_attribution" . }}
+{{ template "footer" . }}{{ end }}
+
+{{ define "propose_field" }}
+<label class="flex flex-col gap-1">
+  <span class="font-mono text-[11px] uppercase tracking-widest text-fog">{{ .Label }}</span>
+  <input type="text" name="{{ .Name }}" value="{{ .Val }}" class="rounded-md bg-ink-900 border border-line px-3 py-2 text-body">
+  {{ with .Err }}<span class="text-status-critical text-xs">{{ . }}</span>{{ end }}
+</label>
+{{ end }}

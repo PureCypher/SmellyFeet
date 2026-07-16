@@ -24,6 +24,7 @@
       <nav aria-label="Primary" class="flex items-center gap-0.5 sm:gap-1 font-mono text-[10px] sm:text-xs uppercase tracking-[0.12em] sm:tracking-[0.18em]">
         <a href="/" class="px-2 sm:px-3 py-1.5 rounded-md transition-colors {{ if eq .Nav "feed" }}text-accent bg-ink-800{{ else }}text-fog hover:text-accent hover:bg-ink-800{{ end }}"{{ if eq .Nav "feed" }} aria-current="page"{{ end }}>Feed</a>
         <a href="/digest" class="px-2 sm:px-3 py-1.5 rounded-md transition-colors {{ if eq .Nav "digest" }}text-accent bg-ink-800{{ else }}text-fog hover:text-accent hover:bg-ink-800{{ end }}"{{ if eq .Nav "digest" }} aria-current="page"{{ end }}>Digest</a>
+        {{ if meetupsEnabled }}<a href="/meetups" class="px-2 sm:px-3 py-1.5 rounded-md transition-colors {{ if eq .Nav "meetups" }}text-accent bg-ink-800{{ else }}text-fog hover:text-accent hover:bg-ink-800{{ end }}"{{ if eq .Nav "meetups" }} aria-current="page"{{ end }}>Meetups</a>{{ end }}
         <a href="/stats" class="px-2 sm:px-3 py-1.5 rounded-md transition-colors {{ if eq .Nav "stats" }}text-accent bg-ink-800{{ else }}text-fog hover:text-accent hover:bg-ink-800{{ end }}"{{ if eq .Nav "stats" }} aria-current="page"{{ end }}>Stats</a>
         <a href="/about" class="px-2 sm:px-3 py-1.5 rounded-md transition-colors {{ if eq .Nav "about" }}text-accent bg-ink-800{{ else }}text-fog hover:text-accent hover:bg-ink-800{{ end }}"{{ if eq .Nav "about" }} aria-current="page"{{ end }}>About</a>
       </nav>
