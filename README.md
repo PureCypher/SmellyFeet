@@ -93,11 +93,12 @@ There's no database — meetups are published by editing the embedded seed,
 Meetup events are tracked from each chapter's own website. To refresh them:
 
 ```
-python3 scripts/import-chapter-events.py > /tmp/events.json
+python3 scripts/import-events.py > /tmp/events.json
 ```
 
-This scrapes every chapter's `website` for its next event date ("where" comes from the
-chapter's city/country) and prints candidate events. It is best-effort: heterogeneous
+This pulls from BSides chapter sites, the [cryptax/confsec](https://github.com/cryptax/confsec)
+conference list, the DEF CON forum calendar (incl. regional editions like DEF CON Middle East),
+and a few named conference sites, and prints candidate events. It is best-effort: heterogeneous
 sites mean a few dates may be CFP/ticket dates, and JS-only or cert-broken sites yield
 nothing (reported on stderr). **Review the dates**, then merge the good ones into the
 `meetups` array of `internal/server/meetups_seed.json` and redeploy. Manually-verified

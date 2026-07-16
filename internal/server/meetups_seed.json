@@ -109,8 +109,8 @@
     {
       "slug": "def-con-34-2026",
       "title": "DEF CON 34 2026",
-      "summary": "Security conference in Las Vegas.",
-      "description": "DEF CON 34 — security conference. See the official site for the schedule, tickets, and CFP.",
+      "summary": "Security event in Las Vegas.",
+      "description": "DEF CON 34 — official DEF CON event (from the DEF CON forum calendar).",
       "starts_at": "2026-08-06T12:00:00Z",
       "date_only": true,
       "location_type": "in_person",
@@ -120,9 +120,9 @@
       "region": "",
       "country": "USA",
       "online_url": "",
-      "rsvp_url": "https://defcon.org/",
+      "rsvp_url": "https://forum.defcon.org/node/253965",
       "chapter_name": "",
-      "chapter_url": "https://defcon.org/",
+      "chapter_url": "https://forum.defcon.org/node/253965",
       "tags": [
         "conference"
       ]
@@ -863,6 +863,27 @@
       ]
     },
     {
+      "slug": "def-con-training-middle-east-2026-2026",
+      "title": "DEF CON Training Middle East 2026",
+      "summary": "Security event in Bahrain.",
+      "description": "DEF CON Training Middle East 2026 — official DEF CON event (from the DEF CON forum calendar).",
+      "starts_at": "2026-11-08T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "",
+      "region": "",
+      "country": "Bahrain",
+      "online_url": "",
+      "rsvp_url": "https://forum.defcon.org/node/255509",
+      "chapter_name": "",
+      "chapter_url": "https://forum.defcon.org/node/255509",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
       "slug": "bsides-tel-aviv-2026",
       "title": "BSides Tel Aviv 2026",
       "summary": "Security BSides community conference in Tel Aviv.",
@@ -879,6 +900,27 @@
       "rsvp_url": "https://www.bsidestlv.com/",
       "chapter_name": "BSides Tel Aviv",
       "chapter_url": "https://www.bsidestlv.com/",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
+      "slug": "def-con-middle-east-2026",
+      "title": "DEF CON Middle East 2026",
+      "summary": "Security event in Bahrain.",
+      "description": "DEF CON Middle East — official DEF CON event (from the DEF CON forum calendar).",
+      "starts_at": "2026-11-11T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "",
+      "region": "",
+      "country": "Bahrain",
+      "online_url": "",
+      "rsvp_url": "https://forum.defcon.org/node/255508",
+      "chapter_name": "",
+      "chapter_url": "https://forum.defcon.org/node/255508",
       "tags": [
         "conference"
       ]
@@ -1404,6 +1446,27 @@
       "rsvp_url": "http://www.bsidesmaine.org",
       "chapter_name": "BSides Portland Maine",
       "chapter_url": "http://www.bsidesmaine.org",
+      "tags": [
+        "conference"
+      ]
+    },
+    {
+      "slug": "def-con-35-2027",
+      "title": "DEF CON 35 2027",
+      "summary": "Security event in Las Vegas.",
+      "description": "DEF CON 35 — official DEF CON event (from the DEF CON forum calendar).",
+      "starts_at": "2027-08-05T12:00:00Z",
+      "date_only": true,
+      "location_type": "in_person",
+      "venue_name": "",
+      "venue_address": "",
+      "city": "Las Vegas",
+      "region": "",
+      "country": "USA",
+      "online_url": "",
+      "rsvp_url": "https://forum.defcon.org/node/253966",
+      "chapter_name": "",
+      "chapter_url": "https://forum.defcon.org/node/253966",
       "tags": [
         "conference"
       ]
