@@ -17,7 +17,7 @@
     <a href="/meetups/{{ .M.Slug }}/ics" class="rounded-md border border-line px-5 py-2.5 font-mono text-xs uppercase tracking-widest text-body hover:border-accent/50 hover:text-accent transition-colors">Add to calendar</a>
   </div>
 
-  {{ if .M.Description }}<div class="mt-8 text-[15px] leading-relaxed text-body max-w-2xl meetup-desc">{{ .M.Description }}</div>{{ end }}
+  {{ if .M.Description }}<div class="mt-8 article-body">{{ .M.Description }}</div>{{ end }}
 
   <dl class="mt-8 grid gap-3 sm:grid-cols-2 font-mono text-xs">
     {{ if .M.VenueName }}<div class="rounded-lg bg-ink-900 border border-line p-4"><dt class="text-fog uppercase tracking-widest text-[10px]">Venue</dt><dd class="mt-1 text-body">{{ .M.VenueName }}{{ if .M.VenueAddress }}<br>{{ .M.VenueAddress }}{{ end }}</dd>{{ if .MapURL }}<dd class="mt-1"><a href="{{ .MapURL }}" rel="noopener nofollow" class="text-accent hover:text-accent-bright">View map ↗</a></dd>{{ end }}</div>{{ end }}
