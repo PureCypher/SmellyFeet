@@ -48,7 +48,8 @@ func TestDigestImportantAndOtherSections(t *testing.T) {
 		Other:     []apiclient.Article{{ID: 2, Title: "Minor item"}},
 	}}
 	body := getPath(t, newTestServer(t, svc), "/digest").Body.String()
-	if !containsAll(body, "Big story", "3 sources", "everything else (1)", "Minor item") {
+	// cross_feed_count counts OTHER feeds, so 3 means 4 distinct sources.
+	if !containsAll(body, "Big story", "4 sources", "everything else (1)", "Minor item") {
 		t.Fatalf("digest body missing expected markers: %s", body)
 	}
 }
