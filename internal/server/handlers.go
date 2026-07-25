@@ -249,8 +249,8 @@ type digestView struct {
 	Nav         string
 	Range       string
 	Since       time.Time
-	Important   []apiclient.Article
-	Other       []apiclient.Article
+	Important   []articleGroup
+	Other       []articleGroup
 	FetchFailed bool
 }
 
@@ -278,14 +278,17 @@ func (s *Server) handleDigest(w http.ResponseWriter, r *http.Request) {
 
 	setCache(w, cacheList)
 	s.render(w, http.StatusOK, "digest", digestView{
-		Title:     "Digest",
-		Desc:      "Cross-feed importance digest — stories covered by multiple sources, for the current day, week, month, quarter, half-year, or year.",
-		OG:        true,
-		Nav:       "digest",
-		Range:     rangeParam,
-		Since:     res.Since,
-		Important: res.Important,
-		Other:     res.Other,
+		Title: "Digest",
+		Desc:  "Cross-feed importance digest — stories covered by multiple sources, for the current day, week, month, quarter, half-year, or year.",
+		OG:    true,
+		Nav:   "digest",
+		Range: rangeParam,
+		Since: res.Since,
+		// Each bucket is grouped independently, which is safe: every article
+		// in a cluster shares the same cross_feed_count, so splitImportant can
+		// never split one cluster across the two buckets.
+		Important: groupByCluster(res.Important),
+		Other:     groupByCluster(res.Other),
 	})
 }
 

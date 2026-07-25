@@ -236,6 +236,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .reveal:nth-child(19) { animation-delay: 630ms; }
 .reveal:nth-child(20) { animation-delay: 665ms; }
 
+/* Digest source groups: the lead card and its disclosure are siblings (the
+   card's stretched link would swallow clicks on a nested summary), so they're
+   joined into one visual unit here. articleCardBody is shared with the list
+   and article pages, hence a class on the <li> rather than a template flag. */
+.grouped > div:first-child { border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom-width: 0; }
+.grouped > details { border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem; }
+
 /* Stats source bars: CSP style-src 'self' forbids inline widths, so widths
    are quantized to 5% steps rendered as static classes. */
 .bar-5{width:5%}.bar-10{width:10%}.bar-15{width:15%}.bar-20{width:20%}

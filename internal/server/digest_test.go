@@ -53,6 +53,60 @@ func TestDigestImportantAndOtherSections(t *testing.T) {
 	}
 }
 
+func TestDigestGroupsCorrelatedSources(t *testing.T) {
+	svc := stubService{digest: apiclient.DigestResult{
+		Range: "daily",
+		Important: []apiclient.Article{
+			{ID: 1, Title: "Fortinet patches RCE", FeedURL: "https://a.example/feed", CrossFeedCount: 2, StoryClusterID: clusterRef(1)},
+			{ID: 2, Title: "Fortinet rushes fix", FeedURL: "https://b.example/feed", CrossFeedCount: 2, StoryClusterID: clusterRef(1)},
+			{ID: 3, Title: "Fortinet flaw exploited", FeedURL: "https://c.example/feed", CrossFeedCount: 2, StoryClusterID: clusterRef(1)},
+		},
+	}}
+	body := getPath(t, newTestServer(t, svc), "/digest").Body.String()
+
+	if !containsAll(body, "Fortinet patches RCE", "+2 more sources", "Fortinet rushes fix", "Fortinet flaw exploited") {
+		t.Fatalf("expected one lead card plus a disclosure listing the other two sources: %s", body)
+	}
+	// One story, not three rows.
+	if !strings.Contains(body, "Important (1)") {
+		t.Errorf("the Important heading must count stories, not articles: %s", body)
+	}
+	if strings.Contains(body, "<details open") {
+		t.Errorf("source groups must default to collapsed: %s", body)
+	}
+}
+
+func TestDigestSingletonStoryHasNoDisclosure(t *testing.T) {
+	svc := stubService{digest: apiclient.DigestResult{
+		Range:     "daily",
+		Important: []apiclient.Article{{ID: 1, Title: "Solo story", CrossFeedCount: 2, StoryClusterID: clusterRef(1)}},
+	}}
+	body := getPath(t, newTestServer(t, svc), "/digest").Body.String()
+
+	if !strings.Contains(body, "Solo story") {
+		t.Fatalf("lead card missing: %s", body)
+	}
+	if strings.Contains(body, "more source") {
+		t.Errorf("a one-article story must not render a disclosure: %s", body)
+	}
+}
+
+func TestDigestGroupsEverythingElseToo(t *testing.T) {
+	svc := stubService{digest: apiclient.DigestResult{
+		Range: "daily",
+		Other: []apiclient.Article{
+			{ID: 1, Title: "Pair lead", FeedURL: "https://a.example/feed", CrossFeedCount: 1, StoryClusterID: clusterRef(5)},
+			{ID: 2, Title: "Pair sibling", FeedURL: "https://b.example/feed", CrossFeedCount: 1, StoryClusterID: clusterRef(5)},
+		},
+	}}
+	body := getPath(t, newTestServer(t, svc), "/digest").Body.String()
+
+	// Two articles, one story: the bucket count and the disclosure both say so.
+	if !containsAll(body, "everything else (1)", "+1 more source") {
+		t.Fatalf("everything-else bucket must group by cluster too: %s", body)
+	}
+}
+
 // clusterRef builds a *int64 for table-test literals.
 func clusterRef(id int64) *int64 { return &id }
 
