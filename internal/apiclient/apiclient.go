@@ -27,6 +27,10 @@ type Article struct {
 	FeedURL        string    `json:"feed_url"`
 	ContentHash    string    `json:"content_hash"`
 	CrossFeedCount int       `json:"cross_feed_count,omitempty"`
+	// StoryClusterID groups articles covering the same story. Populated only
+	// by /articles/digest; nil elsewhere and nil for articles the backend's
+	// clustering job hasn't reached yet.
+	StoryClusterID *int64 `json:"story_cluster_id,omitempty"`
 }
 
 // ListResult is the envelope returned by GET /articles.

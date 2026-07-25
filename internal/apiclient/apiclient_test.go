@@ -171,7 +171,7 @@ func TestGetDigest(t *testing.T) {
 	var gotPath string
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		gotPath = r.URL.RequestURI()
-		w.Write([]byte(`{"range":"weekly","since":"2026-07-07T00:00:00Z","important":[{"id":1,"title":"Big story","cross_feed_count":3}],"other":[{"id":2,"title":"Minor","cross_feed_count":0}]}`))
+		w.Write([]byte(`{"range":"weekly","since":"2026-07-07T00:00:00Z","important":[{"id":1,"title":"Big story","cross_feed_count":3,"story_cluster_id":42}],"other":[{"id":2,"title":"Minor","cross_feed_count":0}]}`))
 	}))
 	defer srv.Close()
 
@@ -192,5 +192,13 @@ func TestGetDigest(t *testing.T) {
 	}
 	if len(res.Other) != 1 || res.Other[0].ID != 2 {
 		t.Fatalf("unexpected other: %+v", res)
+	}
+	if res.Important[0].StoryClusterID == nil || *res.Important[0].StoryClusterID != 42 {
+		t.Fatalf("StoryClusterID = %v, want 42", res.Important[0].StoryClusterID)
+	}
+	// Absent in the JSON means "not yet clustered", which must stay
+	// distinguishable from cluster 0 -- hence a pointer, not an int.
+	if res.Other[0].StoryClusterID != nil {
+		t.Fatalf("StoryClusterID = %v, want nil when absent from the JSON", res.Other[0].StoryClusterID)
 	}
 }
