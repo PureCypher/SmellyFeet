@@ -1,5 +1,6 @@
-{{ define "articleCard" }}
-<li class="reveal">
+{{/* articleCardBody is the card itself, without a list wrapper: the digest's
+     articleGroup partial reuses it while owning its own <li>. */}}
+{{ define "articleCardBody" }}
   <div class="group relative overflow-hidden bg-ink-900 border border-line rounded-xl p-5 hover:border-accent/50 hover:bg-ink-850 transition-colors">
     <span class="absolute left-0 top-0 h-full w-[2px] bg-accent origin-top scale-y-0 group-hover:scale-y-100 transition-transform duration-300"></span>
     <div class="flex flex-wrap items-center justify-between font-mono text-[11px] mb-2 gap-x-3 gap-y-1 [overflow-wrap:anywhere]">
@@ -20,7 +21,10 @@
     </p>
     <span aria-hidden="true" class="absolute right-5 bottom-4 font-mono text-accent opacity-0 group-hover:opacity-100 transition-opacity">→</span>
   </div>
-</li>
+{{ end }}
+
+{{ define "articleCard" }}
+<li class="reveal">{{ template "articleCardBody" . }}</li>
 {{ end }}
 
 {{ define "list" }}{{ template "header" . }}
