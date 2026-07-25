@@ -8,7 +8,9 @@
   {{ template "articleCardBody" .Lead }}
   {{ if .Members }}
   <details class="border border-line bg-ink-900/60">
-    <summary class="cursor-pointer select-none px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-fog hover:text-accent transition-colors">+{{ len .Members }} more source{{ if ne (len .Members) 1 }}s{{ end }}</summary>
+    <summary class="cursor-pointer select-none px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-fog hover:text-accent transition-colors">{{/* "reports", not "sources": this counts sibling ARTICLES, while the card's
+     badge counts distinct FEEDS. One feed can run two stories about the same
+     cluster, so the two numbers legitimately differ. */}}+{{ len .Members }} more report{{ if ne (len .Members) 1 }}s{{ end }}</summary>
     <ul class="border-t border-line/60">
       {{ range .Members }}
       <li class="border-b border-line/40 last:border-b-0">

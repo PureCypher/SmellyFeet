@@ -65,7 +65,7 @@ func TestDigestGroupsCorrelatedSources(t *testing.T) {
 	}}
 	body := getPath(t, newTestServer(t, svc), "/digest").Body.String()
 
-	if !containsAll(body, "Fortinet patches RCE", "+2 more sources", "Fortinet rushes fix", "Fortinet flaw exploited") {
+	if !containsAll(body, "Fortinet patches RCE", "+2 more reports", "Fortinet rushes fix", "Fortinet flaw exploited") {
 		t.Fatalf("expected one lead card plus a disclosure listing the other two sources: %s", body)
 	}
 	// One story, not three rows.
@@ -87,7 +87,7 @@ func TestDigestSingletonStoryHasNoDisclosure(t *testing.T) {
 	if !strings.Contains(body, "Solo story") {
 		t.Fatalf("lead card missing: %s", body)
 	}
-	if strings.Contains(body, "more source") {
+	if strings.Contains(body, "more report") {
 		t.Errorf("a one-article story must not render a disclosure: %s", body)
 	}
 }
@@ -103,7 +103,7 @@ func TestDigestGroupsEverythingElseToo(t *testing.T) {
 	body := getPath(t, newTestServer(t, svc), "/digest").Body.String()
 
 	// Two articles, one story: the bucket count and the disclosure both say so.
-	if !containsAll(body, "everything else (1)", "+1 more source") {
+	if !containsAll(body, "everything else (1)", "+1 more report") {
 		t.Fatalf("everything-else bucket must group by cluster too: %s", body)
 	}
 }
