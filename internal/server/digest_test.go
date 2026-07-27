@@ -48,9 +48,24 @@ func TestDigestImportantAndOtherSections(t *testing.T) {
 		Other:     []apiclient.Article{{ID: 2, Title: "Minor item"}},
 	}}
 	body := getPath(t, newTestServer(t, svc), "/digest").Body.String()
-	// cross_feed_count counts OTHER feeds, so 3 means 4 distinct sources.
-	if !containsAll(body, "Big story", "4 sources", "everything else (1)", "Minor item") {
+	// cross_feed_count counts OTHER feeds, so 3 means 4 distinct feeds.
+	if !containsAll(body, "Big story", "4 feeds", "everything else (1)", "Minor item") {
 		t.Fatalf("digest body missing expected markers: %s", body)
+	}
+}
+
+// The window is a rolling look-back now, so the page has to say which one it
+// is showing -- "since <date>" alone left the reader to infer the width.
+func TestDigestStatesItsWindow(t *testing.T) {
+	for _, tt := range []struct{ path, want string }{
+		{"/digest", "last 24 hours"},
+		{"/digest?range=weekly", "last 7 days"},
+		{"/digest?range=yearly", "last 12 months"},
+	} {
+		body := getPath(t, newTestServer(t, stubService{}), tt.path).Body.String()
+		if !strings.Contains(body, tt.want) {
+			t.Errorf("%s: expected the page to state %q", tt.path, tt.want)
+		}
 	}
 }
 
@@ -69,8 +84,8 @@ func TestDigestGroupsCorrelatedSources(t *testing.T) {
 		t.Fatalf("expected one lead card plus a disclosure listing the other two sources: %s", body)
 	}
 	// One story, not three rows.
-	if !strings.Contains(body, "Important (1)") {
-		t.Errorf("the Important heading must count stories, not articles: %s", body)
+	if !strings.Contains(body, "Top stories (1)") {
+		t.Errorf("the Top stories heading must count stories, not articles: %s", body)
 	}
 	if strings.Contains(body, "<details open") {
 		t.Errorf("source groups must default to collapsed: %s", body)
@@ -102,9 +117,13 @@ func TestDigestGroupsEverythingElseToo(t *testing.T) {
 	}}
 	body := getPath(t, newTestServer(t, svc), "/digest").Body.String()
 
-	// Two articles, one story: the bucket count and the disclosure both say so.
-	if !containsAll(body, "everything else (1)", "+1 more report") {
+	// Two articles, one story: the bucket count says so. Grouped stories in
+	// this bucket render as compact rows, so the lead's title is what shows.
+	if !containsAll(body, "everything else (1)", "Pair lead") {
 		t.Fatalf("everything-else bucket must group by cluster too: %s", body)
+	}
+	if strings.Contains(body, "Pair sibling") {
+		t.Errorf("the low-coverage bucket renders one row per story, not per article: %s", body)
 	}
 }
 

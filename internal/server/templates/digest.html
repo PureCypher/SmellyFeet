@@ -1,16 +1,17 @@
-{{/* articleGroup renders one story: the newest article as a normal card, with
-     the other feeds that covered it behind a collapsed-by-default disclosure.
-     The <details> is a SIBLING of the card, not a child -- the card's title
-     link is stretched over the whole card (after:inset-0) and would otherwise
-     swallow clicks on the summary. */}}
+{{/* articleGroup renders one story as a full card: the newest article in the
+     window, with the other articles from the same story behind a
+     collapsed-by-default disclosure. The <details> is a SIBLING of the card,
+     not a child -- the card's title link is stretched over the whole card
+     (after:inset-0) and would otherwise swallow clicks on the summary. */}}
 {{ define "articleGroup" }}
 <li class="reveal{{ if .Members }} grouped{{ end }}">
   {{ template "articleCardBody" .Lead }}
   {{ if .Members }}
   <details class="border border-line bg-ink-900/60">
-    <summary class="cursor-pointer select-none px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-fog hover:text-accent transition-colors">{{/* "reports", not "sources": this counts sibling ARTICLES, while the card's
-     badge counts distinct FEEDS. One feed can run two stories about the same
-     cluster, so the two numbers legitimately differ. */}}+{{ len .Members }} more report{{ if ne (len .Members) 1 }}s{{ end }}</summary>
+    <summary class="cursor-pointer select-none px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-fog hover:text-accent transition-colors">{{/* "reports in this window", not "sources": this counts sibling ARTICLES
+     inside the digest window, while the card's badge counts distinct FEEDS
+     across the story's whole life. A story can carry an eight-feed badge and
+     no siblings here, because the other seven ran theirs before the window. */}}+{{ len .Members }} more report{{ if ne (len .Members) 1 }}s{{ end }} in this window</summary>
     <ul class="border-t border-line/60">
       {{ range .Members }}
       <li class="border-b border-line/40 last:border-b-0">
@@ -28,23 +29,39 @@
 </li>
 {{ end }}
 
+{{/* storyRow is the compact form of a story: one scannable line instead of a
+     card. Everything past the leading handful renders this way -- a rolling
+     weekly window holds ~1000 stories, and a thousand summary cards is not a
+     digest. */}}
+{{ define "storyRow" }}
+<li class="border-b border-line/40 last:border-b-0">
+  <a href="/article/{{ .Lead.ID }}" class="group/row flex flex-wrap items-baseline gap-x-2.5 gap-y-1 px-4 py-2.5 hover:bg-ink-850 transition-colors">
+    <span class="shrink-0 font-mono text-[11px] rounded border border-line bg-ink-950 px-2 py-0.5 text-accent-dim">{{ sourceName .Lead.FeedURL }}</span>
+    <span class="shrink-0 font-mono text-[11px] text-fog tabular-nums">{{ .Lead.PublishedAt | relTime }}</span>
+    <span class="min-w-0 flex-1 text-sm text-body group-hover/row:text-accent transition-colors [overflow-wrap:anywhere]">{{ .Lead.Title }}</span>
+    {{ with feedCountLabel .Lead.CrossFeedCount }}<span class="shrink-0 font-mono text-[11px] rounded border border-accent/40 bg-accent/10 px-2 py-0.5 text-accent">{{ . }}</span>{{ end }}
+  </a>
+</li>
+{{ end }}
+
 {{ define "digest" }}{{ template "header" . }}
-<div class="mb-7">
+<div class="mb-6">
   <p class="font-mono text-[11px] uppercase tracking-[0.25em] text-accent/80 mb-1.5">// digest</p>
   <h1 class="text-2xl font-semibold text-primary tracking-tight">Cross-feed importance digest</h1>
-  {{ if not .FetchFailed }}<p class="mt-1 font-mono text-xs text-fog">since {{ .Since | formatDate }}</p>{{ end }}
+  <p class="mt-1.5 text-sm text-fog">Stories ranked by how many independent feeds ran them. Corroboration is measured across each story's full life, not just this window.</p>
+  {{ if not .FetchFailed }}<p class="mt-2 font-mono text-[11px] text-structural">{{ .Window }} · since {{ .Since | formatDate }} UTC</p>{{ end }}
 </div>
 
 <form method="get" action="/digest" class="mb-5 flex flex-wrap gap-3 items-end bg-ink-900 border border-line rounded-xl p-4">
   <div>
     <label for="range" class="block font-mono text-[10px] uppercase tracking-widest text-fog mb-1.5">Range</label>
     <select id="range" name="range" class="rounded-lg bg-ink-950 border border-line px-3 py-2 text-sm text-primary focus:border-accent transition-colors">
-      <option value="daily" {{ if eq .Range "daily" }}selected{{ end }}>Daily</option>
-      <option value="weekly" {{ if eq .Range "weekly" }}selected{{ end }}>Weekly</option>
-      <option value="monthly" {{ if eq .Range "monthly" }}selected{{ end }}>Monthly</option>
-      <option value="quarterly" {{ if eq .Range "quarterly" }}selected{{ end }}>Quarterly</option>
-      <option value="halfyearly" {{ if eq .Range "halfyearly" }}selected{{ end }}>Half-yearly</option>
-      <option value="yearly" {{ if eq .Range "yearly" }}selected{{ end }}>Yearly</option>
+      <option value="daily" {{ if eq .Range "daily" }}selected{{ end }}>Last 24 hours</option>
+      <option value="weekly" {{ if eq .Range "weekly" }}selected{{ end }}>Last 7 days</option>
+      <option value="monthly" {{ if eq .Range "monthly" }}selected{{ end }}>Last 30 days</option>
+      <option value="quarterly" {{ if eq .Range "quarterly" }}selected{{ end }}>Last 90 days</option>
+      <option value="halfyearly" {{ if eq .Range "halfyearly" }}selected{{ end }}>Last 6 months</option>
+      <option value="yearly" {{ if eq .Range "yearly" }}selected{{ end }}>Last 12 months</option>
     </select>
   </div>
   <button type="submit" class="rounded-lg bg-accent text-ink-950 font-semibold px-5 py-2 text-sm hover:bg-accent-bright transition-colors">Apply</button>
@@ -60,32 +77,48 @@
 </div>
 {{ else }}
 
-{{ if and (not .Important) (not .Other) }}
+{{ if and (not .TopTotal) (not .RestTotal) }}
   <div class="text-center py-16 border border-dashed border-line rounded-xl">
     <p class="font-mono text-sm text-fog">No articles found in this window.</p>
-    <p class="mt-2 font-mono text-xs text-fog">Try a wider range: <a href="/digest?range=weekly" class="text-accent hover:text-accent-bright transition-colors">Weekly</a> · <a href="/digest?range=monthly" class="text-accent hover:text-accent-bright transition-colors">Monthly</a></p>
+    <p class="mt-2 font-mono text-xs text-fog">Try a wider range: <a href="/digest?range=weekly" class="text-accent hover:text-accent-bright transition-colors">7 days</a> · <a href="/digest?range=monthly" class="text-accent hover:text-accent-bright transition-colors">30 days</a></p>
   </div>
-{{ end }}
+{{ else }}
 
-{{ if .Important }}
-<h2 class="font-mono text-[11px] uppercase tracking-[0.2em] text-fog mb-1">Important ({{ len .Important }})</h2>
-<p class="text-sm text-fog mb-3">Stories reported independently by three or more feeds (the source feed plus at least two others).</p>
-<ul class="space-y-3 mb-8">
-  {{ range .Important }}{{ template "articleGroup" . }}{{ end }}
+{{ if .Top }}
+<h2 class="font-mono text-[11px] uppercase tracking-[0.2em] text-fog mb-1">Top stories ({{ .TopTotal }})</h2>
+<p class="text-sm text-fog mb-3">Reported independently by three or more feeds.{{ if .MoreTop }} Showing the {{ len .Top }} with the widest coverage.{{ end }}</p>
+<ul class="space-y-3 {{ if .MoreTop }}mb-4{{ else }}mb-8{{ end }}">
+  {{ range .Top }}{{ template "articleGroup" . }}{{ end }}
 </ul>
-{{ else if .Other }}
-<p class="text-sm text-fog mb-3">No cross-feed stories detected in this window. {{ len .Other }} other stor{{ if ne (len .Other) 1 }}ies{{ else }}y{{ end }} below.</p>
+
+{{ if .MoreTop }}
+<details class="mb-8 rounded-xl border border-line bg-ink-900/60">
+  <summary class="cursor-pointer select-none px-4 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-fog hover:text-accent transition-colors">{{ len .MoreTop }} more corroborated {{ if eq (len .MoreTop) 1 }}story{{ else }}stories{{ end }}</summary>
+  <ul class="border-t border-line/60">
+    {{ range .MoreTop }}{{ template "storyRow" . }}{{ end }}
+  </ul>
+  {{ if .TopHidden }}
+  <p class="border-t border-line/60 px-4 py-2.5 font-mono text-[11px] text-structural">{{ .TopHidden }} further corroborated {{ if eq .TopHidden 1 }}story{{ else }}stories{{ end }} not listed. <a href="/" class="text-accent hover:text-accent-bright transition-colors">Browse the full feed →</a></p>
+  {{ end }}
+</details>
+{{ end }}
+{{ else }}
+<p class="mb-6 rounded-xl border border-dashed border-line px-4 py-4 text-sm text-fog">No story in this window has been picked up by three or more feeds yet. Corroboration usually takes a day or two to build — try <a href="/digest?range=weekly" class="text-accent hover:text-accent-bright transition-colors">the last 7 days</a>.</p>
 {{ end }}
 
-{{ if .Other }}
+{{ if .Rest }}
 <h2 class="sr-only">Everything else</h2>
 <details class="mb-5 rounded-xl border border-line bg-ink-900/60">
-  <summary class="cursor-pointer select-none px-4 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-fog hover:text-accent transition-colors">everything else ({{ len .Other }})</summary>
-  <ul class="space-y-3 p-4 pt-1">
-    {{ range .Other }}{{ template "articleGroup" . }}{{ end }}
+  <summary class="cursor-pointer select-none px-4 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-fog hover:text-accent transition-colors">everything else ({{ .RestTotal }})</summary>
+  <ul class="border-t border-line/60">
+    {{ range .Rest }}{{ template "storyRow" . }}{{ end }}
   </ul>
+  {{ if .RestHidden }}
+  <p class="border-t border-line/60 px-4 py-2.5 font-mono text-[11px] text-structural">Showing {{ len .Rest }} of {{ .RestTotal }}. <a href="/" class="text-accent hover:text-accent-bright transition-colors">Browse the full feed →</a></p>
+  {{ end }}
 </details>
 {{ end }}
 
+{{ end }}
 {{ end }}
 {{ template "footer" . }}{{ end }}

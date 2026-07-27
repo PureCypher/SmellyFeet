@@ -242,15 +242,15 @@ var validDigestRanges = map[string]bool{
 }
 
 type digestView struct {
-	Title       string
-	Desc        string
-	OG          bool
-	OGArticle   bool // required by the shared header partial whenever OG is true; false = og:type "website"
-	Nav         string
-	Range       string
-	Since       time.Time
-	Important   []articleGroup
-	Other       []articleGroup
+	Title     string
+	Desc      string
+	OG        bool
+	OGArticle bool // required by the shared header partial whenever OG is true; false = og:type "website"
+	Nav       string
+	Range     string
+	Since     time.Time
+	Window    string // prose description of the rolling range, e.g. "last 24 hours"
+	digestSections
 	FetchFailed bool
 }
 
@@ -271,6 +271,7 @@ func (s *Server) handleDigest(w http.ResponseWriter, r *http.Request) {
 			OG:          true,
 			Nav:         "digest",
 			Range:       rangeParam,
+			Window:      digestWindowLabel(rangeParam),
 			FetchFailed: true,
 		})
 		return
@@ -278,17 +279,17 @@ func (s *Server) handleDigest(w http.ResponseWriter, r *http.Request) {
 
 	setCache(w, cacheList)
 	s.render(w, http.StatusOK, "digest", digestView{
-		Title: "Digest",
-		Desc:  "Cross-feed importance digest — stories covered by multiple sources, for the current day, week, month, quarter, half-year, or year.",
-		OG:    true,
-		Nav:   "digest",
-		Range: rangeParam,
-		Since: res.Since,
+		Title:  "Digest",
+		Desc:   "Cross-feed importance digest — security stories ranked by how many independent feeds covered them, over the last day, week, month, quarter, half-year, or year.",
+		OG:     true,
+		Nav:    "digest",
+		Range:  rangeParam,
+		Since:  res.Since,
+		Window: digestWindowLabel(rangeParam),
 		// Each bucket is grouped independently, which is safe: every article
 		// in a cluster shares the same cross_feed_count, so splitImportant can
 		// never split one cluster across the two buckets.
-		Important: groupByCluster(res.Important),
-		Other:     groupByCluster(res.Other),
+		digestSections: splitDigestSections(groupByCluster(res.Important), groupByCluster(res.Other)),
 	})
 }
 

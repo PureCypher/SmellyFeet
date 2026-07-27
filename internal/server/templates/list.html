@@ -7,8 +7,10 @@
       <span class="flex items-center gap-2 min-w-0">
         <a href="/?feed={{ .FeedURL | urlquery }}" title="Filter by {{ sourceName .FeedURL }}" class="relative z-10 truncate rounded border border-line bg-ink-950 px-2 py-0.5 text-accent-dim hover:text-accent hover:border-accent/60 transition-colors">{{ sourceName .FeedURL }}</a>
         {{ with cveID .Title }}<span class="shrink-0 rounded border border-accent/40 bg-accent/10 px-2 py-0.5 text-accent">{{ . }}</span>{{ end }}
-        {{/* cross_feed_count is the count of OTHER feeds, so +1 is the true distinct-source count. */}}
-        {{ if gt .CrossFeedCount 1 }}<span class="shrink-0 rounded border border-accent/40 bg-accent/10 px-2 py-0.5 text-accent">{{ inc .CrossFeedCount }} sources</span>{{ end }}
+        {{/* Coverage badge. Absent on /, which doesn't select cross_feed_count;
+             the digest is the only page where this renders. Solid fill marks
+             wall-to-wall coverage so the strongest stories read at a glance. */}}
+        {{ $tone := coverageTone .CrossFeedCount }}{{ with feedCountLabel .CrossFeedCount }}<span class="shrink-0 rounded px-2 py-0.5 {{ if eq $tone "heavy" }}bg-accent text-ink-950 font-semibold{{ else }}border border-accent/40 bg-accent/10 text-accent{{ end }}" title="Independent feeds that covered this story">{{ . }}</span>{{ end }}
       </span>
       <span class="shrink-0 flex items-center gap-1.5">
         <time class="text-fog" datetime="{{ .PublishedAt.Format "2006-01-02T15:04:05Z07:00" }}">{{ .PublishedAt | relTime }}</time>

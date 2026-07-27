@@ -79,6 +79,8 @@ var funcMap = template.FuncMap{
 	"relTime":        relTime,
 	"cveID":          cveID,
 	"commas":         commas,
+	"feedCountLabel": feedCountLabel,
+	"coverageTone":   coverageTone,
 	"inc":            func(n int) int { return n + 1 },
 	"dec":            func(n int) int { return n - 1 },
 	"assetHash":      func() string { return assetHash },
