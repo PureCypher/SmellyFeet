@@ -22,8 +22,18 @@
 
   <section class="mt-8">
     <h2 class="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-fog mb-3 flex items-center gap-2"><span class="h-px w-6 bg-line"></span>Full text</h2>
-    {{ $body := cleanContent .Content }}
-    {{ if $body }}<div class="article-body">{{ $body }}</div>{{ else }}<p class="text-sm text-fog italic">No full text was stored for this article.</p>{{ end }}
+    {{ $body := sanitizeBody .ContentHTML .URL }}
+    {{ if $body }}
+      <div class="article-body">{{ $body }}</div>
+      <p class="mt-4 text-xs text-fog">Extracted from the publisher with original structure; images load through this site's proxy.</p>
+    {{ else }}
+      {{ $plain := cleanContent .Content }}
+      {{ if $plain }}
+        <div class="article-body article-body-plain">{{ $plain }}</div>
+      {{ else }}
+        <p class="text-sm text-fog italic">No full text was stored for this article.</p>
+      {{ end }}
+    {{ end }}
   </section>
 
   <div class="mt-8 pt-5 border-t border-line flex flex-wrap items-center gap-4">

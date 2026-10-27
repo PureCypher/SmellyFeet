@@ -79,7 +79,7 @@
   --text-2xs: 11px;
   --text-size-xs: 0.75rem;
   --text-size-sm: 0.875rem;
-  --text-size-prose: 0.9375rem;
+  --text-size-prose: 1rem;
   --text-size-base: 1rem;
   --text-size-lg: 1.125rem;
   --text-size-xl: 1.25rem;
@@ -200,16 +200,96 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 ::-webkit-scrollbar-thumb { background: var(--surface-scrollbar); border-radius: 8px; border: 2px solid var(--surface-page); }
 ::-webkit-scrollbar-thumb:hover { background: var(--surface-scrollbar-hover); }
 
-/* Full-text typography (replaces the unavailable Tailwind prose plugin) */
+/* Full-text typography (replaces the unavailable Tailwind prose plugin).
+   .article-body renders sanitized publisher HTML — normal white-space so the
+   document's own flow rules apply; .article-body-plain is the fallback for
+   HTML-stripped bodies, which keep the page's whitespace skeleton. */
 .article-body {
-  white-space: pre-line;
   font-size: var(--text-size-prose);
   line-height: var(--leading-prose);
   color: var(--text-prose);
   max-width: var(--measure-prose);
   word-break: break-word;
 }
+.article-body-plain { white-space: pre-line; }
+
+.article-body p { margin: 0 0 1.15em; }
+.article-body p:last-child { margin-bottom: 0; }
+.article-body h2, .article-body h3, .article-body h4 {
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin: 1.7em 0 0.6em;
+  font-weight: 600;
+}
+.article-body h2 { font-size: 1.2em; }
+.article-body h3 { font-size: 1.05em; }
+.article-body ul, .article-body ol { margin: 0 0 1.15em; padding-left: 1.4em; }
+.article-body li { margin-bottom: 0.4em; }
+.article-body li::marker { color: var(--text-muted); }
 .article-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+.article-body a:hover { color: var(--accent-bright); }
+.article-body strong { color: var(--text-secondary); }
+.article-body em { color: var(--text-secondary); }
+.article-body blockquote {
+  margin: 1.3em 0;
+  padding: 0.15em 0 0.15em 1.1em;
+  border-left: 1px solid var(--border-accent-faint);
+  color: var(--text-secondary);
+}
+.article-body pre {
+  margin: 1.3em 0;
+  padding: 1rem;
+  overflow-x: auto;
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+.article-body code { font-family: var(--font-mono); font-size: 0.875em; }
+.article-body :not(pre) > code {
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 0.1em 0.4em;
+}
+/* Body images load through the same-origin /img proxy. The framed box keeps
+   a failed fetch (publisher blocks, transient errors) looking intentional
+   while the alt text explains what was there. */
+.article-body img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.3em 0;
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+}
+.article-body figure { margin: 1.5em 0; }
+.article-body figure img { margin: 0; }
+.article-body figcaption {
+  margin-top: 0.55em;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+.article-body hr { border: 0; border-top: 1px solid var(--border-default); margin: 1.8em 0; }
+/* Wide tables scroll inside the reading column instead of overflowing it. */
+.article-body table {
+  display: block;
+  overflow-x: auto;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.3em 0;
+  font-size: 0.875em;
+}
+.article-body th, .article-body td {
+  border: 1px solid var(--border-default);
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+.article-body th { color: var(--text-secondary); background: var(--surface-overlay); }
 
 @keyframes riseIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 .reveal { opacity: 0; animation: riseIn var(--dur-reveal) var(--ease-rise) forwards; }

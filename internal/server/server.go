@@ -75,6 +75,7 @@ type Server struct {
 var funcMap = template.FuncMap{
 	"formatDate":     formatDate,
 	"cleanContent":   cleanContent,
+	"sanitizeBody":   sanitizeBody,
 	"sourceName":     sourceName,
 	"relTime":        relTime,
 	"cveID":          cveID,
@@ -144,6 +145,19 @@ func cleanContent(s string) string {
 		}
 	}
 	return strings.Join(out, "\n")
+}
+
+// sanitizeBody is the template's one escape hatch for raw HTML: untrusted
+// publisher HTML goes through sanitizeArticleHTML (strict whitelist,
+// image-proxy rewrite, re-escaped text nodes) before it may be embedded as
+// template.HTML. Empty for nil/empty input, which the template turns into
+// its plain-text fallback. Takes a pointer because the template passes
+// Article.ContentHTML straight through.
+func sanitizeBody(raw *string, pageURL string) template.HTML {
+	if raw == nil || *raw == "" {
+		return ""
+	}
+	return template.HTML(sanitizeArticleHTML(*raw, pageURL))
 }
 
 // sourceName returns a compact display name for a feed URL: the hostname
@@ -243,6 +257,7 @@ func (s *Server) Routes() http.Handler {
 	mux.HandleFunc("GET /{$}", s.handleList)
 	mux.HandleFunc("GET /digest", s.handleDigest)
 	mux.HandleFunc("GET /article/{id}", s.handleArticle)
+	mux.HandleFunc("GET /img", handleImg)
 	mux.HandleFunc("GET /stats", s.handleStats)
 	mux.HandleFunc("GET /about", s.handleAbout)
 	mux.HandleFunc("GET /feed.xml", s.handleFeed)

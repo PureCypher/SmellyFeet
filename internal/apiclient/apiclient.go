@@ -18,15 +18,20 @@ var ErrNotFound = errors.New("not found")
 
 // Article mirrors the JSON returned by the Information-Broker API.
 type Article struct {
-	ID             int64     `json:"id"`
-	Title          string    `json:"title"`
-	URL            string    `json:"url"`
-	Summary        *string   `json:"summary"`
-	Content        string    `json:"content"`
-	PublishedAt    time.Time `json:"published_at"`
-	FeedURL        string    `json:"feed_url"`
-	ContentHash    string    `json:"content_hash"`
-	CrossFeedCount int       `json:"cross_feed_count,omitempty"`
+	ID          int64     `json:"id"`
+	Title       string    `json:"title"`
+	URL         string    `json:"url"`
+	Summary     *string   `json:"summary"`
+	Content     string    `json:"content"`
+	PublishedAt time.Time `json:"published_at"`
+	FeedURL     string    `json:"feed_url"`
+	ContentHash string    `json:"content_hash"`
+	// ContentHTML is the extracted article body with original structure
+	// (headings, lists, images). Populated only by the article-detail
+	// endpoint; nil when the backend predates content_html capture or the
+	// extraction produced nothing usable — the UI falls back to .Content.
+	ContentHTML    *string `json:"content_html,omitempty"`
+	CrossFeedCount int     `json:"cross_feed_count,omitempty"`
 	// StoryClusterID groups articles covering the same story. Populated only
 	// by /articles/digest; nil elsewhere and nil for articles the backend's
 	// clustering job hasn't reached yet.
