@@ -49,7 +49,7 @@ func TestArticlePageSingleURLAndPill(t *testing.T) {
 	if n := strings.Count(body, "https://example.com/original-report"); n != 1 {
 		t.Errorf("original URL appears %d times, want exactly 1 (href only)", n)
 	}
-	if !strings.Contains(body, ">feeds.feedburner.com</a>") {
+	if !strings.Contains(body, ">TheHackersNews</a>") {
 		t.Error("article page missing source pill")
 	}
 }

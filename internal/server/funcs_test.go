@@ -24,7 +24,7 @@ func TestCommas(t *testing.T) {
 func TestSourceName(t *testing.T) {
 	tests := []struct{ name, in, want string }{
 		{"strips www and path", "https://www.brighttalk.com/channel/7451/feed/rss", "brighttalk.com"},
-		{"plain host", "https://feeds.feedburner.com/TheHackersNews", "feeds.feedburner.com"},
+		{"feedburner wrapper uses path name", "https://feeds.feedburner.com/TheHackersNews", "TheHackersNews"},
 		{"not a url", "not a url", "not a url"},
 		{"empty", "", ""},
 	}

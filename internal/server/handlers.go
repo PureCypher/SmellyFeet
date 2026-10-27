@@ -176,6 +176,34 @@ func ingestionHealth(st apiclient.Stats) healthStatus {
 	return healthStatus{State: "ok", Message: fmt.Sprintf("all %s fetches succeeded in the last 24h", commas(st.SuccessfulFetches24h))}
 }
 
+// dedupeFeedList collapses feeds sharing a display name (sourceName) into one
+// dropdown entry: wrapper feeds (e.g. feedburner mirrors of the same source)
+// otherwise render as several identical-looking options. The entry with the
+// most articles is kept as the filter target, so the count shown is the count
+// actually filtered — no aggregation fiction.
+func dedupeFeedList(feeds []apiclient.Feed) []apiclient.Feed {
+	byName := make(map[string]apiclient.Feed, len(feeds))
+	order := make([]string, 0, len(feeds))
+	for _, f := range feeds {
+		name := sourceName(f.FeedURL)
+		key := strings.ToLower(name)
+		existing, ok := byName[key]
+		if !ok {
+			byName[key] = f
+			order = append(order, key)
+			continue
+		}
+		if f.ArticleCount > existing.ArticleCount {
+			byName[name] = f
+		}
+	}
+	out := make([]apiclient.Feed, 0, len(order))
+	for _, name := range order {
+		out = append(out, byName[name])
+	}
+	return out
+}
+
 // trimDesc collapses whitespace and truncates to n runes for meta descriptions.
 func trimDesc(s string, n int) string {
 	s = strings.Join(strings.Fields(s), " ")
@@ -213,6 +241,8 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		feeds = nil             // non-fatal: filter dropdown simply shows "All feeds"
 		feedsUnavailable = true // surfaced as an explicit DEGRADED callout, not silently
+	} else {
+		feeds = dedupeFeedList(feeds)
 	}
 
 	var upcoming []apiclient.Article

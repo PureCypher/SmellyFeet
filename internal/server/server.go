@@ -147,13 +147,22 @@ func cleanContent(s string) string {
 }
 
 // sourceName returns a compact display name for a feed URL: the hostname
-// without a leading "www.". Returns the input unchanged if it doesn't parse.
+// without a leading "www.". For wrapper feeds (e.g. feedburner mirrors), the
+// hostname is not the publisher — several distinct wrappers would all display
+// "feeds.feedburner.com" — so the name comes from the path's last segment
+// instead. Returns the input unchanged if it doesn't parse.
 func sourceName(feedURL string) string {
 	u, err := url.Parse(feedURL)
 	if err != nil || u.Hostname() == "" {
 		return feedURL
 	}
-	return strings.TrimPrefix(u.Hostname(), "www.")
+	host := strings.TrimPrefix(u.Hostname(), "www.")
+	if host == "feeds.feedburner.com" {
+		if segs := strings.Split(strings.Trim(u.Path, "/"), "/"); len(segs) > 0 && segs[len(segs)-1] != "" {
+			return segs[len(segs)-1]
+		}
+	}
+	return host
 }
 
 // relTimeAt renders t relative to now; dates outside the recent past
