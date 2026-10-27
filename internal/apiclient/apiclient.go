@@ -31,14 +31,23 @@ type Article struct {
 	// by /articles/digest; nil elsewhere and nil for articles the backend's
 	// clustering job hasn't reached yet.
 	StoryClusterID *int64 `json:"story_cluster_id,omitempty"`
+	// SummaryState distinguishes summarization outcomes: "available" (LLM
+	// summary stored), "pending" (not yet reached by the summarizer), or
+	// "failed" (retries exhausted). Empty on older backend builds — the UI
+	// falls back to rendering .Summary as before.
+	SummaryState string `json:"summary_state"`
 }
 
 // ListResult is the envelope returned by GET /articles.
 type ListResult struct {
 	Articles []Article `json:"articles"`
 	Count    int       `json:"count"`
-	Limit    int       `json:"limit"`
-	Offset   int       `json:"offset"`
+	// Total matching rows across all pages. 0 means the backend omitted it
+	// (count query failed or genuinely zero results) — pagination renders
+	// without a total in that case.
+	Total  int `json:"total"`
+	Limit  int `json:"limit"`
+	Offset int `json:"offset"`
 }
 
 // DigestResult is the envelope returned by GET /articles/digest.

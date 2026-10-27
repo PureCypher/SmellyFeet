@@ -10,7 +10,14 @@
 
   <section class="mt-6 rounded-xl border border-accent/25 bg-accent/[0.06] p-5">
     <h2 class="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-accent mb-2">▍ AI Summary</h2>
-    <p class="text-[15px] text-zinc-100 leading-relaxed">{{ if .Summary }}{{ .Summary }}{{ else }}<span class="text-fog italic">No summary available.</span>{{ end }}</p>
+    <p class="text-[15px] text-zinc-100 leading-relaxed">
+      {{ if .SummaryState }}
+        {{ if eq .SummaryState "pending" }}<span class="text-fog italic">Summary queued — being generated. Check back shortly.</span>
+        {{ else if eq .SummaryState "failed" }}<span class="text-fog italic">Summary unavailable — generation failed. The full text and the original source below are unaffected.</span>
+        {{ else }}{{ .Summary }}{{ end }}
+      {{ else if .Summary }}{{ .Summary }}
+      {{ else }}<span class="text-fog italic">No summary available.</span>{{ end }}
+    </p>
   </section>
 
   <section class="mt-8">

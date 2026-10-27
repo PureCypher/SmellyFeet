@@ -20,7 +20,12 @@
     </div>
     <h2 class="text-lg font-semibold text-primary leading-snug group-hover:text-accent transition-colors"><a href="/article/{{ .ID }}" class="after:absolute after:inset-0">{{ .Title }}</a></h2>
     <p class="mt-2 text-sm text-body leading-relaxed line-clamp-3">
-      {{ if .Summary }}{{ .Summary }}{{ else }}<span class="text-fog italic">No summary available.</span>{{ end }}
+      {{ if .SummaryState }}
+        {{ if eq .SummaryState "pending" }}<span class="text-fog italic">Summary queued — being generated.</span>
+        {{ else if eq .SummaryState "failed" }}<span class="text-fog italic">Summary unavailable — generation failed.</span>
+        {{ else }}{{ .Summary }}{{ end }}
+      {{ else if .Summary }}{{ .Summary }}
+      {{ else }}<span class="text-fog italic">No summary available.</span>{{ end }}
     </p>
     <span aria-hidden="true" class="absolute right-5 bottom-4 font-mono text-accent opacity-0 group-hover:opacity-100 transition-opacity">→</span>
   </div>
@@ -110,7 +115,7 @@
 
 <nav aria-label="Pagination" class="mt-10 flex items-center justify-between font-mono text-xs">
   {{ if .HasPrev }}<a href="?page={{ dec .Page }}&amp;q={{ .Q | urlquery }}&amp;feed={{ .Feed | urlquery }}&amp;sort={{ .Sort }}" class="px-4 py-2 rounded-lg border border-line text-body hover:border-accent hover:text-accent transition-colors">← Prev</a>{{ else }}<span class="px-4 py-2 text-faint">← Prev</span>{{ end }}
-  <span class="text-fog uppercase tracking-widest">Page {{ .Page }}</span>
+  <span class="text-fog uppercase tracking-widest">Page {{ .Page }}{{ if .Pages }} of {{ .Pages }}{{ end }}</span>
   {{ if .HasNext }}<a href="?page={{ inc .Page }}&amp;q={{ .Q | urlquery }}&amp;feed={{ .Feed | urlquery }}&amp;sort={{ .Sort }}" class="px-4 py-2 rounded-lg border border-line text-body hover:border-accent hover:text-accent transition-colors">Next →</a>{{ else }}<span class="px-4 py-2 text-faint">Next →</span>{{ end }}
 </nav>
 {{ template "footer" . }}{{ end }}

@@ -72,8 +72,13 @@ type listView struct {
 	Feed             string
 	Sort             string
 	Page             int
-	HasPrev          bool
-	HasNext          bool
+	// TotalResults is the backend-reported matching-row total across all
+	// pages; 0 = unknown (count query failed or no results) and the pager
+	// renders without "of N".
+	TotalResults int
+	Pages        int
+	HasPrev      bool
+	HasNext      bool
 }
 
 // minSearchQueryLen mirrors the backend's own rule (Information-Broker api.go):
@@ -216,6 +221,12 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 		upcoming, current = splitUpcoming(res.Articles, time.Now())
 	}
 
+	// Pages from the backend total; unknown (0) renders "Page N" alone.
+	pages := 0
+	if res.Total > 0 {
+		pages = (res.Total + s.pageSize - 1) / s.pageSize
+	}
+
 	setCache(w, cacheList)
 	s.render(w, http.StatusOK, "list", listView{
 		Title:            "Articles",
@@ -231,6 +242,8 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 		Feed:             feed,
 		Sort:             sort,
 		Page:             page,
+		TotalResults:     res.Total,
+		Pages:            pages,
 		HasPrev:          page > 1,
 		HasNext:          len(res.Articles) == s.pageSize,
 	})
