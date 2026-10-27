@@ -268,6 +268,9 @@ func (s *Server) Routes() http.Handler {
 		mux.HandleFunc("GET /meetups/{slug}", s.handleMeetupDetail)
 		mux.HandleFunc("GET /api/meetups", s.handleAPIMeetups)
 	}
+	// Catch-all so unknown paths render the site's 404 page instead of Go's
+	// bare "404 page not found" — keep the reading shell around every miss.
+	mux.HandleFunc("GET /", s.handleNotFound)
 	mux.HandleFunc("GET /robots.txt", func(w http.ResponseWriter, r *http.Request) {
 		setCache(w, cacheAbout)
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
