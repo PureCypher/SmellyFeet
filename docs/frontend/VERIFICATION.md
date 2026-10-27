@@ -31,3 +31,14 @@ Environment: **local integration smoke** — throwaway PostgreSQL 15 container (
 ### Limitations
 - The smoke ingest used `qwen3:0.6b` and a fresh DB: most summaries failed on empty/short article text (legitimate `summary unavailable` path) — production model `granite4.1:3b` is unaffected.
 - No production data reconciliation performed (read-only checks against prod were done earlier in the session; schema unchanged).
+
+## Addendum — source dropdown (D4), 00:25 UTC
+
+- `sourceName` wrapper handling updated (feedburner path slug), `dedupeFeedList`
+  collapses same-publisher section feeds; regression tests: `feed_dedupe_test.go`
+  (real duplicate shapes from feeds.txt), `funcs_test.go`/`ui_test.go` updated to
+  the new wrapper convention.
+- `go test ./...` green in SmellyFeet (apiclient, config, server); vet + build clean.
+- Commits: `e41c87a` (frontend), `545c199` (backend), `320cccb` (frontend contract).
+
+Deployment plan for these changes: see DEPLOYMENT.md.
