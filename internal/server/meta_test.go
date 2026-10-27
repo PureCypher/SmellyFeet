@@ -25,7 +25,7 @@ func TestArticlePageHasOpenGraphTags(t *testing.T) {
 	for _, want := range []string{
 		`property="og:title" content="WidgetCorp zero-day"`,
 		`property="og:type" content="article"`,
-		`property="og:site_name" content="Information Broker"`,
+		`property="og:site_name" content="SmellyFeet"`,
 		`name="description"`,
 	} {
 		if !strings.Contains(body, want) {

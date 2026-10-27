@@ -35,6 +35,31 @@
 <li class="reveal">{{ template "articleCardBody" . }}</li>
 {{ end }}
 
+{{/* The page's lead story: same data, bigger presence. Solid amber hairline
+    marks it without inventing an importance score the backend doesn't have —
+    it is simply the first item in the current sort order. */}}
+{{ define "articleCardLead" }}
+<li class="reveal">
+  <div class="group relative overflow-hidden bg-ink-900 border border-line rounded-xl p-6 sm:p-7 hover:border-accent/60 transition-colors">
+    <span class="absolute inset-x-0 top-0 h-px bg-accent/60" aria-hidden="true"></span>
+    <div class="flex flex-wrap items-center justify-between font-mono text-[11px] mb-3 gap-x-3 gap-y-1 [overflow-wrap:anywhere]">
+      <span class="flex items-center gap-2 min-w-0">
+        <a href="/?feed={{ .FeedURL | urlquery }}" title="Filter by {{ sourceName .FeedURL }}" class="relative z-10 truncate rounded border border-line bg-ink-950 px-2 py-0.5 text-accent-dim hover:text-accent hover:border-accent/60 transition-colors">{{ sourceName .FeedURL }}</a>
+        {{ with cveID .Title }}<span class="rounded border border-accent/40 bg-ink-950 px-2 py-0.5 text-accent">{{ . }}</span>{{ end }}
+      </span>
+      <span class="flex items-center gap-1.5">
+        <time datetime="{{ .PublishedAt.Format "2006-01-02T15:04:05Z07:00" }}">{{ .PublishedAt | relTime }}</time>
+        <span class="text-structural" aria-hidden="true">·</span>
+        <span class="text-structural">{{ .PublishedAt | formatDate }} UTC</span>
+      </span>
+    </div>
+    <h2 class="text-xl sm:text-2xl font-bold text-primary leading-snug tracking-tight group-hover:text-accent transition-colors"><a href="/article/{{ .ID }}" class="after:absolute after:inset-0">{{ .Title }}</a></h2>
+    <p class="mt-2.5 text-[15px] text-body leading-relaxed line-clamp-4">{{ if .Summary }}{{ .Summary }}{{ else }}<span class="italic text-fog">No summary available yet.</span>{{ end }}</p>
+    <p class="mt-3 font-mono text-[10px] uppercase tracking-[0.2em] text-fog group-hover:text-accent transition-colors">Read the brief <span aria-hidden="true">→</span></p>
+  </div>
+</li>
+{{ end }}
+
 {{ define "list" }}{{ template "header" . }}
 <div class="mb-7">
   <p class="font-mono text-[11px] uppercase tracking-[0.25em] text-accent/80 mb-1.5">// live feed</p>
@@ -110,7 +135,7 @@
 {{ end }}
 
 <ul class="space-y-3">
-  {{ range .Articles }}{{ template "articleCard" . }}{{ end }}
+  {{ range $i, $a := .Articles }}{{ if eq $i 0 }}{{ template "articleCardLead" $a }}{{ else }}{{ template "articleCard" $a }}{{ end }}{{ end }}
 </ul>
 
 <nav aria-label="Pagination" class="mt-10 flex items-center justify-between font-mono text-xs">

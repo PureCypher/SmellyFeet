@@ -1,45 +1,56 @@
 {{ define "article" }}{{ template "header" . }}
-<a href="/" class="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-fog hover:text-accent transition-colors mb-6">← Back to feed</a>
+<div class="max-w-3xl mx-auto">
+<a href="/" class="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-fog hover:text-accent transition-colors">← Back to feed</a>
+
 {{ with .Article }}
-<article class="bg-ink-900 border border-line rounded-2xl p-7 md:p-9">
+<header class="mt-6">
   <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-[11px] text-fog mb-4">
     <a href="/?feed={{ .FeedURL | urlquery }}" title="Filter by {{ sourceName .FeedURL }}" class="rounded border border-line bg-ink-950 px-2 py-0.5 text-accent-dim hover:text-accent hover:border-accent/60 transition-colors">{{ sourceName .FeedURL }}</a>
-    <time datetime="{{ .PublishedAt.Format "2006-01-02T15:04:05Z07:00" }}" title="{{ .PublishedAt | formatDate }}">{{ .PublishedAt | relTime }}</time>
+    <time datetime="{{ .PublishedAt.Format "2006-01-02T15:04:05Z07:00" }}">{{ .PublishedAt | relTime }}</time>
+    <span class="text-structural" aria-hidden="true">·</span>
+    <span class="text-structural">{{ .PublishedAt | formatDate }} UTC</span>
   </div>
-  <h1 class="text-2xl md:text-[1.95rem] font-bold text-zinc-50 leading-tight tracking-tight">{{ .Title }}</h1>
+  <h1 class="text-2xl sm:text-3xl md:text-[2.35rem] font-bold text-primary leading-[1.15] tracking-tight [overflow-wrap:break-word]">{{ .Title }}</h1>
+</header>
 
-  <section class="mt-6 rounded-xl border border-accent/25 bg-accent/[0.06] p-5">
-    <h2 class="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-accent mb-2">▍ AI Summary</h2>
-    <p class="text-[15px] text-zinc-100 leading-relaxed">
-      {{ if .SummaryState }}
-        {{ if eq .SummaryState "pending" }}<span class="text-fog italic">Summary queued — being generated. Check back shortly.</span>
-        {{ else if eq .SummaryState "failed" }}<span class="text-fog italic">Summary unavailable — generation failed. The full text and the original source below are unaffected.</span>
-        {{ else }}{{ .Summary }}{{ end }}
-      {{ else if .Summary }}{{ .Summary }}
-      {{ else }}<span class="text-fog italic">No summary available.</span>{{ end }}
-    </p>
-  </section>
+{{/* Platform-generated briefing: visually distinct from publisher text, honestly
+    labeled, with only the three real states the backend reports. */}}
+<section class="mt-7 rounded-xl border border-accent/25 bg-accent/[0.06] p-5 md:p-6" aria-labelledby="ai-brief">
+  <h2 id="ai-brief" class="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-accent mb-2.5">AI brief — generated locally, may err</h2>
+  <p class="text-[15px] text-zinc-100 leading-relaxed">
+    {{ if .SummaryState }}
+      {{ if eq .SummaryState "pending" }}<span class="text-fog italic">Summary queued — being generated. Check back shortly.</span>
+      {{ else if eq .SummaryState "failed" }}<span class="text-fog italic">Summary unavailable — generation failed. The full text and the original source below are unaffected.</span>
+      {{ else }}{{ .Summary }}{{ end }}
+    {{ else if .Summary }}{{ .Summary }}
+    {{ else }}<span class="text-fog italic">No summary available.</span>{{ end }}
+  </p>
+</section>
 
-  <section class="mt-8">
-    <h2 class="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-fog mb-3 flex items-center gap-2"><span class="h-px w-6 bg-line"></span>Full text</h2>
-    {{ $body := sanitizeBody .ContentHTML .URL }}
-    {{ if $body }}
-      <div class="article-body">{{ $body }}</div>
-      <p class="mt-4 text-xs text-fog">Extracted from the publisher with original structure; images load through this site's proxy.</p>
+{{/* Publisher content: extracted HTML (sanitized, images via same-origin proxy)
+    or the plain-text fallback. Open on the page, not in a card — this is the
+    reading surface, distinct from the browse surface. */}}
+<section class="mt-9">
+  <h2 class="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-fog mb-4 flex items-center gap-2"><span class="h-px w-6 bg-line"></span>Full text</h2>
+  {{ $body := sanitizeBody .ContentHTML .URL }}
+  {{ if $body }}
+    <div class="article-body">{{ $body }}</div>
+    <p class="mt-5 max-w-prose text-xs text-fog">Extracted from the publisher with original structure; images load through this site's proxy and may be unavailable if the source blocks fetching.</p>
+  {{ else }}
+    {{ $plain := cleanContent .Content }}
+    {{ if $plain }}
+      <div class="article-body article-body-plain">{{ $plain }}</div>
     {{ else }}
-      {{ $plain := cleanContent .Content }}
-      {{ if $plain }}
-        <div class="article-body article-body-plain">{{ $plain }}</div>
-      {{ else }}
-        <p class="text-sm text-fog italic">No full text was stored for this article.</p>
-      {{ end }}
+      <p class="text-sm text-fog italic">No full text was stored for this article — read it at the publisher instead.</p>
     {{ end }}
-  </section>
+  {{ end }}
+</section>
 
-  <div class="mt-8 pt-5 border-t border-line flex flex-wrap items-center gap-4">
-    <a href="{{ .URL }}" target="_blank" rel="noopener noreferrer"
-      class="inline-flex items-center gap-2 rounded-lg bg-accent text-ink-950 font-semibold px-5 py-2.5 text-sm hover:bg-accent-bright transition-colors">Read original <span aria-hidden="true">↗</span><span class="sr-only"> (opens in new tab)</span></a>
-  </div>
-</article>
+<div class="mt-9 pt-5 border-t border-line flex flex-wrap items-center gap-x-4 gap-y-2">
+  <a href="{{ .URL }}" target="_blank" rel="noopener noreferrer"
+    class="inline-flex items-center gap-2 rounded-lg bg-accent text-ink-950 font-semibold px-5 py-2.5 text-sm hover:bg-accent-bright transition-colors">Read original <span aria-hidden="true">↗</span><span class="sr-only"> (opens in new tab)</span></a>
+  <a href="/?feed={{ .FeedURL | urlquery }}" class="font-mono text-xs uppercase tracking-widest text-fog hover:text-accent transition-colors">More from {{ sourceName .FeedURL }}</a>
+</div>
 {{ end }}
+</div>
 {{ template "footer" . }}{{ end }}
