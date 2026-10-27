@@ -42,3 +42,22 @@ Environment: **local integration smoke** — throwaway PostgreSQL 15 container (
 - Commits: `e41c87a` (frontend), `545c199` (backend), `320cccb` (frontend contract).
 
 Deployment plan for these changes: see DEPLOYMENT.md.
+
+## Production route timings & security headers (2026-10-27, read-only)
+
+`curl time_total` against https://feed.purecypher.com/ (includes TLS + Cloudflare edge):
+
+| Route | Total |
+|---|---|
+| `/` | 193 ms |
+| `/?q=ransomware` (live ILIKE search incl. full_content) | 218 ms |
+| `/?page=5` | 191 ms |
+| `/digest` | 287 ms |
+| `/stats` | 237 ms |
+| `/about` | 107 ms |
+| `/article/90142` | 134 ms |
+| `/feed.xml` | 148 ms |
+
+Search over title/summary/full_content shows no ILIKE scan penalty at this dataset size — audit hypothesis H1 (slow trigram-backed search) is disproven; no action needed. H4 (missing WriteTimeout) was already fixed: `main.go:33` sets `WriteTimeout: 30s`.
+
+Security headers on production (verified via `curl -I`): CSP `default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'`, `nosniff`, `Referrer-Policy`, `X-Frame-Options`, per-route `Cache-Control`. Zero `template.HTML` usage across the frontend (`grep -rn 'template.HTML' internal/` → 0 hits).
