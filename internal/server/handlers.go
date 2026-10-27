@@ -403,3 +403,10 @@ func (s *Server) handleAbout(w http.ResponseWriter, r *http.Request) {
 	setCache(w, cacheAbout)
 	s.render(w, http.StatusOK, "about", map[string]any{"Title": "About", "Nav": "about"})
 }
+
+// handleNotFound is the catch-all for unmatched routes: renders the site's
+// 404 page inside the normal shell rather than Go's bare default.
+func (s *Server) handleNotFound(w http.ResponseWriter, r *http.Request) {
+	setCache(w, cacheNone)
+	s.render(w, http.StatusNotFound, "notfound", map[string]any{"Title": "Not Found", "Nav": ""})
+}

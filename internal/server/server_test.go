@@ -132,7 +132,7 @@ func TestArticlePageNotFound(t *testing.T) {
 	if rec.Code != http.StatusNotFound {
 		t.Fatalf("status = %d, want 404", rec.Code)
 	}
-	if !strings.Contains(rec.Body.String(), "Article not found") {
+	if !strings.Contains(rec.Body.String(), "Page not found") {
 		t.Fatalf("expected notfound page: %s", rec.Body.String())
 	}
 }
@@ -264,5 +264,27 @@ func TestAboutPage(t *testing.T) {
 		if !strings.Contains(body, want) {
 			t.Fatalf("about page missing %q", want)
 		}
+	}
+}
+
+// Unknown routes must render the site's 404 page inside the normal shell,
+// not Go's bare "404 page not found" default.
+func TestUnknownRouteRendersSiteNotFound(t *testing.T) {
+	h := newTestServer(t, stubService{})
+	req := httptest.NewRequest(http.MethodGet, "/definitely-not-a-route", nil)
+	rec := httptest.NewRecorder()
+	h.ServeHTTP(rec, req)
+	if rec.Code != http.StatusNotFound {
+		t.Fatalf("got %d, want 404", rec.Code)
+	}
+	body := rec.Body.String()
+	if !strings.Contains(body, "Page not found") {
+		t.Fatalf("site 404 page not rendered, body had: %q", body[:min(300, len(body))])
+	}
+	if !strings.Contains(body, `<!doctype html>`) {
+		t.Fatalf("expected the full site shell, got a bare 404 response")
+	}
+	if strings.Contains(body, "404 page not found") {
+		t.Fatalf("Go's default 404 text leaked through")
 	}
 }

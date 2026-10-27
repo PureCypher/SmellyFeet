@@ -60,4 +60,58 @@ Deployment plan for these changes: see DEPLOYMENT.md.
 
 Search over title/summary/full_content shows no ILIKE scan penalty at this dataset size — audit hypothesis H1 (slow trigram-backed search) is disproven; no action needed. H4 (missing WriteTimeout) was already fixed: `main.go:33` sets `WriteTimeout: 30s`.
 
-Security headers on production (verified via `curl -I`): CSP `default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'`, `nosniff`, `Referrer-Policy`, `X-Frame-Options`, per-route `Cache-Control`. Zero `template.HTML` usage across the frontend (`grep -rn 'template.HTML' internal/` → 0 hits).
+Security headers on production (verified via `curl -I`): CSP `default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'`, `nosniff`, `Referrer-Policy`, `X-Frame-Options`, per-route `Cache-Control`.
+
+`template.HTML` usage (updated for the full-text HTML feature): exactly one
+escape hatch — `sanitizeBody` in `internal/server/server.go`, which renders
+untrusted publisher HTML through `sanitizeArticleHTML` (strict whitelist,
+attribute re-validation, image rewrite to the same-origin `/img` proxy). No
+other `template.HTML` exists (`grep -rn 'template.HTML' internal/` → the
+funcMap entry and the sanitizer docstring only).
+
+## Session 3 — full-text HTML pipeline + image proxy + redesign (2026-10-27)
+
+Environment: same local integration smoke (`sf-preview-pg` postgres:15 container
+on 127.0.0.1:15433, throwaway; freshly built IB + SmellyFeet binaries; 7351
+pre-existing articles + 20 freshly ingested Ars Technica articles with
+`content_html` capture). Production untouched.
+
+### Data pipeline (Information-Broker)
+- `content_html` capture verified: after the extraction commit, 20/20 newly
+  ingested articles carry structured HTML (`SELECT count(content_html)`).
+- Extraction chrome-strip regression: the embedded `<header>` (headline
+  block, byline, category icons) no longer reaches storage — regression test
+  `TestExtractMainContentStripsEmbeddedHeader`-style fixtures in
+  `monitor_test.go` cover header/form/button stripping; live ingest showed
+  prose-first extraction on all 20 articles.
+- Schema migration on startup: existing DB (pre-`content_html` schema) gained
+  the column via `CREATE TABLE IF NOT EXISTS` path; NULL `content_html`
+  falls back to the plain-text renderer (verified on the 7351 legacy rows).
+
+### Frontend (SmellyFeet)
+- `go test ./...` green (sanitizer XSS/rewrite suite: script/iframe drops,
+  `javascript:` href neutralization, data:-URI image drops, relative-URL
+  resolution, attr allowlist, hostile-input fuzz set; `/img` proxy guard
+  tests: missing/bad param, scheme+port rejection, content-type sniffing,
+  MultiReader probe-byte regression, loopback/private-IP dial refusal).
+- Rendered verification (Chromium, DOM + screenshots):
+  - `/article/7411` renders sanitized HTML: title-once (no publisher header
+    duplication), `<img src="/img?u=https%3A%2F%2Fcdn.arstechnica.net...">`,
+    `loading="lazy" decoding="async"`, first paragraphs intact, no
+    `h1`/`h2` chrome in the body, no horizontal overflow at 390px.
+  - Image actually loads through the proxy at 16px/1.85/72ch (measured
+    computed styles) — publisher CDN returned 403 from this LAN for one
+    URL (bot-block, not a proxy defect) but the same-origin proxy path was
+    proven with a fetchable upstream image.
+  - Unknown routes now render the site 404 shell (`/nonexistent-route` →
+    "Page not found" inside header/footer), previously Go's bare default.
+- Brand alignment: `<title>… · SmellyFeet`, og:site_name, wordmark
+  `smellyfeet`, footer "SmellyFeet · PureCypher threat intelligence feed";
+  the backend product name appears only in the About page relationship copy.
+- CSP unchanged; the only `template.HTML` is the sanitizer escape hatch.
+
+### Known limitations
+- One preview article's CDN image 403s from this network (Ars bot-block).
+  The proxy reports a clean 502 and the frame keeps its alt/box styling.
+- 7351 legacy rows have no `content_html`; they render via the plain-text
+  fallback (honest state, labelled in the UI).

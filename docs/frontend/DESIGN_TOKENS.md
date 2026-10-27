@@ -175,7 +175,7 @@ through `2xl` plus `3xl`/`4xl` display; the one-off 15px and `.article-body`
 | `--text-2xs` | `11px` | Mono small-caps section labels, nav meta, status labels. |
 | `--text-xs` | `0.75rem` | Badges, timestamps, footer text. |
 | `--text-sm` | `0.875rem` | Secondary UI text, buttons, card summaries. |
-| `--text-size-prose` | `0.9375rem` | Article body and list-item summaries. (Merges shipped `text-[15px]` and `.article-body` 0.94rem — a 0.04px difference nobody can see.) Size-scale token — pairs with the `--text-prose` **color** token in §2; the two are separate properties despite the shared name root, do not conflate them. |
+| `--text-size-prose` | `1rem` | Article body (`.article-body`, rendered from sanitized publisher HTML). Raised from 0.9375rem when full-text HTML reading shipped — 16px at 1.85 leading over 72ch is the comfortable long-form floor. List summaries stay at `text-[15px]`. Size-scale token — pairs with the `--text-prose` **color** token in §2; the two are separate properties despite the shared name root, do not conflate them. |
 | `--text-base` | `1rem` | Default body size. |
 | `--text-lg` | `1.125rem` | Card titles, list-item headlines. |
 | `--text-xl` | `1.25rem` | Section headings. |
@@ -322,3 +322,21 @@ still passing on `--surface-overlay` (`#1c1c24`).
 Non-text UI (borders on interactive elements, status dots) targets 3:1
 against adjacent colors per WCAG 1.4.11; status dots always carry a text
 label regardless (§5).
+
+## 15. Article-body typography (full-text rendering)
+
+`.article-body` renders sanitizer-whitelisted publisher HTML; `.article-body-plain`
+is the `white-space: pre-line` fallback for HTML-stripped bodies. Same type
+role (`--text-prose` on `--text-size-prose`, 72ch), two whitespace modes.
+
+- Paragraph rhythm `1.15em`; headings `h2/h3/h4` in `--text-primary` (a stray
+  publisher `h1` demotes to `h2` — the page title is the only `h1`).
+- Blockquotes: 1px `--border-accent-faint` left rule (Signal Lamp accent,
+  never wider — see the craft ban on colored left borders above 1px).
+- `pre`/`code`: `--surface-overlay` fills; inline code inherits `--font-mono`.
+- Images: block, `max-width: 100%`, `--radius-lg` frame on `--surface-overlay`;
+  srcs are same-origin `/img?u=…` proxied (sanitizer rewrite; SSRF-guarded).
+- Tables scroll in-column (`display: block; overflow-x: auto`) — no page-level
+  horizontal scroll on narrow viewports.
+- Lists, `hr`, and `figcaption` follow the same muted-metadata treatment used
+  across the shell.
