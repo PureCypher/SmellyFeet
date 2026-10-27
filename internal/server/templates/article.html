@@ -21,6 +21,7 @@
     {{ if .SummaryState }}
       {{ if eq .SummaryState "pending" }}<span class="text-fog italic">Summary queued — being generated. Check back shortly.</span>
       {{ else if eq .SummaryState "failed" }}<span class="text-fog italic">Summary unavailable — generation failed. The full text and the original source below are unaffected.</span>
+      {{ else if eq .SummaryState "unavailable" }}<span class="text-fog italic">No summary exists for this article and none can be generated — its stored text is empty (this happens when the source page could not be extracted). Read the original source below.</span>
       {{ else }}{{ .Summary }}{{ end }}
     {{ else if .Summary }}{{ .Summary }}
     {{ else }}<span class="text-fog italic">No summary available.</span>{{ end }}

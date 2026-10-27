@@ -37,9 +37,10 @@ type Article struct {
 	// clustering job hasn't reached yet.
 	StoryClusterID *int64 `json:"story_cluster_id,omitempty"`
 	// SummaryState distinguishes summarization outcomes: "available" (LLM
-	// summary stored), "pending" (not yet reached by the summarizer), or
-	// "failed" (retries exhausted). Empty on older backend builds — the UI
-	// falls back to rendering .Summary as before.
+	// summary stored), "pending" (not yet reached by the summarizer), "failed"
+	// (retries exhausted), or "unavailable" (no stored text — the summarizer
+	// can never produce one, e.g. link-only feeds). Empty on older backend
+	// builds — the UI falls back to rendering .Summary as before.
 	SummaryState string `json:"summary_state"`
 }
 
