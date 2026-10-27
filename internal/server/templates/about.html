@@ -1,13 +1,13 @@
 {{ define "about" }}{{ template "header" . }}
 <div class="mb-8">
   <p class="font-mono text-[11px] uppercase tracking-[0.25em] text-accent/80 mb-1.5">// about</p>
-  <h1 class="text-3xl font-bold text-primary tracking-tight">SmellyFeet</h1>
-  <p class="mt-1.5 font-mono text-xs text-fog">the reading room for Information Broker</p>
+  <h1 class="text-3xl font-bold text-primary tracking-tight">Information Broker</h1>
+  <p class="mt-1.5 font-mono text-xs text-fog">the cybersecurity intelligence reading room</p>
 </div>
 
 <div class="space-y-4 text-[15px] leading-relaxed text-body max-w-2xl">
-  <p>SmellyFeet is the front end for <span class="text-accent">Information Broker</span> — a continuously-running intelligence pipeline that scrapes cybersecurity RSS sources, summarizes every article with a local LLM, and stores them for fast browsing.</p>
-  <p>This app turns that firehose into something you can actually read: a clean stream of AI-written summaries, a full-text view for each article with a link straight back to the original source, plus keyword search, per-source filtering, and live system statistics.</p>
+  <p>Information Broker is a continuously-running intelligence pipeline that scrapes cybersecurity RSS sources, summarizes every article with a local LLM, and stores them for fast browsing.</p>
+  <p>This site turns that firehose into something you can actually read: a clean stream of AI-written summaries, a full-text view for each article with a link straight back to the original source, plus keyword search, per-source filtering, and live system statistics.</p>
 </div>
 
 <section class="mt-10">
@@ -21,7 +21,7 @@
     <li aria-hidden="true" class="text-accent rotate-90 sm:rotate-0">→</li>
     <li class="px-3 py-2 rounded-lg bg-ink-900 border border-line text-body">Broker API</li>
     <li aria-hidden="true" class="text-accent rotate-90 sm:rotate-0">→</li>
-    <li class="px-3 py-2 rounded-lg border border-accent/50 bg-accent/[0.08] text-accent font-semibold">SmellyFeet</li>
+    <li class="px-3 py-2 rounded-lg border border-accent/50 bg-accent/[0.08] text-accent font-semibold">Web reader</li>
   </ol>
 </section>
 
@@ -62,7 +62,7 @@
     <li><span class="text-accent">›</span> Zero client-side JavaScript — every control is native HTML</li>
     <li><span class="text-accent">›</span> No cookies, no sessions, no tracking of any kind</li>
     <li><span class="text-accent">›</span> Strict CSP; fonts and assets self-hosted and go:embed-ded</li>
-    <li><span class="text-accent">›</span> No database of its own — talks only to the Information Broker HTTP API</li>
+    <li><span class="text-accent">›</span> No database of its own — talks only to the pipeline's HTTP API</li>
     <li><span class="text-accent">›</span> Containerized; deploys and restarts independently of the scraper</li>
   </ul>
 </section>

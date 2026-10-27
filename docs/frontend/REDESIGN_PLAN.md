@@ -1,4 +1,4 @@
-# SmellyFeet Redesign Plan — "Signal Lamp"
+# Information Broker Redesign Plan — "Signal Lamp"
 
 **Phase 1 deliverable**, owned by Fable per the governing master prompt's model-routing policy. Companion document: `DESIGN_TOKENS.md`. Direction: **Signal Lamp**, chosen by the user from a live 3-option comparison (Amber Phosphor / Signal Lamp / NOC Wallboard) — keeps the shipped amber brand identity fully intact, adds a real severity system only where the Phase 0 audit found a genuine gap (feed health, error states).
 
@@ -844,15 +844,15 @@ Nothing in this wireframe renders a number the broker cannot supply today; the t
 │                                                                            │
 │  // about                          ← eyebrow: --font-mono --text-2xs,      │
 │                                      --tracking-label-wide, --accent-dim   │
-│  SmellyFeet                        ← h1: --text-2xl, --text-primary,       │
+│  Information Broker                        ← h1: --text-2xl, --text-primary,       │
 │                                      --tracking-tight                      │
-│  the reading room for Information Broker                                   │
+│  the cybersecurity intelligence reading room                                   │
 │                                    ← --font-mono --text-xs --text-muted    │
 │                                                                            │
 │  ┌─ intro prose (--container-narrow 42rem, --text-size-prose, ──────────┐ │
 │  │  --leading-relaxed)                                                   │ │
 │  │                                                                       │ │
-│  │  SmellyFeet is the front end for Information Broker — a              │ │
+│  │  Information Broker is the intelligence pipeline — a              │ │
 │  │  continuously-running intelligence pipeline that scrapes             │ │
 │  │  cybersecurity RSS sources, summarizes every article with a          │ │
 │  │  local LLM, and stores them for fast browsing.                       │ │
@@ -941,7 +941,7 @@ Changes vs. shipped, all copy/semantics only: pipeline becomes an `<ol>` (order 
 │ FEED DIGEST STATS [ABOUT]    │  (shipped behavior: 10px mono, tighter
 ├──────────────────────────────┤   tracking, gap-0.5; keep)
 │ // about                     │
-│ SmellyFeet                   │
+│ Information Broker                   │
 │ the reading room for         │
 │ Information Broker           │
 │                              │
@@ -1018,7 +1018,7 @@ Changes vs. shipped, all copy/semantics only: pipeline becomes an `<ol>` (order 
 | Active nav "About" | `--accent` + `--surface-overlay` | `aria-current="page"` + background fill (shape) |
 | Eyebrow `// about` | `--accent-dim` | It's literal text |
 | Pipeline arrows | `--accent` | `aria-hidden`; sequence carried by `<ol>` positions |
-| Final "SmellyFeet" pill | `--surface-accent-wash` + `--border-accent-hover` | Labeled "SmellyFeet", position 5 of 5 in the `<ol>`, bolder weight |
+| Final "Web reader" pill | `--surface-accent-wash` + `--border-accent-hover` | Labeled "Web reader", position 5 of 5 in the `<ol>`, bolder weight |
 | `›` list markers | `--accent` | Decorative; `<li>` carries structure |
 | Links (back-to-feed, Atom) | `--accent` / hover `--accent-bright` | Link text + `:focus-visible` ring (`DESIGN_TOKENS.md` §6) |
 

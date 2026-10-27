@@ -11,7 +11,7 @@ web
 
 ## Stack
 
-- **Frontend (this repo, SmellyFeet):** Go 1.22, zero-dependency (stdlib + golang.org/x/net for HTML sanitization only). Server-rendered `html/template` with Tailwind 3.4 CSS built from `assets/tailwind.input.css` into `internal/server/static/app.css` via a cached standalone Tailwind binary. **Zero client-side JavaScript; frozen CSP** (`default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'`). Fonts self-hosted (IBM Plex Sans/Mono). Data fetched from the backend API at request time; no caching layer in the frontend.
+- **Frontend (this repo, SmellyFeet — user-facing brand "Information Broker"):** Go 1.22, zero-dependency (stdlib + golang.org/x/net for HTML sanitization only). Server-rendered `html/template` with Tailwind 3.4 CSS built from `assets/tailwind.input.css` into `internal/server/static/app.css` via a cached standalone Tailwind binary. **Zero client-side JavaScript; frozen CSP** (`default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'`). Fonts self-hosted (IBM Plex Sans/Mono). Data fetched from the backend API at request time; no caching layer in the frontend.
 - **Backend (Information-Broker, sibling repo):** Go + PostgreSQL. RSS/monitor ingestion with full-content extraction, Ollama summarization, story clustering, maintenance `backfill` command.
 - Inferred from repo structure and docs/frontend/ARCHITECTURE.md. Deployment target is a self-hosted machine (192.168.1.135), public URL https://feed.purecypher.com.
 

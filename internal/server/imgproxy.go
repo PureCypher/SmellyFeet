@@ -54,7 +54,7 @@ func handleImg(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid image URL", http.StatusBadRequest)
 		return
 	}
-	req.Header.Set("User-Agent", "SmellyFeet-ImageProxy/1.0")
+	req.Header.Set("User-Agent", "InformationBroker-ImageProxy/1.0")
 	// Never forward visitor credentials/cookies upstream.
 	req.Header.Del("Cookie")
 	req.Header.Del("Authorization")

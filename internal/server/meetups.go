@@ -191,7 +191,7 @@ func icsForMeetup(m Meetup, now time.Time) string {
 	lines := []string{
 		"BEGIN:VCALENDAR",
 		"VERSION:2.0",
-		"PRODID:-//SmellyFeet//Meetups//EN",
+		"PRODID:-//Information Broker//Meetups//EN",
 		"CALSCALE:GREGORIAN",
 		"METHOD:PUBLISH",
 		"BEGIN:VEVENT",

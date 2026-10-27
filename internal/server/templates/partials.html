@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ .Title }} · SmellyFeet</title>
-  {{ if .OG }}<meta property="og:site_name" content="SmellyFeet">
+  <title>{{ .Title }} · Information Broker</title>
+  {{ if .OG }}<meta property="og:site_name" content="Information Broker">
   <meta property="og:title" content="{{ .Title }}">
   <meta property="og:type" content="{{ if .OGArticle }}article{{ else }}website{{ end }}">
   {{ if .Desc }}<meta name="description" content="{{ .Desc }}">
   <meta property="og:description" content="{{ .Desc }}">{{ end }}{{ end }}
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
   <link rel="stylesheet" href="/static/app.css?v={{ assetHash }}">
-  <link rel="alternate" type="application/atom+xml" title="SmellyFeet" href="/feed.xml">
+  <link rel="alternate" type="application/atom+xml" title="Information Broker" href="/feed.xml">
 </head>
 <body class="text-secondary font-sans min-h-screen antialiased">
   <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-accent focus:text-ink-950 focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:font-semibold focus:uppercase focus:tracking-widest">Skip to content</a>
@@ -19,7 +19,7 @@
     <div class="max-w-5xl mx-auto px-4 sm:px-5 min-h-16 py-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
       <a href="/" class="flex items-center gap-2.5">
         <span class="inline-block h-2 w-2 rounded-full bg-accent shadow-[0_0_12px_rgba(245,177,61,0.75)]"></span>
-        <span class="font-mono text-sm sm:text-base tracking-[0.14em] sm:tracking-[0.2em] text-primary">smelly<span class="text-accent">feet</span></span>
+        <span class="font-mono text-sm sm:text-base tracking-[0.14em] sm:tracking-[0.2em] text-primary">information<span class="text-accent">·broker</span></span>
       </a>
       <nav aria-label="Primary" class="flex items-center gap-0.5 sm:gap-1 font-mono text-[10px] sm:text-xs uppercase tracking-[0.12em] sm:tracking-[0.18em]">
         <a href="/" class="px-2 sm:px-3 py-1.5 rounded-md transition-colors {{ if eq .Nav "feed" }}text-accent bg-ink-800{{ else }}text-fog hover:text-accent hover:bg-ink-800{{ end }}"{{ if eq .Nav "feed" }} aria-current="page"{{ end }}>Feed</a>
@@ -37,7 +37,7 @@
   </main>
   <footer class="max-w-5xl mx-auto px-5 py-10 mt-6 border-t border-line/50">
     <div class="flex flex-wrap items-center justify-between gap-2">
-      <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-fog">SmellyFeet · PureCypher threat intelligence feed</p>
+      <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-fog">Information Broker · PureCypher threat intelligence feed</p>
       <a href="/feed.xml" class="font-mono text-[11px] uppercase tracking-[0.2em] text-fog hover:text-accent transition-colors">Atom feed</a>
     </div>
   </footer>

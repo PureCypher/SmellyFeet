@@ -260,7 +260,7 @@ func TestAboutPage(t *testing.T) {
 		t.Fatalf("status = %d, want 200", rec.Code)
 	}
 	body := rec.Body.String()
-	for _, want := range []string{"SmellyFeet", "Information Broker", "How it works"} {
+	for _, want := range []string{"Information Broker", "How it works", "Web reader"} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("about page missing %q", want)
 		}

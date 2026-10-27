@@ -1,4 +1,4 @@
-# SmellyFeet Design Tokens — "Signal Lamp"
+# Information Broker Design Tokens — "Signal Lamp"
 
 **Phase 1 deliverable.** Direction chosen from the Phase 0 three-way comparison
 (Amber Phosphor / **Signal Lamp** / NOC Wallboard). Signal Lamp is the
