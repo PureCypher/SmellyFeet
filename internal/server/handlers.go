@@ -214,6 +214,15 @@ func trimDesc(s string, n int) string {
 	return strings.TrimSpace(string(r[:n])) + "…"
 }
 
+// feedsOrNil is transitional (replaced by parseFeedSelection): the list page
+// still carries a single feed until the multi-source UI lands.
+func feedsOrNil(feed string) []string {
+	if feed == "" {
+		return nil
+	}
+	return []string{feed}
+}
+
 func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	page := parsePage(r.URL.Query().Get("page"))
@@ -227,7 +236,7 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 	res, err := s.svc.ListArticles(ctx, apiclient.ListParams{
 		Limit:  s.pageSize,
 		Offset: (page - 1) * s.pageSize,
-		Feed:   feed,
+		Feeds:  feedsOrNil(feed),
 		Q:      q,
 		Sort:   sort,
 	})

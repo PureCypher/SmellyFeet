@@ -20,7 +20,7 @@ func TestListArticles(t *testing.T) {
 	defer srv.Close()
 
 	c := New(srv.URL)
-	res, err := c.ListArticles(context.Background(), ListParams{Limit: 20, Offset: 0, Feed: "f", Q: "ransom"})
+	res, err := c.ListArticles(context.Background(), ListParams{Limit: 20, Offset: 0, Feeds: []string{"f"}, Q: "ransom"})
 	if err != nil {
 		t.Fatalf("ListArticles error: %v", err)
 	}
@@ -200,5 +200,24 @@ func TestGetDigest(t *testing.T) {
 	// distinguishable from cluster 0 -- hence a pointer, not an int.
 	if res.Other[0].StoryClusterID != nil {
 		t.Fatalf("StoryClusterID = %v, want nil when absent from the JSON", res.Other[0].StoryClusterID)
+	}
+}
+
+func TestListArticlesRepeatsFeedParam(t *testing.T) {
+	var gotPath string
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		gotPath = r.URL.RequestURI()
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(`{"articles":[],"count":0,"limit":20,"offset":0}`))
+	}))
+	defer srv.Close()
+
+	c := New(srv.URL)
+	// Empty entries are skipped; order is preserved.
+	if _, err := c.ListArticles(context.Background(), ListParams{Limit: 20, Feeds: []string{"a", "", "b"}}); err != nil {
+		t.Fatalf("ListArticles error: %v", err)
+	}
+	if gotPath != "/articles?feed=a&feed=b&limit=20" {
+		t.Fatalf("unexpected request path: %s", gotPath)
 	}
 }

@@ -88,9 +88,10 @@ type Stats struct {
 type ListParams struct {
 	Limit  int
 	Offset int
-	Feed   string
-	Q      string
-	Sort   string // "" = newest first (default), "oldest" = ascending
+	// Feeds restricts results to any of these feed URLs (OR); empty = all.
+	Feeds []string
+	Q     string
+	Sort  string // "" = newest first (default), "oldest" = ascending
 }
 
 // Client calls the Information-Broker API.
@@ -130,7 +131,7 @@ func (c *Client) getJSON(ctx context.Context, path string, out any) error {
 	return nil
 }
 
-// ListArticles fetches a page of articles with optional feed/search filters.
+// ListArticles fetches a page of articles with optional feed(s)/search filters.
 func (c *Client) ListArticles(ctx context.Context, p ListParams) (ListResult, error) {
 	v := url.Values{}
 	if p.Limit > 0 {
@@ -139,8 +140,10 @@ func (c *Client) ListArticles(ctx context.Context, p ListParams) (ListResult, er
 	if p.Offset > 0 {
 		v.Set("offset", strconv.Itoa(p.Offset))
 	}
-	if p.Feed != "" {
-		v.Set("feed", p.Feed)
+	for _, f := range p.Feeds {
+		if f != "" {
+			v.Add("feed", f) // Encode keeps per-key order: feed=a&feed=b
+		}
 	}
 	if p.Q != "" {
 		v.Set("q", p.Q)
