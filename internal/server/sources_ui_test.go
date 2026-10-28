@@ -155,3 +155,25 @@ func TestFeedContextStripOnlyForSingleFeed(t *testing.T) {
 		t.Error("the raw-URL strip makes no sense for several sources")
 	}
 }
+
+// Long hostnames (blog.cryptographyengineering.com, ...) were cut off with an
+// ellipsis on phones, so a reader could not tell sources apart. Names must wrap.
+func TestSourcePickerWrapsLongNames(t *testing.T) {
+	svc := stubService{feeds: []apiclient.Feed{
+		{FeedURL: "https://blog.cryptographyengineering.com/feed/", ArticleCount: 10},
+	}}
+	body := getPath(t, newTestServer(t, svc), "/").Body.String()
+
+	start := strings.Index(body, `<details id="source-picker"`)
+	if start < 0 {
+		t.Fatal("picker missing")
+	}
+	picker := body[start : start+strings.Index(body[start:], "</details>")]
+
+	if strings.Contains(picker, "truncate") {
+		t.Error("picker source names must not be truncated with an ellipsis")
+	}
+	if !strings.Contains(picker, "[overflow-wrap:anywhere]") {
+		t.Error("picker source names must wrap anywhere so long hostnames stay readable")
+	}
+}
