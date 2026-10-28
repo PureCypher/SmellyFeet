@@ -28,7 +28,8 @@ func TestListCardShowsPillBadgeAndRelTime(t *testing.T) {
 		`title="Filter by brighttalk.com"`,
 		">CVE-2026-14615</span>",
 		"2h ago",
-		"brighttalk.com (12)",
+		`value="https://www.brighttalk.com/channel/7451/feed/rss"`, // picker checkbox
+		">12</span>", // its article count
 	} {
 		if !strings.Contains(body, want) {
 			t.Errorf("list page missing %q", want)

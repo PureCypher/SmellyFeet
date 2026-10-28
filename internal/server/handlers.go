@@ -58,18 +58,30 @@ func (s *Server) handleHealthz(w http.ResponseWriter, r *http.Request) {
 }
 
 type listView struct {
-	Title            string
-	Desc             string
-	OG               bool
-	OGArticle        bool
-	Nav              string
-	Articles         []apiclient.Article
-	Upcoming         []apiclient.Article
-	Feeds            []apiclient.Feed
+	Title     string
+	Desc      string
+	OG        bool
+	OGArticle bool
+	Nav       string
+	Articles  []apiclient.Article
+	Upcoming  []apiclient.Article
+	// SourceGroups feeds the source picker (nil when /feeds is unavailable).
+	SourceGroups     []sourceGroup
 	FeedsUnavailable bool
 	Q                string
 	QApplied         bool
-	Feed             string
+	// SelectedFeeds is the active multi-source filter; SingleFeed is set only
+	// when exactly one is selected (it drives the raw "Feed URL:" strip).
+	SelectedFeeds []string
+	SingleFeed    string
+	SourceChips   []sourceChip
+	// Precomputed hrefs keep every filter-preserving link in Go, where it is
+	// tested, instead of in template string concatenation.
+	SearchChipHref   string // drop the search, keep sources and sort
+	SortChipHref     string // drop "oldest", keep search and sources
+	ClearSourcesHref string // drop every source, keep search and sort
+	PrevHref         string
+	NextHref         string
 	Sort             string
 	Page             int
 	// TotalResults is the backend-reported matching-row total across all
@@ -214,20 +226,11 @@ func trimDesc(s string, n int) string {
 	return strings.TrimSpace(string(r[:n])) + "…"
 }
 
-// feedsOrNil is transitional (replaced by parseFeedSelection): the list page
-// still carries a single feed until the multi-source UI lands.
-func feedsOrNil(feed string) []string {
-	if feed == "" {
-		return nil
-	}
-	return []string{feed}
-}
-
 func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	page := parsePage(r.URL.Query().Get("page"))
 	q := r.URL.Query().Get("q")
-	feed := r.URL.Query().Get("feed")
+	selected := parseFeedSelection(r.URL.Query()["feed"])
 	sort := r.URL.Query().Get("sort")
 	if sort != "oldest" {
 		sort = "" // whitelist: only "oldest" changes the order
@@ -236,7 +239,7 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 	res, err := s.svc.ListArticles(ctx, apiclient.ListParams{
 		Limit:  s.pageSize,
 		Offset: (page - 1) * s.pageSize,
-		Feeds:  feedsOrNil(feed),
+		Feeds:  selected,
 		Q:      q,
 		Sort:   sort,
 	})
@@ -246,12 +249,16 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 	}
 
 	feeds, err := s.svc.ListFeeds(ctx)
+	var groups []sourceGroup
 	feedsUnavailable := false
 	if err != nil {
-		feeds = nil             // non-fatal: filter dropdown simply shows "All feeds"
-		feedsUnavailable = true // surfaced as an explicit DEGRADED callout, not silently
+		feedsUnavailable = true // non-fatal: surfaced as an explicit DEGRADED callout, not silently
 	} else {
-		feeds = dedupeFeedList(feeds)
+		groups = buildSourceGroups(dedupeFeedList(feeds), selected)
+	}
+	singleFeed := ""
+	if len(selected) == 1 {
+		singleFeed = selected[0]
 	}
 
 	var upcoming []apiclient.Article
@@ -274,11 +281,18 @@ func (s *Server) handleList(w http.ResponseWriter, r *http.Request) {
 		Nav:              "feed",
 		Articles:         current,
 		Upcoming:         upcoming,
-		Feeds:            feeds,
+		SourceGroups:     groups,
 		FeedsUnavailable: feedsUnavailable,
 		Q:                q,
 		QApplied:         len(strings.TrimSpace(q)) >= minSearchQueryLen,
-		Feed:             feed,
+		SelectedFeeds:    selected,
+		SingleFeed:       singleFeed,
+		SourceChips:      buildSourceChips(selected, q, sort),
+		SearchChipHref:   listURL("", selected, sort, 0),
+		SortChipHref:     listURL(q, selected, "", 0),
+		ClearSourcesHref: listURL(q, nil, sort, 0),
+		PrevHref:         listURL(q, selected, sort, page-1),
+		NextHref:         listURL(q, selected, sort, page+1),
 		Sort:             sort,
 		Page:             page,
 		TotalResults:     res.Total,
