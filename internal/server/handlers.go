@@ -194,7 +194,7 @@ func dedupeFeedList(feeds []apiclient.Feed) []apiclient.Feed {
 			continue
 		}
 		if f.ArticleCount > existing.ArticleCount {
-			byName[name] = f
+			byName[key] = f
 		}
 	}
 	out := make([]apiclient.Feed, 0, len(order))

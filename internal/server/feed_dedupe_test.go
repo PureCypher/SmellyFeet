@@ -51,3 +51,16 @@ func TestDedupeFeedListNoCollision(t *testing.T) {
 		t.Fatalf("dedupeFeedList() collapsed distinct publishers, got %d", len(got))
 	}
 }
+
+// Pre-existing bug: the larger duplicate was stored under the original-case
+// name instead of the lowercased key, so a mixed-case wrapper name never won.
+func TestDedupeFeedListMixedCaseNameKeepsLargest(t *testing.T) {
+	in := []apiclient.Feed{
+		{FeedURL: "https://feeds.feedburner.com/thehackersnews", ArticleCount: 400},
+		{FeedURL: "https://feeds.feedburner.com/TheHackersNews", ArticleCount: 900},
+	}
+	got := dedupeFeedList(in)
+	if len(got) != 1 || got[0].ArticleCount != 900 {
+		t.Fatalf("dedupeFeedList() = %+v, want one entry with the 900-count feed", got)
+	}
+}
