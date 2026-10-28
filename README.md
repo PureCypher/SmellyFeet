@@ -126,8 +126,9 @@ or endorsed listing. The official, approved chapter list lives at
 ## Architecture
 
 Talks to the Information-Broker HTTP API only (no direct DB). `internal/apiclient` wraps the API,
-`internal/server` renders `html/template` pages styled with Tailwind (CDN). See
-`docs/superpowers/specs/2026-06-05-information-broker-frontend-design.md`.
+`internal/server` renders `html/template` pages styled with Tailwind (CDN). The original design
+spec (`docs/superpowers/specs/2026-06-05-information-broker-frontend-design.md`) was removed from
+the tree; it remains in git history.
 
 ## Test
 

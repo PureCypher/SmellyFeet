@@ -140,7 +140,7 @@ Single `articles` table: `id`, `title`, `url` (unique), `publish_date`, `summary
 default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
 ```
 
-No `script-src` (inherits `'none'` — all script execution blocked by design), no `connect-src`/`object-src`/`frame-src` (all `'none'` by fallback). This is a **deliberate, twice-reaffirmed decision** (`docs/superpowers/specs/2026-07-03-cloudflare-public-design.md`, `docs/superpowers/specs/2026-07-03-ui-refinement-design.md`) — zero JavaScript, zero third-party requests, zero inline styles.
+No `script-src` (inherits `'none'` — all script execution blocked by design), no `connect-src`/`object-src`/`frame-src` (all `'none'` by fallback). This is a **deliberate, twice-reaffirmed decision** (`docs/superpowers/specs/2026-07-03-cloudflare-public-design.md`, `docs/superpowers/specs/2026-07-03-ui-refinement-design.md`; both since removed from the tree, see git history) — zero JavaScript, zero third-party requests, zero inline styles.
 
 ### Other headers (`middleware.go:39-40`)
 
@@ -188,7 +188,7 @@ The site ships **zero JavaScript**, which resolves most keyboard-operability con
 
 ## 7. Constraints that limit framework or deployment choices
 
-- **Server-rendered stdlib Go is a documented decision, not an accident.** The zero-dependency `go.mod` is an explicit acceptance criterion in `docs/superpowers/plans/2026-07-03-cloudflare-public.md`. Introducing htmx, Alpine, templ, or any framework would reverse an approved spec, not fill a gap — Phase 2 must treat this as a decision to revisit deliberately, not default past.
+- **Server-rendered stdlib Go is a documented decision, not an accident.** The zero-dependency `go.mod` is an explicit acceptance criterion in `docs/superpowers/plans/2026-07-03-cloudflare-public.md` (since removed from the tree, see git history). Introducing htmx, Alpine, templ, or any framework would reverse an approved spec, not fill a gap — Phase 2 must treat this as a decision to revisit deliberately, not default past.
 - **CSP `default-src 'none'; style-src 'self'` + zero-JS, chosen twice explicitly.** Rules out inline styles (hence the `bar-N` quantized-class trick for charts — any new chart needs the same approach or SVG with attribute-based sizing), any client-side behavior (theme toggle, live filtering, auto-refresh beyond `<meta refresh>`), icon/font/analytics CDNs. Every interactive widget must be native HTML.
 - **Full-URL edge caching forbids per-user state.** No cookies, sessions, or personalization without redesigning the cache strategy — "analyst" features implying saved views or watchlists are architecturally excluded under the current caching model.
 - **Article content is plain text forever, as already ingested.** Information-Broker discards all markup at fetch time; rich rendering of the corpus already stored is impossible without re-ingesting from source.
@@ -219,7 +219,7 @@ Reproduction steps: navigate to each URL directly (no auth, no cookies needed �
 
 ### Internal contradictions found
 
-- **Two "Approved" specs dated 2026-07-14 describe different digest mechanisms.** `docs/superpowers/specs/2026-07-14-digest-heuristic-design.md` (live pg_trgm title-similarity self-join) carries no superseded marker, yet the same-day story-clustering spec replaced its mechanism entirely with a precomputed `ClusteringScheduler`. The routes/contracts sections above describe only the shipped (clustered) version. **Action: mark the digest-heuristic spec superseded before anyone treats it as ground truth.**
+- **Two "Approved" specs dated 2026-07-14 describe different digest mechanisms.** `docs/superpowers/specs/2026-07-14-digest-heuristic-design.md` (live pg_trgm title-similarity self-join) carries no superseded marker, yet the same-day story-clustering spec replaced its mechanism entirely with a precomputed `ClusteringScheduler`. The routes/contracts sections above describe only the shipped (clustered) version. **Resolved: the plans and specs have since been removed from the tree (see git history), so the stale spec can no longer be mistaken for ground truth.**
 - **Go version story is inconsistent** — `go.mod` says `go 1.22`, the Dockerfile builds with `golang:1.24-alpine`. Not breaking, but Phase 1 should pick one floor.
 - **"Zero in-process caching" + "Cloudflare SWR is the only mitigation" together mean availability is weaker than either fact alone suggests** — SWR only protects URLs already in edge cache; any uncached variant (every unique `?q=` search, page 2+, filter combinations) hard-502s the instant Information-Broker is down.
 - **Coverage mandate vs. enforcement:** the cloudflare-public spec mandates `-race` + ≥80% coverage; there is zero CI in either repo. Well-tested only for as long as someone remembers to run `go test ./...` — exactly the discipline a large template rewrite tends to erode.
