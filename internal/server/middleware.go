@@ -38,6 +38,9 @@ func withSecurityHeaders(next http.Handler) http.Handler {
 		h.Set("Content-Security-Policy", csp)
 		h.Set("X-Content-Type-Options", "nosniff")
 		h.Set("Referrer-Policy", "strict-origin-when-cross-origin")
+		// The site is HTTPS-only behind the Cloudflare tunnel; tell browsers
+		// to never downgrade. Ignored on plain-HTTP origins (localhost).
+		h.Set("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
 		next.ServeHTTP(w, r)
 	})
 }

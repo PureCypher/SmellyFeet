@@ -23,6 +23,9 @@ func TestSecurityHeadersOnAllRoutes(t *testing.T) {
 		if got := rec.Header().Get("Referrer-Policy"); got != "strict-origin-when-cross-origin" {
 			t.Errorf("%s Referrer-Policy = %q", path, got)
 		}
+		if got := rec.Header().Get("Strict-Transport-Security"); got != "max-age=31536000; includeSubDomains" {
+			t.Errorf("%s Strict-Transport-Security = %q", path, got)
+		}
 	}
 }
 
