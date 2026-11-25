@@ -16,5 +16,11 @@ services:
     environment:
       TUNNEL_TOKEN: ${TUNNEL_TOKEN}   # read by cloudflared; kept out of argv so it never shows in ps
     command: tunnel --no-autoupdate run
+    # Host networking: the dashboard ingress targets http://127.0.0.1:3000, which on a
+    # bridge network is cloudflared itself (connection refused -> 502). On the host netns
+    # it reaches the published port; the alias keeps the documented smellyfeet:3000 working.
+    network_mode: host
+    extra_hosts:
+      - "smellyfeet:127.0.0.1"
     depends_on:
       - smellyfeet
